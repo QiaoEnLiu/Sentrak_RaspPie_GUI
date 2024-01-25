@@ -32,17 +32,32 @@ except Exception as e:
     traceback.print_exc()
     input("Press Enter to exit")
 
+# 定義Modbus裝置的串口及地址
+instrument = minimalmodbus.Instrument('COM4', 1)  
+# 第一個參數是串口，第二個參數是Modbus地址
+
+# 設定串口波特率，Parity和Stop bits（這些參數需與Modbus設備一致）
+instrument.serial.baudrate = 9600
+instrument.serial.parity = minimalmodbus.serial.PARITY_NONE
+instrument.serial.stopbits = 1
+
+o2_address = 0
+temperature_address = 2
+
+
 font = QFont()
 
 global_presentUser = None
 
+oxygen_concentration = 12.56 # 12.56
 temperature_unit_text='Celsius' # Celsius, Fahrenheit
-temperature_test = 16.8 # 攝氏
-oxygen_concentration = 12.56
+temperature_unit='°C'
+temperature_test = 16.8 # 攝氏 16.8
+
 
 class MyWindow(QMainWindow):
 
-    data_updated = pyqtSignal(float, float)
+    # data_updated = pyqtSignal(float, float)
     def __init__(self):
         super().__init__()
 
@@ -73,17 +88,23 @@ class MyWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
         # 創建狀態列
+        font.setPointSize(36)
         status_bar = QStatusBar(self)
         self.setStatusBar(status_bar)
         status_bar.setGeometry(0, 0, 1920, 100)  # 設置狀態列的尺寸
         status_bar.setStyleSheet("background-color: lightgray;")  # 設置背景顏色
         status_bar.setSizeGripEnabled(False)  # 隱藏右下角的調整大小的三角形
 
+        self.alarm_label = QLabel('警告')
+        status_bar.addWidget(self.alarm_label,1)
+        self.alarm_label.setAlignment(Qt.AlignLeft)
+        self.alarm_label.setFont(font)
+
         # 在狀態列中央加入日期時間
         self.datetime_label = QLabel(self)
-        status_bar.addWidget(self.datetime_label, 1)  # 將 QLabel 加入狀態列，並指定伸縮因子為1
+        status_bar.addWidget(self.datetime_label,1)  # 將 QLabel 加入狀態列，並指定伸縮因子為1
         self.datetime_label.setAlignment(Qt.AlignCenter)  # 文字置中
-        font.setPointSize(36)
+        self.datetime_label.setStyleSheet("background-color: lightblue;")
         self.datetime_label.setFont(font)
 
         # 更新日期時間的 QTimer
@@ -94,6 +115,12 @@ class MyWindow(QMainWindow):
         # 更新一次日期時間，避免一開始顯示空白
         self.update_datetime()
 
+        self.state_label = QLabel('未連線')
+        status_bar.addWidget(self.state_label,1)
+        self.state_label.setAlignment(Qt.AlignRight)
+        self.state_label.setFont(font)
+
+
         # 創建主畫面
         main_frame = QFrame(self)
         main_frame.setGeometry(0, 100, 960, 780)
@@ -101,7 +128,7 @@ class MyWindow(QMainWindow):
         # main_frame.setStyleSheet("background-color: white;")  # 主畫面背景顏色
 
         temperature_unit=unit_transfer.set_temperature_unit(unit=temperature_unit_text)
-        temperature=unit_transfer.convert_temperature(temperature=temperature_test,unit=temperature_unit_text)
+        # temperature=unit_transfer.convert_temperature(temperature=temperature_test,unit=temperature_unit_text)
         self.main_label = QLabel(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature_test:.2f} {temperature_unit}") # ° 為Alt 0176
         self.main_label.setAlignment(Qt.AlignCenter)  # 文字置中
         font.setPointSize(72)
@@ -133,7 +160,7 @@ class MyWindow(QMainWindow):
         # 在功能列中添加按鈕
         save_button = QPushButton('資料儲存', function_bar)
         # test_button = QPushButton('測試', function_bar)
-        self.test_RTU_button = QPushButton('測試RTU', function_bar)
+        # self.test_RTU_button = QPushButton('測試RTU', function_bar)
         self.quit_button=QPushButton('離開',function_bar)
         # self.lock_label = QLabel('螢幕鎖',function_bar)
         self.lock_button=QPushButton('解鎖',function_bar)
@@ -181,7 +208,7 @@ class MyWindow(QMainWindow):
 
         save_button.setFixedSize(button_width, button_height)
         # test_button.setFixedSize(button_width, button_height)
-        self.test_RTU_button.setFixedSize(button_width, button_height)
+        # self.test_RTU_button.setFixedSize(button_width, button_height)
         self.quit_button.setFixedSize(button_width,button_height)
         # self.lock_label.setFixedSize(button_width, button_height)
         self.lock_button.setFixedSize(button_width, button_height)
@@ -192,7 +219,7 @@ class MyWindow(QMainWindow):
         font.setPointSize(36)
         save_button.setFont(font)
         # test_button.setFont(font)
-        self.test_RTU_button.setFont(font)
+        # self.test_RTU_button.setFont(font)
         self.quit_button.setFont(font)
         # self.lock_label.setFont(font)
         self.lock_button.setFont(font)
@@ -226,7 +253,7 @@ class MyWindow(QMainWindow):
 
         function_bar_layout1.addWidget(save_button)
         # function_bar_layout1.addWidget(test_button)
-        function_bar_layout1.addWidget(self.test_RTU_button)
+        # function_bar_layout1.addWidget(self.test_RTU_button)
         function_bar_layout1.addWidget(self.quit_button)
         function_bar_layout1.addItem(spacer)
 
@@ -245,7 +272,7 @@ class MyWindow(QMainWindow):
         function_bar_layout.addLayout(function_bar_layout3, 1)
 
         self.quit_button.clicked.connect(self.show_confirmation_dialog)
-        self.test_RTU_button.clicked.connect(self.conect_modbus_RTU)
+        # self.test_RTU_button.clicked.connect(self.conect_modbus_RTU)
         self.lock_button.clicked.connect(self.showLoginDialog)
         self.menu_button.clicked.connect(self.switch_to_menu)
         self.return_button.clicked.connect(self.switch_to_previous_page)
@@ -263,14 +290,20 @@ class MyWindow(QMainWindow):
     def testClicked(self):
         print('測試按鈕')
 
-    def show_confirmation_dialog(self):
-        # 顯示確認對話框
-        reply = QMessageBox.question(self, '程式關閉', '確定要關閉程式嗎？',
-                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+    def update_modbus_data(self):
+        try:
+            # 讀取浮點數值，地址為1
+            value_read_o2 = self.instrument.read_float(o2_address)
+            value_read_temp = self.instrument.read_float(temperature_address)
+            self.main_label.setText(f"O<sub>2</sub>: {value_read_o2:.2f} ppb<br>T: {value_read_temp:.2f} {temperature_unit}")
+            # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
-        if reply == QMessageBox.Yes:
-            # 如果用戶選擇 "Yes"，則關閉應用程式
-            QApplication.quit()
+            print(f'O2:{value_read_o2:.2f}, T:{value_read_temp:.2f} {temperature_unit}')
+
+        except minimalmodbus.NoResponseError as e:
+            print(f'No response from the instrument: {e}')
+        except Exception as e:
+            print(f'Exception: {e}')
 
     def update_datetime(self):
         current_datetime = QDateTime.currentDateTime()
@@ -284,6 +317,16 @@ class MyWindow(QMainWindow):
 
         # 在這裡更新畫布
         self.plot_canvas.draw()
+
+    def show_confirmation_dialog(self):
+        # 顯示確認對話框
+        reply = QMessageBox.question(self, '程式關閉', '確定要關閉程式嗎？',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            # 如果用戶選擇 "Yes"，則關閉應用程式
+            QApplication.quit()
+
 
     def showLoginDialog(self):
 
@@ -371,11 +414,11 @@ class MyWindow(QMainWindow):
             return
         
 
-    def conect_modbus_RTU(self):
-        connectGUI=ModbusRTUConfigurator(self)
-        # connectGUI.value_updated.connect(self.set_main_values)
-        # self.data_updated.connect(self.update_main_label)
-        # connectGUI.exec_()
+    # def conect_modbus_RTU(self):
+    #     connectGUI=ModbusRTUConfigurator(self)
+    #     connectGUI.value_updated.connect(self.set_main_values)
+    #     self.data_updated.connect(self.update_main_label)
+    #     connectGUI.exec_()
 
     # @pyqtSlot(float)
     # def update_main_label(self, temperature):
@@ -389,27 +432,27 @@ class MyWindow(QMainWindow):
     #     self.data_updated.emit(temperature_test)
 
 
-    # 取得模擬RTU數據測試畫面
-    def switch_to_TestRTU(self):
-        print(self.test_RTU_button.text())
-        if self.tsRTU_page_index is None:
-            tsRTU_page = testRTU_Frame(self.test_RTU_button.text(),"background-color: orange;")
-            self.tsRTU_page_index = self.stacked_widget.addWidget(tsRTU_page)
+    # # 取得模擬RTU數據測試畫面
+    # def switch_to_TestRTU(self):
+    #     print(self.test_RTU_button.text())
+    #     if self.tsRTU_page_index is None:
+    #         tsRTU_page = testRTU_Frame(self.test_RTU_button.text(),"background-color: orange;")
+    #         self.tsRTU_page_index = self.stacked_widget.addWidget(tsRTU_page)
 
-        if self.current_page_index != self.tsRTU_page_index:
-            self.stacked_widget.setCurrentIndex(self.tsRTU_page_index)
-            self.current_page_index = self.tsRTU_page_index
+    #     if self.current_page_index != self.tsRTU_page_index:
+    #         self.stacked_widget.setCurrentIndex(self.tsRTU_page_index)
+    #         self.current_page_index = self.tsRTU_page_index
 
-        else:
-            # 如果當前已經是主選單索引，再次切換到主選單
-            self.stacked_widget.setCurrentIndex(self.tsRTU_page_index)
+    #     else:
+    #         # 如果當前已經是主選單索引，再次切換到主選單
+    #         self.stacked_widget.setCurrentIndex(self.tsRTU_page_index)
 
-        # 根據當前的畫面索引顯示或隱藏按鈕
-        self.menu_button.setVisible(self.current_page_index == self.plot_page_index)
-        self.test_RTU_button.setVisible(self.current_page_index == self.plot_page_index)
-        self.return_button.setVisible(self.current_page_index == self.tsRTU_page_index)
+    #     # 根據當前的畫面索引顯示或隱藏按鈕
+    #     self.menu_button.setVisible(self.current_page_index == self.plot_page_index)
+    #     self.test_RTU_button.setVisible(self.current_page_index == self.plot_page_index)
+    #     self.return_button.setVisible(self.current_page_index == self.tsRTU_page_index)
 
-        print('Current Page Index:', self.current_page_index)
+    #     print('Current Page Index:', self.current_page_index)
 
 
     # 在MyWindow類別中新增一個方法用於切換畫面
