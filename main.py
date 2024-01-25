@@ -108,9 +108,10 @@ class MyWindow(QMainWindow):
         self.datetime_label.setFont(font)
 
         # 更新日期時間的 QTimer
-        self.update_datetime_timer = QTimer(self)
-        self.update_datetime_timer.timeout.connect(self.update_datetime)
-        self.update_datetime_timer.start(1000)  # 每秒更新一次
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_datetime)
+        self.timer.timeout.connect(self.update_modbus_data)
+        self.timer.start(1000)  # 每秒更新一次
 
         # 更新一次日期時間，避免一開始顯示空白
         self.update_datetime()
@@ -293,14 +294,16 @@ class MyWindow(QMainWindow):
     def update_modbus_data(self):
         try:
             # 讀取浮點數值，地址為1
-            value_read_o2 = self.instrument.read_float(o2_address)
-            value_read_temp = self.instrument.read_float(temperature_address)
+            value_read_o2 = instrument.read_float(o2_address)
+            value_read_temp = instrument.read_float(temperature_address)
             self.main_label.setText(f"O<sub>2</sub>: {value_read_o2:.2f} ppb<br>T: {value_read_temp:.2f} {temperature_unit}")
             # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
+            self.state_label.setText('已連線')
             print(f'O2:{value_read_o2:.2f}, T:{value_read_temp:.2f} {temperature_unit}')
 
         except minimalmodbus.NoResponseError as e:
+            self.state_label.setText('未連線')
             print(f'No response from the instrument: {e}')
         except Exception as e:
             print(f'Exception: {e}')
