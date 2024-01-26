@@ -29,7 +29,7 @@ for font in font_list:
         selected_font = font
         break
 
-
+#region plotCanvas
 class plotCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig, self.ax = plt.subplots(figsize=(width, height), dpi=dpi)
@@ -91,3 +91,5 @@ class plotCanvas(FigureCanvas):
 
 
         self.draw()
+
+#endregion

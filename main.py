@@ -32,6 +32,8 @@ except Exception as e:
     traceback.print_exc()
     input("Press Enter to exit")
 
+
+#region 連接modbus RTU
 # 定義Modbus裝置的串口及地址
 instrument = minimalmodbus.Instrument('COM4', 1)  
 # 第一個參數是串口，第二個參數是Modbus地址
@@ -44,7 +46,9 @@ instrument.serial.stopbits = 1
 o2_address = 0
 temperature_address = 2
 
+#endregion
 
+#region 其他全域變數
 font = QFont()
 
 global_presentUser = None
@@ -54,16 +58,17 @@ temperature_unit_text='Celsius' # Celsius, Fahrenheit
 temperature_unit='°C'
 temperature = 16.8 # 攝氏 16.8
 
+#endregion
 
+#class MyWindow
+#region 主畫面
 class MyWindow(QMainWindow):
 
-    # data_updated = pyqtSignal(float, float)
+    #region 主畫面元件
     def __init__(self):
         super().__init__()
 
         self.isLogin=False
-
-        self.plot_canvas = plotCanvas(self, width=5, height=4)
 
         # 設置主視窗的尺寸
         # 取得螢幕解析度
@@ -87,7 +92,9 @@ class MyWindow(QMainWindow):
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
 
+
         # 創建狀態列
+        #region 狀態列
         font.setPointSize(36)
         status_bar = QStatusBar(self)
         self.setStatusBar(status_bar)
@@ -104,8 +111,9 @@ class MyWindow(QMainWindow):
         self.datetime_label = QLabel(self)
         status_bar.addWidget(self.datetime_label,1)  # 將 QLabel 加入狀態列，並指定伸縮因子為1
         self.datetime_label.setAlignment(Qt.AlignCenter)  # 文字置中
-        self.datetime_label.setStyleSheet("background-color: lightblue;")
+        # self.datetime_label.setStyleSheet("background-color: lightblue;")
         self.datetime_label.setFont(font)
+
 
         # 更新日期時間的 QTimer
         self.timer = QTimer(self)
@@ -121,8 +129,11 @@ class MyWindow(QMainWindow):
         self.state_label.setAlignment(Qt.AlignRight)
         self.state_label.setFont(font)
 
+        #endregion
+
 
         # 創建主畫面
+        #region 主畫面
         main_frame = QFrame(self)
         main_frame.setGeometry(0, 100, 960, 780)
         main_frame.setStyleSheet("background-color: lightblue;")
@@ -142,6 +153,8 @@ class MyWindow(QMainWindow):
         # 創建子畫面
         self.sub_frame = QFrame(self)
         self.sub_frame.setGeometry(960, 100, 960, 780)
+
+        self.plot_canvas = plotCanvas(self, width=5, height=4)
         # self.sub_frame.setStyleSheet("background-color: lightblue;")  # 子畫面背景顏色
         # sub_label = QLabel('子畫面')
         # sub_label.setAlignment(Qt.AlignCenter)  # 文字置中
@@ -153,7 +166,11 @@ class MyWindow(QMainWindow):
         self.sub_frame_layout.addWidget(self.plot_canvas) # 在子畫面中加入 Matplotlib 的畫布
         # self.sub_frame_layout.addWidget(sub_label)
 
+        #endregion
+
+        
         # 創建功能列
+        #region 功能列
         function_bar = QFrame(self)
         function_bar.setGeometry(0, 880, 1920, 200)  # 設置功能列的尺寸
         function_bar.setStyleSheet("background-color: lightgray;")  # 設置背景顏色
@@ -168,41 +185,6 @@ class MyWindow(QMainWindow):
         self.logout_button = QPushButton('登出', function_bar)
         self.menu_button = QPushButton('選單', function_bar)
         self.return_button = QPushButton('返回', function_bar)
-
-        # 在 MyWindow 類別的 __init__ 方法中初始化 QStackedWidget
-        self.stacked_widget = QStackedWidget(self.sub_frame)
-        self.plot_page_index = self.stacked_widget.addWidget(self.plot_canvas) # 此處僅添加 plot 畫面
-        self.menu_page_index = self.stacked_widget.addWidget(self.create_menu_page()) #此處添加了 menu 畫面
-        self.tsRTU_page_index = None
-        self.stacked_widget.setCurrentIndex(self.plot_page_index) #設定初始顯示的畫面
-        self.current_page_index = self.plot_page_index # 將當前的畫面索引設為 plot_page_index
-
-        # 設定當前顯示的子畫面索引
-        print('Current Page Index:', self.current_page_index)
-
-        # 在 MyWindow 類別中添加 sub_pages 作為成員變數
-        self.sub_pages = {}
-
-        # 將QStackedWidget添加到sub_frame佈局
-        self.sub_frame_layout.addWidget(self.stacked_widget)
-
-
-        # 創建一個放置元件的底層佈局
-        global_layout = QVBoxLayout(central_widget)
-        global_layout.setContentsMargins(0, 0, 0, 0)  # 消除佈局的邊距
-        global_layout.setSpacing(0)
-
-        # 添加狀態列到佈局
-        global_layout.addWidget(status_bar, 1)  # 狀態列佔用 1 的高度
-
-        # 創建一個放置元件的子佈局
-        main_layout = QHBoxLayout()
-        main_layout.setSpacing(0)
-        main_layout.addWidget(main_frame, 1)  # 添加主畫面到佈局，第二個參數是優先級，表示佔用100的寬度
-        main_layout.addWidget(self.sub_frame, 1) # 添加子畫面到佈局
-        global_layout.addLayout(main_layout,8) # 添加子佈局到佈局
-        global_layout.addWidget(function_bar, 2)  # 添加功能列到佈局，功能列佔用 2 的高度
-
 
         # 設定按鈕大小
         button_width, button_height = 200, 200
@@ -228,18 +210,41 @@ class MyWindow(QMainWindow):
         self.menu_button.setFont(font)
         self.return_button.setFont(font)
 
-        # 設定圖片路徑，picture資料夾和程式碼同一個資料夾中
+        self.quit_button.clicked.connect(self.show_confirmation_dialog)
+        # self.test_RTU_button.clicked.connect(self.conect_modbus_RTU)
+        self.lock_button.clicked.connect(self.showLoginDialog)
+        self.menu_button.clicked.connect(self.switch_to_menu)
+        self.return_button.clicked.connect(self.switch_to_previous_page)
+        self.logout_button.clicked.connect(self.logout_button_click)
 
-        # lock_icon_path = os.path.join('picture', 'lock_icon.png')
-        # print("Absolute path of image:", os.path.abspath(lock_icon_path))
+        self.lock_button.setVisible(not self.isLogin)
+        self.logout_button.setVisible(self.isLogin)
+        self.menu_button.setVisible(True)
+        self.return_button.setVisible(False)
+        print('登入：',self.logout_button.isVisible())
 
-        # lock_icon_path = "picture/lock_icon.png"
-        self.lock_icon_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "picture", "lock_icon.png")
-        self.lock_icon_base64 = image_to_base64(self.lock_icon_path) # 使用 lock_icon_base64
-        self.lock_icon_bytes = QByteArray.fromBase64(self.lock_icon_base64.encode())
-        # self.lock_label.setPixmap(QPixmap.fromImage(QImage.fromData(self.lock_icon_bytes)))
-        # lock_pixmap = QPixmap(lock_icon_path)
-        # lock_label.setPixmap(lock_pixmap.scaled(button_width, button_height, Qt.KeepAspectRatio))
+        #endregion
+
+
+
+        #主畫面配制
+        #region 主畫面配制
+        # 創建一個放置元件的底層佈局
+        global_layout = QVBoxLayout(central_widget)
+        global_layout.setContentsMargins(0, 0, 0, 0)  # 消除佈局的邊距
+        global_layout.setSpacing(0)
+
+        # 添加狀態列到佈局
+        global_layout.addWidget(status_bar, 1)  # 狀態列佔用 1 的高度
+
+        # 創建一個放置元件的子佈局
+        main_layout = QHBoxLayout()
+        main_layout.setSpacing(0)
+        main_layout.addWidget(main_frame, 1)  # 添加主畫面到佈局，第二個參數是優先級，表示佔用100的寬度
+        main_layout.addWidget(self.sub_frame, 1) # 添加子畫面到佈局
+        global_layout.addLayout(main_layout,8) # 添加子佈局到佈局
+        global_layout.addWidget(function_bar, 2)  # 添加功能列到佈局，功能列佔用 2 的高度
+
 
         # 將 SpacerItem 插入按鈕之間，靠左、置中、靠右
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -272,25 +277,60 @@ class MyWindow(QMainWindow):
         function_bar_layout.addLayout(function_bar_layout2, 1)
         function_bar_layout.addLayout(function_bar_layout3, 1)
 
-        self.quit_button.clicked.connect(self.show_confirmation_dialog)
-        # self.test_RTU_button.clicked.connect(self.conect_modbus_RTU)
-        self.lock_button.clicked.connect(self.showLoginDialog)
-        self.menu_button.clicked.connect(self.switch_to_menu)
-        self.return_button.clicked.connect(self.switch_to_previous_page)
-        self.logout_button.clicked.connect(self.logout_button_click)
+        #endregion
 
-        self.lock_button.setVisible(not self.isLogin)
-        self.logout_button.setVisible(self.isLogin)
-        self.menu_button.setVisible(True)
-        self.return_button.setVisible(False)
-        print('登入：',self.logout_button.isVisible())
+        #主畫面堆疊
+        #region 畫面堆疊
+        # 在 MyWindow 類別的 __init__ 方法中初始化 QStackedWidget
+        self.stacked_widget = QStackedWidget(self.sub_frame)
+        self.plot_page_index = self.stacked_widget.addWidget(self.plot_canvas) # 此處僅添加 plot 畫面
+        self.menu_page_index = self.stacked_widget.addWidget(self.create_menu_page()) #此處添加了 menu 畫面
+        self.tsRTU_page_index = None
+        self.stacked_widget.setCurrentIndex(self.plot_page_index) #設定初始顯示的畫面
+        self.current_page_index = self.plot_page_index # 將當前的畫面索引設為 plot_page_index
+
+        # 設定當前顯示的子畫面索引
+        print('Current Page Index:', self.current_page_index)
+
+        # 在 MyWindow 類別中添加 sub_pages 作為成員變數
+        self.sub_pages = {}
+
+        # 將QStackedWidget添加到sub_frame佈局
+        self.sub_frame_layout.addWidget(self.stacked_widget)
+
+        #endregion
+
+
+        #圖片來源
+        #region 圖片來源
+        # 設定圖片路徑，picture資料夾和程式碼同一個資料夾中
+
+        # lock_icon_path = os.path.join('picture', 'lock_icon.png')
+        # print("Absolute path of image:", os.path.abspath(lock_icon_path))
+
+        # lock_icon_path = "picture/lock_icon.png"
+        self.lock_icon_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "picture", "lock_icon.png")
+        self.lock_icon_base64 = image_to_base64(self.lock_icon_path) # 使用 lock_icon_base64
+        self.lock_icon_bytes = QByteArray.fromBase64(self.lock_icon_base64.encode())
+        # self.lock_label.setPixmap(QPixmap.fromImage(QImage.fromData(self.lock_icon_bytes)))
+        # lock_pixmap = QPixmap(lock_icon_path)
+        # lock_label.setPixmap(lock_pixmap.scaled(button_width, button_height, Qt.KeepAspectRatio))
+
+        #endregion
+
 
         # 顯示視窗
         self.show()
 
+    #endregion
+
+
+    #region testClicked    
     def testClicked(self):
         print('測試按鈕')
+    #endregion
 
+    #region modbus RTU讀取（氧氣濃度、溫度）
     def update_modbus_data(self):
         global oxygen_concentration, temperature
         try:
@@ -305,10 +345,13 @@ class MyWindow(QMainWindow):
 
         except minimalmodbus.NoResponseError as e:
             self.state_label.setText('未連線')
-            print(f'No response from the instrument: {e}')
+            # print(f'No response from the instrument: {e}')
         except Exception as e:
             print(f'Exception: {e}')
 
+    #endregion
+            
+    #region 時間更新
     def update_datetime(self):
         global oxygen_concentration, temperature
         try:
@@ -329,7 +372,9 @@ class MyWindow(QMainWindow):
             self.plot_canvas.draw()
         except Exception as e:
             print(f'Exception in update_datetime: {e}')
+    #endregion
 
+    #region 關閉程式警告視窗
     def show_confirmation_dialog(self):
         # 顯示確認對話框
         reply = QMessageBox.question(self, '程式關閉', '確定要關閉程式嗎？',
@@ -339,7 +384,9 @@ class MyWindow(QMainWindow):
             # 如果用戶選擇 "Yes"，則關閉應用程式
             QApplication.quit()
 
+    #endregion
 
+    #region 登入視窗
     def showLoginDialog(self):
 
         # 顯示帳號和密碼輸入對話框
@@ -362,10 +409,14 @@ class MyWindow(QMainWindow):
         else:
             print('登入取消')
 
+    #endregion
+
+    #region 取得使用者訊息
     def get_global_presentUser(self):
         return global_presentUser
+    #endregion
 
-
+    #region 登入成功行為
     def handle_login_success(self, checkLogin):
         # 登入成功時觸發，將 logout_button 由不可見改為可見
         print('收到 login_successful 信號:', checkLogin)
@@ -376,6 +427,9 @@ class MyWindow(QMainWindow):
         self.lock_icon_bytes = QByteArray.fromBase64(self.lock_icon_base64.encode())
         # self.lock_label.setPixmap(QPixmap.fromImage(QImage.fromData(self.lock_icon_bytes)))
 
+    #endregion
+    
+    #region 登出行為
     def logout_button_click(self):
         # 顯示確認對話框
         reply = QMessageBox.question(self, '登出', '確定要登出嗎？',
@@ -384,8 +438,6 @@ class MyWindow(QMainWindow):
         if reply == QMessageBox.Yes:
             # 如果用戶選擇 "Yes"，則登出應用程式
                     
-
-
             global global_presentUser
             self.isLogin=False
 
@@ -425,8 +477,11 @@ class MyWindow(QMainWindow):
         else:
             return
         
+    #endregion
+        
 
-    # def conect_modbus_RTU(self):
+    #region 連接COM Port視窗並讀取氧氣濃度及溫度
+    # def connect_modbus_RTU(self):
     #     connectGUI=ModbusRTUConfigurator(self)
     #     connectGUI.value_updated.connect(self.set_main_values)
     #     self.data_updated.connect(self.update_main_label)
@@ -442,8 +497,11 @@ class MyWindow(QMainWindow):
     #     temperature = round(temperature, 2)
     #     # 發送 oxygen_concentration 和 temperature 更新的信號
     #     self.data_updated.emit(temperature)
+    
+    #endregion
 
 
+    #region 取得模擬RTU數據測試畫面
     # # 取得模擬RTU數據測試畫面
     # def switch_to_TestRTU(self):
     #     print(self.test_RTU_button.text())
@@ -465,9 +523,11 @@ class MyWindow(QMainWindow):
     #     self.return_button.setVisible(self.current_page_index == self.tsRTU_page_index)
 
     #     print('Current Page Index:', self.current_page_index)
+    
+    #endregion
 
-
-    # 在MyWindow類別中新增一個方法用於切換畫面
+    # 在MyWindow類別中新增一個方法用於由主畫面切換主選單
+    #region 前往主選單
     def switch_to_menu(self):
         if self.isLogin == False:
             print('請先登入解鎖')
@@ -494,8 +554,10 @@ class MyWindow(QMainWindow):
 
             print('Current Page Index:', self.current_page_index)
 
+    #endregion
     
-    # 在MyWindow中新增一個方法用於創建選單畫面
+    # 在MyWindow中新增一個方法用於創建主選單畫面 
+    #region 建立主選單及其元件、配制
     def create_menu_page(self):       
 
         menu_page = QFrame(self)
@@ -534,7 +596,7 @@ class MyWindow(QMainWindow):
         self.record_button.setFont(font)
         self.identify_button.setFont(font)
 
-        # 連接按鈕點擊事件
+        # 連接按鈕點擊事件（前往各個子選單）
         self.set_button.clicked.connect(lambda: self.show_sub_page(self.set_button.text(),self.set_button.styleSheet()))
         self.calibrate_button.clicked.connect(lambda: self.show_sub_page(self.calibrate_button.text(),self.calibrate_button.styleSheet()))
         self.record_button.clicked.connect(lambda: self.show_sub_page(self.record_button.text(),self.record_button.styleSheet()))
@@ -548,8 +610,11 @@ class MyWindow(QMainWindow):
 
         # print('登入：',self.logout_button.isVisible())
         return menu_page
+    
+    #endregion
 
 
+    #region 前往下一個頁面的堆疊功能
     def show_sub_page(self, page_name, _style):
         print('登入：',self.logout_button.isVisible())
 
@@ -588,15 +653,22 @@ class MyWindow(QMainWindow):
         # 顯示返回按鈕
         self.return_button.setVisible(True)
 
+    #endregion
+
+    #region 是否有登入
     def is_login_dialog(self):
         # 顯示確認對話框
-        message_text="你要先登入解鎖才能進入目錄"
+        message_text="你要先登入解鎖才能進入選單"
         QMessageBox.critical(self, '請先登入', message_text)
-        print('目錄不可用')
+        print('選單不可用')
+
+    #endregion
 
 
     # 在 MyWindow 中新增一個方法用於返回上一個畫面
+    #region 返回
     def switch_to_previous_page(self):
+
         if self.stacked_widget is not None:
         
             # 如果當前是選單畫面，直接返回主畫面
@@ -605,9 +677,9 @@ class MyWindow(QMainWindow):
                 self.current_page_index = self.plot_page_index
 
             # RTU測試畫面返回主畫面
-            elif self.current_page_index == self.tsRTU_page_index:
-                self.stacked_widget.setCurrentIndex(self.plot_page_index)
-                self.current_page_index = self.plot_page_index
+            # elif self.current_page_index == self.tsRTU_page_index:
+            #     self.stacked_widget.setCurrentIndex(self.plot_page_index)
+            #     self.current_page_index = self.plot_page_index
                 
             else:
                 # 清除之前的子畫面
@@ -634,9 +706,12 @@ class MyWindow(QMainWindow):
             # self.test_RTU_button.setVisible(self.current_page_index == self.plot_page_index)
             self.return_button.setVisible(self.current_page_index != self.plot_page_index)
 
-        print('Current Page Index:', self.current_page_index) 
+        print('Current Page Index:', self.current_page_index)
 
+    #endregion 
 
+#endregion
+        
 if __name__ == '__main__':
 
     print("Current working directory:", os.getcwd())

@@ -1,7 +1,7 @@
 #zh-tw 下列程式碼找出上述問題
 
 # menuSubFrame.py
-# 些程式碼為選單畫面：當Snetrak_Raspberry_GUI.py的功能選單的四個按鈕（設定、校正、記錄、識別）偵測到點擊事件時，所執行的程式碼並將子畫面刷新為清單畫面
+# 些程式碼為選單畫面：當main.py的功能選單的四個按鈕（設定、校正、記錄、識別）偵測到點擊事件時，所執行的程式碼並將子畫面刷新為清單畫面
 
 try:
     import sys
@@ -25,10 +25,11 @@ except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
     input("Press Enter to exit")
+
 font = QFont()
 class menuSubFrame(QWidget):
 
-
+    #region 清單畫面
     def __init__(self, title, _style, sub_pages, stacked_widget, main_window):
         super().__init__()
         self.sub_pages = sub_pages
@@ -42,6 +43,7 @@ class menuSubFrame(QWidget):
         print(title,self.user.userInfo())
 
         # 標題列
+        #region 標題列
         title_layout = QVBoxLayout()        
         self.title_label = QLabel(self.title, self)
         # title_label.setAlignment(Qt.AlignCenter)  
@@ -49,7 +51,10 @@ class menuSubFrame(QWidget):
         self.title_label.setFont(font)
         self.title_label.setStyleSheet(_style)
         title_layout.addWidget(self.title_label)
+        #endregion
 
+        # 清單
+        #region 清單元件配制
         content_layout = QVBoxLayout()
         # content_layout.setContentsMargins(0, 0, 0, 0)
         # content_layout.setSpacing(0)
@@ -81,20 +86,28 @@ class menuSubFrame(QWidget):
         # 將垂直滾動條設置為不可見
         self.list_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         content_layout.addWidget(self.list_widget)
+        #endregion
+
 
         # 整體佈局
+        #region 標題列及清單配制
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
         main_layout.addLayout(title_layout)
         main_layout.addLayout(content_layout)
+        #endregion
 
+    #endregion
+        
+    #region 清單內容
     def create_list_item(self, option):
 
         # 創建 QListWidgetItem
         item = QListWidgetItem()
         
-        # 設置圖示
+        # 設置清單圖示及其內部配制
+        #region 清單圖示
         list_icon = QLabel('圖示')
         list_icon.setStyleSheet("border: 5px solid black;border-right: 0px;")
         
@@ -121,6 +134,11 @@ class menuSubFrame(QWidget):
         item_label.setContentsMargins(0, 0, 0, 0)
         # print('item_label:', item_label.font().pointSize())
 
+        #endregion
+
+        # 設置清單描述配制
+        #region 清單描述及其配制
+
         self.describe_label.setText('描述')
         font.setPointSize(pixmap.scaledToHeight(144).height()*15//80)
         # font.setPointSize(12)
@@ -128,7 +146,10 @@ class menuSubFrame(QWidget):
         self.describe_label.setStyleSheet("border: 5px solid black;border-top: 0px; color: gray")
         self.describe_label.setContentsMargins(0, 0, 0, 0)
         # print('self.describe_label:', self.describe_label.font().pointSize())
+        
+        #endregion
 
+        #region清單配製
         # 將圖示和文字排列在一行
         item_layout = QHBoxLayout()
         icon_layout = QHBoxLayout()
@@ -174,10 +195,14 @@ class menuSubFrame(QWidget):
 
         # 設置點擊事件處理函數，連接點擊信號
         self.list_widget.itemClicked.connect(lambda item: self.handle_record_item_click(item))
+
+        #endregion
         
 
+    #region 清單描述
     def itemDeescribe(self, option):
         item_title = option
+        #region 設定清單
         if item_title == '顯示':
             self.describe_label.setText('波形圖週期、單位')
         elif item_title == '警報輸出':
@@ -194,12 +219,18 @@ class menuSubFrame(QWidget):
             self.describe_label.setText('調整時間、日期格式')
         elif item_title == '語言':
             self.describe_label.setText('多國語言')
+        #endregion
+            
+        #region 校正清單
         elif item_title =='感測器校正':
             self.describe_label.setText('空氣校正、直接校正')
         elif item_title =='大氣壓力校正':
             self.describe_label.setText('大氣壓力校正')
         elif item_title == '類比輸出校正':
             self.describe_label.setText('0 - 20 mA、4 - 20 mA')
+        #endregion
+        
+        #region 記錄清單
         elif item_title == '觀看記錄':
             self.describe_label.setText('時間、數值')
         elif item_title == '統計表':
@@ -208,17 +239,27 @@ class menuSubFrame(QWidget):
             self.describe_label.setText('儲存格式：Excel、txt、json、csv')
         elif item_title == '記錄方式設定':
             self.describe_label.setText('自動、手動')
+        #endregion
+            
+        #region 識別
         elif item_title == '登入身份':
             self.describe_label.setText('輸入密碼')
         elif item_title == '儀器資訊':
             self.describe_label.setText('型號、序號、生產日期……')
         elif item_title == '感測器資訊':
             self.describe_label.setText('型號、序號、生產日期……')
+        #endregion
+
+        #region 其他
         else :
             self.describe_label.setText('描述')
+        #endregion
+            
+    #endregion
 
 
     # 在 MyWindow 類別中新增一個槽函數處理 '' 頁面 item 被點擊的信號
+    #region 前往下個畫面
     def handle_record_item_click(self, item):
         # 在這裡處理四個功能頁面下 item 被點擊的事件
         # 例如，切換到 testEndFrame 並顯示被點擊的項目文字
@@ -260,3 +301,5 @@ class menuSubFrame(QWidget):
         self.current_page_index = next_frame_index
 
         # print('Current Page Index:', self.current_page_index)
+        
+    #endregion
