@@ -109,8 +109,8 @@ class MyWindow(QMainWindow):
 
         # 更新日期時間的 QTimer
         self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_datetime)
         self.timer.timeout.connect(self.update_modbus_data)
+        self.timer.timeout.connect(self.update_datetime)
         self.timer.start(1000)  # 每秒更新一次
 
         # 更新一次日期時間，避免一開始顯示空白
@@ -292,6 +292,7 @@ class MyWindow(QMainWindow):
         print('測試按鈕')
 
     def update_modbus_data(self):
+        global oxygen_concentration, temperature
         try:
             # 讀取浮點數值，地址為1
             oxygen_concentration = instrument.read_float(o2_address)
@@ -309,17 +310,25 @@ class MyWindow(QMainWindow):
             print(f'Exception: {e}')
 
     def update_datetime(self):
-        current_datetime = QDateTime.currentDateTime()
-        formatted_datetime = current_datetime.toString("yyyy-MM-dd hh:mm:ss")
-        self.datetime_label.setText(formatted_datetime)
-        # 清除之前的圖例
-        self.plot_canvas.ax.clear()
+        global oxygen_concentration, temperature
+        try:
+            # 使用全域變數的數據
+            # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
+            current_datetime = QDateTime.currentDateTime()
+            formatted_datetime = current_datetime.toString("yyyy-MM-dd hh:mm:ss")
+            self.datetime_label.setText(formatted_datetime)
+            # 清除之前的圖例
+            self.plot_canvas.ax.clear()
 
-        # 重新繪製折線圖
-        self.plot_canvas.plot(temperature_unit=temperature_unit_text, oxygen_concentration=oxygen_concentration, temperature=temperature) # Celsius, Fahrenheit
+            # 重新繪製折線圖
+            self.plot_canvas.plot(temperature_unit=temperature_unit_text,
+                                oxygen_concentration=oxygen_concentration,
+                                temperature=temperature)  # Celsius, Fahrenheit
 
-        # 在這裡更新畫布
-        self.plot_canvas.draw()
+            # 在這裡更新畫布
+            self.plot_canvas.draw()
+        except Exception as e:
+            print(f'Exception in update_datetime: {e}')
 
     def show_confirmation_dialog(self):
         # 顯示確認對話框
