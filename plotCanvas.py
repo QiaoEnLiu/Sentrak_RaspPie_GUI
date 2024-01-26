@@ -3,7 +3,7 @@
 # 初始子畫面折線圖
 
 try:
-    import numpy, traceback
+    import numpy, traceback, minimalmodbus
     import matplotlib.pyplot as plt
     from matplotlib.font_manager import FontProperties, FontManager
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -37,7 +37,9 @@ class plotCanvas(FigureCanvas):
         self.setParent(parent)
         
 
-    def plot(self, temperature_unit):
+    def plot(self, temperature_unit, oxygen_concentration, temperature):
+
+        print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
 
         # 使用選擇的字型進行圖表繪製
         font = FontProperties(fname=selected_font.fname, size=12)
@@ -45,12 +47,12 @@ class plotCanvas(FigureCanvas):
 
         # 生成溫度和氧氣濃度的數據
         x = numpy.linspace(0, 10, 100)
-        temperature = 25 + 5 * numpy.sin(x)  # 溫度數據（示例）
-        oxygen_concentration = 20 + 10 * numpy.cos(x)  # 氧氣濃度數據（示例）
+        temperature_onPlot = 25 + 5 * numpy.sin(x)  # 溫度數據（示例）
+        oxygen_concentration_onPlot = 20 + 10 * numpy.cos(x)  # 氧氣濃度數據（示例）
 
         # 繪製折線圖
-        line1, = self.ax.plot(x, temperature, label='溫度'+self.temperature_unit) # Temperature
-        line2, = self.ax.plot(x, oxygen_concentration, label='氧氣濃度') # Oxygen Concentration
+        line1, = self.ax.plot(x, temperature_onPlot, label='溫度'+self.temperature_unit) # Temperature
+        line2, = self.ax.plot(x, oxygen_concentration_onPlot, label='氧氣濃度') # Oxygen Concentration
 
         self.ax.set_title(
             '溫度、氧氣濃度時間狀態',
@@ -70,4 +72,3 @@ class plotCanvas(FigureCanvas):
 
         self.draw()
     
-

@@ -1,4 +1,4 @@
-#zh-tw
+#zh-tw 這是main.py的原始碼，比較長，有辦法使update_modbus_data的value_read_o2 及value_read_temp寫進plotCanvas裡嗎？
 
 # main.py
 # 此程式碼為主畫面，顯示折線圖為主
@@ -52,7 +52,7 @@ global_presentUser = None
 oxygen_concentration = 12.56 # 12.56
 temperature_unit_text='Celsius' # Celsius, Fahrenheit
 temperature_unit='°C'
-temperature_test = 16.8 # 攝氏 16.8
+temperature = 16.8 # 攝氏 16.8
 
 
 class MyWindow(QMainWindow):
@@ -129,8 +129,8 @@ class MyWindow(QMainWindow):
         # main_frame.setStyleSheet("background-color: white;")  # 主畫面背景顏色
 
         temperature_unit=unit_transfer.set_temperature_unit(unit=temperature_unit_text)
-        # temperature=unit_transfer.convert_temperature(temperature=temperature_test,unit=temperature_unit_text)
-        self.main_label = QLabel(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature_test:.2f} {temperature_unit}") # ° 為Alt 0176
+        # temperature=unit_transfer.convert_temperature(temperature=temperature,unit=temperature_unit_text)
+        self.main_label = QLabel(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature:.2f} {temperature_unit}") # ° 為Alt 0176
         self.main_label.setAlignment(Qt.AlignCenter)  # 文字置中
         font.setPointSize(72)
         self.main_label.setFont(font)
@@ -294,13 +294,13 @@ class MyWindow(QMainWindow):
     def update_modbus_data(self):
         try:
             # 讀取浮點數值，地址為1
-            value_read_o2 = instrument.read_float(o2_address)
-            value_read_temp = instrument.read_float(temperature_address)
-            self.main_label.setText(f"O<sub>2</sub>: {value_read_o2:.2f} ppb<br>T: {value_read_temp:.2f} {temperature_unit}")
+            oxygen_concentration = instrument.read_float(o2_address)
+            temperature = instrument.read_float(temperature_address)
+            self.main_label.setText(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature:.2f} {temperature_unit}")
             # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
             self.state_label.setText('已連線')
-            print(f'O2:{value_read_o2:.2f}, T:{value_read_temp:.2f} {temperature_unit}')
+            # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
 
         except minimalmodbus.NoResponseError as e:
             self.state_label.setText('未連線')
@@ -316,7 +316,7 @@ class MyWindow(QMainWindow):
         self.plot_canvas.ax.clear()
 
         # 重新繪製折線圖
-        self.plot_canvas.plot(temperature_unit=temperature_unit_text) # Celsius, Fahrenheit
+        self.plot_canvas.plot(temperature_unit=temperature_unit_text, oxygen_concentration=oxygen_concentration, temperature=temperature) # Celsius, Fahrenheit
 
         # 在這裡更新畫布
         self.plot_canvas.draw()
@@ -428,11 +428,11 @@ class MyWindow(QMainWindow):
     #     self.main_label.setText(f'O₂: {oxygen_concentration:.2f} ppb, T: {temperature:.2f} °C')
 
     # def set_main_values(self, temperature):
-    #     # 設定 oxygen_concentration 和 temperature_test 的值
+    #     # 設定 oxygen_concentration 和 temperature 的值
     #     # oxygen_concentration = round(oxygen, 2)
-    #     temperature_test = round(temperature, 2)
-    #     # 發送 oxygen_concentration 和 temperature_test 更新的信號
-    #     self.data_updated.emit(temperature_test)
+    #     temperature = round(temperature, 2)
+    #     # 發送 oxygen_concentration 和 temperature 更新的信號
+    #     self.data_updated.emit(temperature)
 
 
     # # 取得模擬RTU數據測試畫面
