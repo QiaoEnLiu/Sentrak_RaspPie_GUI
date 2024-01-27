@@ -19,8 +19,7 @@ class rs485_Frame(QWidget):
         super().__init__()
         print(title)
 
-        rs485_layout = QVBoxLayout(self)
-
+        rs485_layout = QVBoxLayout()
 
         title_layout = QVBoxLayout()
         title_layout.setContentsMargins(0, 0, 0, 0)
@@ -124,8 +123,8 @@ class rs485_Frame(QWidget):
         setting_layout.addWidget(set_button)
 
 
-        rs485_layout.addLayout(title_layout)
-        rs485_layout.addStretch()
+        # rs485_layout.addLayout(title_layout)
+        # rs485_layout.addStretch()
         rs485_layout.addLayout(com_layout)
         rs485_layout.addStretch()
         rs485_layout.addLayout(baud_layout)
@@ -138,6 +137,11 @@ class rs485_Frame(QWidget):
         rs485_layout.addStretch()
         rs485_layout.addLayout(setting_layout)
         rs485_layout.addStretch()
+
+        # 整體佈局
+        main_layout = QVBoxLayout(self)
+        main_layout.addLayout(title_layout)
+        main_layout.addLayout(rs485_layout)
 
        
 
