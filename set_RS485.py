@@ -1,7 +1,9 @@
 #zh-tw
 # set_RS485.py
 
-#
+# 此程式碼為「設定」底下進入「rs-485」並實作Slaver設定的介面
+# 尚未能直接設定Slaver通訊
+
 try:
     import traceback
     from PyQt5.QtCore import Qt

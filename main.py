@@ -89,9 +89,6 @@ class MyWindow(QMainWindow):
         print('視窗大小：', winWidth, '*', winHeight)
         print('螢幕解析：', screen_width, '*', screen_height)
 
-        central_widget = QWidget(self)
-        self.setCentralWidget(central_widget)
-
 
         # 創建狀態列
         #region 狀態列
@@ -102,37 +99,26 @@ class MyWindow(QMainWindow):
         status_bar.setStyleSheet("background-color: lightgray;")  # 設置背景顏色
         status_bar.setSizeGripEnabled(False)  # 隱藏右下角的調整大小的三角形
 
-        self.alarm_label = QLabel('警告')
-        status_bar.addWidget(self.alarm_label,1)
-        self.alarm_label.setAlignment(Qt.AlignLeft)
+        self.alarm_label = QLabel('警告', self)
+        self.alarm_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.alarm_label.setFont(font)
 
         # 在狀態列中央加入日期時間
         self.datetime_label = QLabel(self)
-        status_bar.addWidget(self.datetime_label,1)  # 將 QLabel 加入狀態列，並指定伸縮因子為1
         self.datetime_label.setAlignment(Qt.AlignCenter)  # 文字置中
-        # self.datetime_label.setStyleSheet("background-color: lightblue;")
         self.datetime_label.setFont(font)
 
-
-        # 更新日期時間的 QTimer
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_modbus_data)
-        self.timer.timeout.connect(self.update_datetime)
-        self.timer.start(1000)  # 每秒更新一次
-
-        # 更新一次日期時間，避免一開始顯示空白
-        self.update_datetime()
-
-        self.state_label = QLabel('未連線')
-        status_bar.addWidget(self.state_label,1)
-        self.state_label.setAlignment(Qt.AlignRight)
+        self.state_label = QLabel('未連線', self)
+        self.state_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.state_label.setFont(font)
 
+        status_bar.addWidget(self.alarm_label,1) # 將 QLabel 加入狀態列，並指定伸縮因子為1
+        status_bar.addWidget(self.datetime_label,1)
+        status_bar.addWidget(self.state_label,1)
         #endregion
 
 
-        # 創建主畫面
+        # 創建中央主畫面及子畫面
         #region 主畫面
         main_frame = QFrame(self)
         main_frame.setGeometry(0, 100, 960, 780)
@@ -150,6 +136,9 @@ class MyWindow(QMainWindow):
         main_frame_layout.setSpacing(0)  # 添加這一行以消除元素之間的間距
         main_frame_layout.addWidget(self.main_label)
 
+        #endregion
+
+        #region 子畫面
         # 創建子畫面
         self.sub_frame = QFrame(self)
         self.sub_frame.setGeometry(960, 100, 960, 780)
@@ -223,28 +212,6 @@ class MyWindow(QMainWindow):
         self.return_button.setVisible(False)
         print('登入：',self.logout_button.isVisible())
 
-        #endregion
-
-
-
-        #主畫面配制
-        #region 主畫面配制
-        # 創建一個放置元件的底層佈局
-        global_layout = QVBoxLayout(central_widget)
-        global_layout.setContentsMargins(0, 0, 0, 0)  # 消除佈局的邊距
-        global_layout.setSpacing(0)
-
-        # 添加狀態列到佈局
-        global_layout.addWidget(status_bar, 1)  # 狀態列佔用 1 的高度
-
-        # 創建一個放置元件的子佈局
-        main_layout = QHBoxLayout()
-        main_layout.setSpacing(0)
-        main_layout.addWidget(main_frame, 1)  # 添加主畫面到佈局，第二個參數是優先級，表示佔用100的寬度
-        main_layout.addWidget(self.sub_frame, 1) # 添加子畫面到佈局
-        global_layout.addLayout(main_layout,8) # 添加子佈局到佈局
-        global_layout.addWidget(function_bar, 2)  # 添加功能列到佈局，功能列佔用 2 的高度
-
 
         # 將 SpacerItem 插入按鈕之間，靠左、置中、靠右
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -276,6 +243,32 @@ class MyWindow(QMainWindow):
         function_bar_layout.addLayout(function_bar_layout1, 1)
         function_bar_layout.addLayout(function_bar_layout2, 1)
         function_bar_layout.addLayout(function_bar_layout3, 1)
+
+
+
+
+        #endregion
+
+        # 整體畫面配制
+        #region 整體畫面
+        # 創建一個放置元件的底層佈局
+        central_widget = QWidget(self)
+        self.setCentralWidget(central_widget)
+
+        global_layout = QVBoxLayout(central_widget)
+        global_layout.setContentsMargins(0, 0, 0, 0)  # 消除佈局的邊距
+        global_layout.setSpacing(0)
+
+
+        # 創建一個放置元件的子佈局
+        main_layout = QHBoxLayout()
+        main_layout.setSpacing(0)
+        main_layout.addWidget(main_frame, 1)  # 添加主畫面到佈局，第二個參數是優先級，表示佔用100的寬度
+        main_layout.addWidget(self.sub_frame, 1) # 添加子畫面到佈局
+
+        global_layout.addWidget(status_bar, 1)  # 添加狀態列到佈局佔用 1 的高度
+        global_layout.addLayout(main_layout,8) # 添加子佈局到佈局
+        global_layout.addWidget(function_bar, 2)  # 添加功能列到佈局，功能列佔用 2 的高度
 
         #endregion
 
@@ -316,6 +309,17 @@ class MyWindow(QMainWindow):
         # lock_pixmap = QPixmap(lock_icon_path)
         # lock_label.setPixmap(lock_pixmap.scaled(button_width, button_height, Qt.KeepAspectRatio))
 
+        #endregion
+
+
+        #region 更新日期時間並持續讓modbus讀取資料進圖表    
+        self.timer = QTimer(self) # 更新日期時間的 QTimer
+        self.timer.timeout.connect(self.update_modbus_data)
+        self.timer.timeout.connect(self.update_datetime)
+        self.timer.start(1000)  # 每秒更新一次
+
+        # 更新一次日期時間，避免一開始顯示空白
+        self.update_datetime()
         #endregion
 
 
