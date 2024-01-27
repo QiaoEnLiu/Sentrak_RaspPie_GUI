@@ -1,4 +1,6 @@
-#zh-tw 現在關掉線程不會再停止回應了，但我需要在成功連線後關閉介面時要持續讀取，因為我稍早提過此介面是由另一個介面開啟。
+#zh-tw
+
+
 import sys, minimalmodbus, traceback, time
 from PyQt5.QtSerialPort import QSerialPort, QSerialPortInfo
 from PyQt5.QtWidgets import QLabel, QComboBox, QHBoxLayout, QVBoxLayout, QWidget,\

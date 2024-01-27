@@ -1,4 +1,4 @@
-#zh-tw 這是main.py的原始碼，比較長，有辦法使update_modbus_data的value_read_o2 及value_read_temp寫進plotCanvas裡嗎？
+#zh-tw
 
 # main.py
 # 此程式碼為主畫面，顯示折線圖為主
@@ -371,6 +371,7 @@ class MyWindow(QMainWindow):
             # 在這裡更新畫布
             self.plot_canvas.draw()
         except Exception as e:
+            traceback.print_exc()
             print(f'Exception in update_datetime: {e}')
     #endregion
 

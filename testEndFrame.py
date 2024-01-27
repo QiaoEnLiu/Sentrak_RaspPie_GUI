@@ -22,21 +22,21 @@ class testEndFrame(QWidget):
 
         self.sub_pages=sub_pages
         
-        end_label = QLabel(title, self)
-        end_label.setAlignment(Qt.AlignCenter)  
+        title_label = QLabel(title, self)
+        title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(72)
-        end_label.setFont(font)
-        end_label.setStyleSheet(_style)
+        title_label.setFont(font)
+        title_label.setStyleSheet(_style)
 
         user_label = QLabel(user.userInfo())
         user_label.setFont(font)
         user_label.setStyleSheet(_style)
 
-        end_sub_frame_layout = QVBoxLayout(self)
-        end_sub_frame_layout.setContentsMargins(0, 0, 0, 0)
-        end_sub_frame_layout.setSpacing(0) 
-        end_sub_frame_layout.addWidget(end_label)
-        end_sub_frame_layout.addWidget(user_label)
+        main_layout = QVBoxLayout(self)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0) 
+        main_layout.addWidget(title_label)
+        main_layout.addWidget(user_label)
 
         print('終節點測試畫面：', title)
 

@@ -96,10 +96,10 @@ class internetFrame(QWidget):
         network_stat_bt.setFont(font)
         network_stat_bt.clicked.connect(lambda: self.show_networt())
 
-        set_layout=QHBoxLayout()
-        set_layout.addWidget(set_button)
-        set_layout.addWidget(ip_default_button)
-        set_layout.addWidget(network_stat_bt)
+        setting_layout=QHBoxLayout()
+        setting_layout.addWidget(set_button)
+        setting_layout.addWidget(ip_default_button)
+        setting_layout.addWidget(network_stat_bt)
 
         internetInfo_layout.addStretch()
         internetInfo_layout.addLayout(ip_layout)
@@ -110,7 +110,7 @@ class internetFrame(QWidget):
         internetInfo_layout.addStretch()
         internetInfo_layout.addLayout(dns_layout)
         internetInfo_layout.addStretch()
-        internetInfo_layout.addLayout(set_layout)
+        internetInfo_layout.addLayout(setting_layout)
 
 
         # 整體佈局
