@@ -1,4 +1,4 @@
-#zh-tw 我要將oxygen_concentration、temperature寫進圖表裡呈線折線
+#zh-tw
 # PlotCanvas.py
 # 初始子畫面折線圖
 
@@ -40,6 +40,10 @@ class plotCanvas(FigureCanvas):
         self.temperature_data = []
         self.oxygen_concentration_data = []        
 
+        # 隱藏上側和右側的軸線
+        self.ax.spines['right'].set_visible(False)
+        self.ax.spines['top'].set_visible(False)
+
     def plot(self, temperature_unit, oxygen_concentration, temperature):
 
         # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
@@ -50,18 +54,33 @@ class plotCanvas(FigureCanvas):
 
         # 生成溫度和氧氣濃度的數據
         # 更新數據
-        self.x_data.append(len(self.x_data))
+        if len(self.x_data) == 0:
+            self.x_data.append(1)
+        else:
+            self.x_data.append(self.x_data[-1] + 1)
         self.temperature_data.append(temperature)
         self.oxygen_concentration_data.append(oxygen_concentration)
+
+        # print(f'{self.x_data[-1]} O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
+
+        if len(self.x_data) > 10:
+            self.x_data.pop(0)
+            self.temperature_data.pop(0)
+            self.oxygen_concentration_data.pop(0)
 
         # 繪製折線圖
         lineTemp, = self.ax.plot(self.x_data, self.temperature_data, label='溫度'+self.temperature_unit, color='blue')  # Temperature
         lineO2, = self.ax.plot(self.x_data, self.oxygen_concentration_data, label='氧氣濃度', color='green')  # Oxygen Concentration
 
-
         # 繪製散點圖
         scatterTemp = self.ax.scatter(self.x_data, self.temperature_data, label='溫度'+self.temperature_unit, color='blue')  # Temperature
         scatterO2 = self.ax.scatter(self.x_data, self.oxygen_concentration_data, label='氧氣濃度', color='green')  # Oxygen Concentration
+
+        # 設定x軸的顯示範圍
+        if len(self.x_data) > 1:
+            self.ax.set_xlim(self.x_data[0], self.x_data[-1] + 1)
+
+        self.ax.set_xticks(range(self.x_data[0], self.x_data[-1] + 2, 1))
 
         self.ax.set_ylim(0, 30)
 
@@ -88,7 +107,6 @@ class plotCanvas(FigureCanvas):
         # 添加圖例
         self.ax.legend(handles=[lineTemp, lineO2], labels=['溫度'+self.temperature_unit, '氧氣濃度'], prop=font)
         self.ax.legend(handles=[scatterTemp, scatterO2], prop=font)
-
 
         self.draw()
 

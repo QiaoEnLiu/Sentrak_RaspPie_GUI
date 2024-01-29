@@ -42,6 +42,7 @@ instrument = minimalmodbus.Instrument('COM4', 1)
 instrument.serial.baudrate = 9600
 instrument.serial.parity = minimalmodbus.serial.PARITY_NONE
 instrument.serial.stopbits = 1
+instrument.serial.timeout = 1.0
 
 o2_address = 0
 temperature_address = 2
