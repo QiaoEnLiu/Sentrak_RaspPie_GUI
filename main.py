@@ -4,11 +4,9 @@
 # 此程式碼為主畫面，顯示折線圖為主
 
 try:
-    import sys
+    import sys, os, traceback, minimalmodbus, threading
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
-
-    import os, traceback, minimalmodbus
 
     from PyQt5.QtWidgets import \
         QApplication, QMainWindow, QWidget, QStatusBar, QVBoxLayout,\
@@ -339,18 +337,28 @@ class MyWindow(QMainWindow):
     def update_modbus_data(self):
         global oxygen_concentration, temperature
         try:
-            # 讀取浮點數值，地址為1
-            oxygen_concentration = instrument.read_float(o2_address)
-            temperature = instrument.read_float(temperature_address)
-            self.main_label.setText(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature:.2f} {temperature_unit}")
-            # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
+            # 定義一個函數，用於在執行緒中執行Modbus讀取
+            def modbus_read_thread():
+                global oxygen_concentration, temperature
+                try:
+                    # 讀取浮點數值，地址為1
+                    oxygen_concentration = instrument.read_float(o2_address)
+                    temperature = instrument.read_float(temperature_address)
+                    self.main_label.setText(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature:.2f} {temperature_unit}")
+                    # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
-            self.state_label.setText('已連線')
-            # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
+                    self.state_label.setText('已連線')
+                    print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
 
-        except minimalmodbus.NoResponseError as e:
-            self.state_label.setText('未連線')
-            # print(f'No response from the instrument: {e}')
+                except minimalmodbus.NoResponseError as e:
+                    self.state_label.setText('未連線')
+                    print(f'No response from the instrument: {e}')
+                except Exception as e:
+                    print(f'Exception: {e}')
+
+            # 建立一個新的執行緒並啟動
+            modbus_thread = threading.Thread(target=modbus_read_thread)
+            modbus_thread.start()
         except Exception as e:
             print(f'Exception: {e}')
 

@@ -74,7 +74,7 @@ class setUnitFrame(QWidget):
         setUnit_layout.setSpacing(0) 
         setUnit_layout.addWidget(title_label)
         
-        temperture_layout = QVBoxLayout(self)
+        temperture_layout = QVBoxLayout()
         temperture_layout.setContentsMargins(10, 10, 10, 10)
         temperture_layout.setSpacing(0) 
         temperture_layout.addWidget(temperture_label)
@@ -85,23 +85,23 @@ class setUnitFrame(QWidget):
         tempUnit_layout.addWidget(self.fahrenheit_radio)
         temperture_layout.addLayout(tempUnit_layout)
 
-        oxygen_layout = QVBoxLayout(self)
-        oxygen_set_layout = QHBoxLayout(self)
+        oxygen_layout = QVBoxLayout()
+        oxygen_set_layout = QHBoxLayout()
         oxygen_layout.setContentsMargins(10, 10, 10, 10)
         oxygen_layout.setSpacing(0)
         oxygen_layout.addWidget(oxygen_label)
         oxygen_layout.addLayout(oxygen_set_layout)
 
-        o2_pp_layout = QVBoxLayout(self)
+        o2_pp_layout = QVBoxLayout()
         o2_pp_layout.addWidget(partial_pressure_label)
 
-        o2_dissolve_layout=QVBoxLayout(self)
+        o2_dissolve_layout=QVBoxLayout()
         o2_dissolve_layout.addWidget(dissolve_label)
 
         oxygen_set_layout.addLayout(o2_pp_layout)
         oxygen_set_layout.addLayout(o2_dissolve_layout)
 
-        set_layout = QVBoxLayout(self)
+        set_layout = QVBoxLayout()
         set_layout.setContentsMargins(10, 10, 10, 10)
         set_layout.setSpacing(0)
         set_layout.addWidget(set)
