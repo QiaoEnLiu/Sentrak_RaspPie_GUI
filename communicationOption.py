@@ -22,12 +22,13 @@ except Exception as e:
 font = QFont()
 
 class comOptionFrame(QWidget):
-    def __init__(self, title, _style, user, stacked_widget, sub_pages):
+    def __init__(self, title, _style, user, stacked_widget, sub_pages, it_4x):
         super().__init__()
         
         self.user=user
         self.stacked_widget=stacked_widget
         self.sub_pages=sub_pages
+        self.it_4x=it_4x
 
         print(title,self.user.userInfo())
 

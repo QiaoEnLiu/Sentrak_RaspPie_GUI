@@ -33,25 +33,34 @@ except Exception as e:
 
 #region 連接modbus RTU
 # 定義Modbus裝置的串口及地址
-instrument_4x_1 = minimalmodbus.Instrument('COM4', 1)  # Read Only
-instrument_3x_1 = minimalmodbus.Instrument('COM4', 2) 
+instrument_3x_1 = minimalmodbus.Instrument('COM4', 1)  # Read Only :read f=3,4
+instrument_4x_2 = minimalmodbus.Instrument('COM4', 2)  # Write Allow :write f=6,16
 # 第一個參數是串口，第二個參數是Modbus地址
 
-it_4x=[instrument_4x_1]
-it_3x=[instrument_3x_1]
-
+it_3x=[instrument_3x_1] 
+it_4x=[instrument_4x_2] 
 
 
 
 # 設定串口波特率，Parity和Stop bits（這些參數需與Modbus設備一致）
-for i in it_4x+it_3x:
+for i in it_3x+it_4x:
     i.serial.baudrate = 9600
     i.serial.parity = minimalmodbus.serial.PARITY_NONE
     i.serial.stopbits = 1
     i.serial.timeout = 1.0
 
-_4x_1_o2_address = 0
-_4x_1_temperature_address = 2
+#endregion
+    
+#region 數據位址
+
+_3x_1_o2_address = 0
+_3x_1_temperature_address = 2
+
+_4x_2_TempUnit=0
+tempUnitDist={0:'°C',1:'°F'}
+
+_4x_2_SetGasUnit=4
+o2_GasUnitDist={0:'ppb',1:'PPM',2:'mg/l',3:'PPMV',4:'%',5:'PPM',6:'mg/l',7:'ppb',8:'PPMV',9:'kPa'}
 
 #endregion
 
@@ -62,7 +71,7 @@ global_presentUser = None
 
 oxygen_concentration = 12.56 # 12.56
 temperature_unit_text='Celsius' # Celsius, Fahrenheit
-temperature_unit='°C'
+temperature_unit_default='°C'
 temperature = 16.8 # 攝氏 16.8
 
 #endregion
@@ -76,6 +85,8 @@ class MyWindow(QMainWindow):
         super().__init__()
 
         self.isLogin=False
+
+        #region 視窗大小
 
         # 設置主視窗的尺寸
         # 取得螢幕解析度
@@ -95,6 +106,8 @@ class MyWindow(QMainWindow):
 
         print('視窗大小：', winWidth, '*', winHeight)
         print('螢幕解析：', screen_width, '*', screen_height)
+
+        #endregion
 
 
         # 創建狀態列
@@ -132,9 +145,9 @@ class MyWindow(QMainWindow):
         main_frame.setStyleSheet("background-color: lightblue;")
         # main_frame.setStyleSheet("background-color: white;")  # 主畫面背景顏色
 
-        temperature_unit=unit_transfer.set_temperature_unit(unit=temperature_unit_text)
+        temperature_unit_default=unit_transfer.set_temperature_unit(unit=temperature_unit_text)
         # temperature=unit_transfer.convert_temperature(temperature=temperature,unit=temperature_unit_text)
-        self.main_label = QLabel(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature:.2f} {temperature_unit}") # ° 為Alt 0176
+        self.main_label = QLabel(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature:.2f} {temperature_unit_default}") # ° 為Alt 0176
         self.main_label.setAlignment(Qt.AlignCenter)  # 文字置中
         font.setPointSize(72)
         self.main_label.setFont(font)
@@ -350,24 +363,31 @@ class MyWindow(QMainWindow):
                 global oxygen_concentration, temperature
                 try:
                     # 讀取浮點數值，地址為1
-                    oxygen_concentration = instrument_4x_1.read_float(_4x_1_o2_address)
-                    temperature = instrument_4x_1.read_float(_4x_1_temperature_address)
-                    self.main_label.setText(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature:.2f} {temperature_unit}")
+                    oxygen_concentration = instrument_3x_1.read_float(_3x_1_o2_address,functioncode=4)
+                    temperature = instrument_3x_1.read_float(_3x_1_temperature_address,functioncode=4)
+
+                    setGasUnit=instrument_4x_2.read_register(_4x_2_SetGasUnit,functioncode=3)
+                    temp_unit=instrument_4x_2.read_register(_4x_2_TempUnit,functioncode=3)
+
+
+                    self.main_label.setText(f"O<sub>2</sub>: {oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}<br>T: {temperature:.2f} {tempUnitDist[temp_unit]}")
                     # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
                     self.state_label.setText('已連線')
-                    print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
+                    # print(f'O2:{oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}, T:{temperature:.2f} {tempUnitDist[temp_unit]}')
 
                 except minimalmodbus.NoResponseError as e:
                     self.state_label.setText('未連線')
                     print(f'No response from the instrument: {e}')
                 except Exception as e:
+                    traceback.print_exc()
                     print(f'Exception: {e}')
 
             # 建立一個新的執行緒並啟動
             modbus_thread = threading.Thread(target=modbus_read_thread)
             modbus_thread.start()
         except Exception as e:
+            traceback.print_exc()
             print(f'Exception: {e}')
 
     #endregion
@@ -377,7 +397,7 @@ class MyWindow(QMainWindow):
         global oxygen_concentration, temperature
         try:
             # 使用全域變數的數據
-            # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
+            # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit_default}')
             current_datetime = QDateTime.currentDateTime()
             formatted_datetime = current_datetime.toString("yyyy-MM-dd hh:mm:ss")
             self.datetime_label.setText(formatted_datetime)
@@ -651,7 +671,7 @@ class MyWindow(QMainWindow):
         # 判斷是否已經創建了該子畫面
         if page_name not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[page_name]):
             # 如果還沒有，則創建一個新的子畫面
-            sub_page = menuSubFrame(page_name, _style, self.sub_pages, self.stacked_widget, self)
+            sub_page = menuSubFrame(page_name, _style, self.sub_pages, self.stacked_widget, self, it_4x)
 
             # 添加到堆疊中
             sub_page_index = self.stacked_widget.addWidget(sub_page)

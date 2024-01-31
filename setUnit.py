@@ -5,8 +5,8 @@
 #--第一子畫面最終測試碼執行結果 Sentrak_RaspberryPie_GUI.py -> menuSubFrame.py
 #--最新最子畫面最終測試碼執行結果 menuSubFrame.py -> testEndFrame.py
 try:
-    import traceback
-    from PyQt5.QtCore import Qt
+    import traceback, minimalmodbus, threading
+    from PyQt5.QtCore import Qt, QTimer
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, \
         QPushButton, QSizePolicy, QRadioButton, QComboBox
     from PyQt5.QtGui import QFont
@@ -16,11 +16,24 @@ except Exception as e:
     input("Press Enter to exit")
 
 font = QFont()
+
+tempUnit_address=0
+tempUnitDist={0:'°C',1:'°F'}
+select_tempUnit=None
+
+o2_GasUnit_address=4
+o2_GasUnitDist={0:'ppb',1:'PPM',2:'mg/l',3:'PPMV',4:'%',5:'PPM',6:'mg/l',7:'ppb',8:'PPMV',9:'kPa'}
+
+
 class setUnitFrame(QWidget):
-    def __init__(self, title, _style, user, stacked_widget, sub_pages):
+    def __init__(self, title, _style, user, stacked_widget, sub_pages,it_4x):
         super().__init__()
         print(title)
         self.sub_pages=sub_pages
+        self.it_4x=it_4x[0]
+
+        self.temp_unit = self.it_4x.read_register(tempUnit_address,functioncode=3)
+        self.setGasUnit = self.it_4x.read_register(o2_GasUnit_address,functioncode=3)
         
         title_label = QLabel(title, self)
         title_label.setAlignment(Qt.AlignCenter)  
@@ -36,6 +49,13 @@ class setUnitFrame(QWidget):
         self.celsius_radio = QRadioButton('攝氏')
         self.fahrenheit_radio = QRadioButton('華氏')
 
+        if self.temp_unit==0:
+            self.celsius_radio.setChecked(True)
+        elif self.temp_unit==1:
+            self.fahrenheit_radio.setChecked(True)
+        else:
+            pass
+
         font.setPointSize(24)
         self.celsius_radio.setFont(font)
         self.fahrenheit_radio.setFont(font)
@@ -50,9 +70,10 @@ class setUnitFrame(QWidget):
         font.setPointSize(24)
         partial_pressure_label.setFont(font)
 
-        # pp_unit_ComboBox=QComboBox(self)
-        # pp_unit_ComboBox.addItem("")
-        # pp_unit_ComboBox.addItem("")
+        self.gas_unit_ComboBox=QComboBox(self)
+        self.gas_unit_ComboBox.addItems(o2_GasUnitDist.values())
+        self.gas_unit_ComboBox.setFont(font)
+        self.gas_unit_ComboBox.setCurrentText(o2_GasUnitDist[self.setGasUnit])
 
         dissolve_label = QLabel('溶解', self)
         dissolve_label.setAlignment(Qt.AlignLeft)  
@@ -64,6 +85,8 @@ class setUnitFrame(QWidget):
         set.setFont(font)
         # set.setStyleSheet(_style)
         set.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        set.clicked.connect(self.setUnit)
+        
 
         # user_label = QLabel(user.userInfo())
         # user_label.setFont(font)
@@ -94,6 +117,7 @@ class setUnitFrame(QWidget):
 
         o2_pp_layout = QVBoxLayout()
         o2_pp_layout.addWidget(partial_pressure_label)
+        o2_pp_layout.addWidget(self.gas_unit_ComboBox)
 
         o2_dissolve_layout=QVBoxLayout()
         o2_dissolve_layout.addWidget(dissolve_label)
@@ -119,3 +143,72 @@ class setUnitFrame(QWidget):
         self.current_page_index = end_frame_index # 將當前的畫面索引設為 plot_page_index
         # 設定當前顯示的子畫面索引
         print('Current Page Index:', self.current_page_index)
+
+        # #region 更新日期時間並持續讓modbus讀取資料進圖表    
+        # self.timer = QTimer(self) # 更新日期時間的 QTimer
+        # self.timer.timeout.connect(self.update_modbus_data)
+        # self.timer.start(1000)  # 每秒更新一次
+
+
+
+
+    #region modbus RTU讀取（氧氣濃度、溫度）
+    # def update_modbus_data(self):
+    #     try:
+    #         # 定義一個函數，用於在執行緒中執行Modbus讀取
+    #         def modbus_read_thread():
+    #             try:
+    #                 # 讀取浮點數值，地址為1
+    #                 temp_unit = self.it_4x.read_register(tempUnit_address,functioncode=3)
+    #                 setGasUnit = self.it_4x.read_register(o2_GasUnit_address,functioncode=3)
+
+    #                 if temp_unit==0:
+    #                     self.celsius_radio.setChecked(True)
+    #                 elif temp_unit==1:
+    #                     self.fahrenheit_radio.setChecked(True)
+    #                 else:
+    #                     pass
+
+    #                 self.gas_unit_ComboBox.setCurrentText(o2_GasUnitDist[setGasUnit])
+
+    #                 print(f'溫度單位{tempUnitDist[temp_unit]}（{temp_unit}），濃度單位{o2_GasUnitDist[setGasUnit]}（{setGasUnit}）')
+    #             except minimalmodbus.NoResponseError as e:
+    #                 print(f'Set Unit Interface: {e}')
+    #             except Exception as e:
+    #                 traceback.print_exc()
+    #                 print(f'Exception: {e}')
+
+    #         # 建立一個新的執行緒並啟動
+    #         modbus_thread = threading.Thread(target=modbus_read_thread)
+    #         modbus_thread.start()
+    #     except Exception as e:
+    #         traceback.print_exc()
+    #         print(f'Exception: {e}')
+
+    #endregion
+            
+    #region
+    def setUnit(self):
+        print('Set Unit')
+        try:
+            
+            self.it_4x.write_register(o2_GasUnit_address,self.gas_unit_ComboBox.currentIndex(),functioncode=6)
+
+            if self.celsius_radio.isChecked():
+                select_tempUnit = 0  # 攝氏
+            elif self.fahrenheit_radio.isChecked():
+                select_tempUnit = 1  # 華氏
+            else:
+                select_tempUnit = -1
+
+            self.it_4x.write_register(tempUnit_address,select_tempUnit,functioncode=6)
+
+
+            print(f'溫度單位{tempUnitDist[select_tempUnit]}（{select_tempUnit}），濃度單位{o2_GasUnitDist[self.gas_unit_ComboBox.currentIndex()]}（{self.gas_unit_ComboBox.currentIndex()}）')
+        except minimalmodbus.NoResponseError as e:
+            print(f'Set Unit Interface: {e}')
+        except Exception as e:
+            traceback.print_exc()
+            print(f'Exception: {e}')
+    #endregion
+    

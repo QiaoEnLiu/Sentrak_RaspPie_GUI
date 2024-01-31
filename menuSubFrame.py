@@ -30,11 +30,12 @@ font = QFont()
 class menuSubFrame(QWidget):
 
     #region 清單畫面
-    def __init__(self, title, _style, sub_pages, stacked_widget, main_window):
+    def __init__(self, title, _style, sub_pages, stacked_widget, main_window, it_4x):
         super().__init__()
         self.sub_pages = sub_pages
         self.main_window = main_window
         self.stacked_widget = stacked_widget
+        self.it_4x=it_4x
         self.id_login_frame = id_LogIn_Frame
 
         self.title = title
@@ -197,7 +198,7 @@ class menuSubFrame(QWidget):
         self.list_widget.itemClicked.connect(lambda item: self.handle_record_item_click(item))
 
         #endregion
-        
+    #endregion
 
     #region 清單描述
     def itemDeescribe(self, option):
@@ -270,11 +271,11 @@ class menuSubFrame(QWidget):
             print('進入選項：', item_text)
             if item_text == '顯示':
                 # 由「設定」進入「顯示」介面
-                next_frame = displayOptionFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages)
+                next_frame = displayOptionFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages,self.it_4x)
 
             elif item_text == '通訊':
                 # 由「設定」進入「通訊」介面
-                next_frame = comOptionFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages)
+                next_frame = comOptionFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages,self.it_4x)
 
             elif item_text == '登入身份':
                 # 由「識別」進入「登入身份」介面，此功能須再與解鎖功能區分
