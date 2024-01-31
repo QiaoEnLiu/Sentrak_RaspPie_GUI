@@ -1,4 +1,4 @@
-#zh-tw 你上述的字典與下列我額外做的權限類別不衝突嗎？
+#zh-tw
 # userPermissions.py
 
 #權限類別

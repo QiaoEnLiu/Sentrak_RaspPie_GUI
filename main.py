@@ -33,17 +33,25 @@ except Exception as e:
 
 #region 連接modbus RTU
 # 定義Modbus裝置的串口及地址
-instrument = minimalmodbus.Instrument('COM4', 1)  
+instrument_4x_1 = minimalmodbus.Instrument('COM4', 1)  # Read Only
+instrument_3x_1 = minimalmodbus.Instrument('COM4', 2) 
 # 第一個參數是串口，第二個參數是Modbus地址
 
-# 設定串口波特率，Parity和Stop bits（這些參數需與Modbus設備一致）
-instrument.serial.baudrate = 9600
-instrument.serial.parity = minimalmodbus.serial.PARITY_NONE
-instrument.serial.stopbits = 1
-instrument.serial.timeout = 1.0
+it_4x=[instrument_4x_1]
+it_3x=[instrument_3x_1]
 
-o2_address = 0
-temperature_address = 2
+
+
+
+# 設定串口波特率，Parity和Stop bits（這些參數需與Modbus設備一致）
+for i in it_4x+it_3x:
+    i.serial.baudrate = 9600
+    i.serial.parity = minimalmodbus.serial.PARITY_NONE
+    i.serial.stopbits = 1
+    i.serial.timeout = 1.0
+
+_4x_1_o2_address = 0
+_4x_1_temperature_address = 2
 
 #endregion
 
@@ -342,8 +350,8 @@ class MyWindow(QMainWindow):
                 global oxygen_concentration, temperature
                 try:
                     # 讀取浮點數值，地址為1
-                    oxygen_concentration = instrument.read_float(o2_address)
-                    temperature = instrument.read_float(temperature_address)
+                    oxygen_concentration = instrument_4x_1.read_float(_4x_1_o2_address)
+                    temperature = instrument_4x_1.read_float(_4x_1_temperature_address)
                     self.main_label.setText(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature:.2f} {temperature_unit}")
                     # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
