@@ -7,7 +7,7 @@
 try:
     import traceback
     from PyQt5.QtCore import Qt
-    from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
+    from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QComboBox, QPushButton
     from PyQt5.QtGui import QFont
 except Exception as e:
     print(f"An error occurred: {e}")
@@ -28,17 +28,33 @@ class setPlotTimeFrame(QWidget):
         title_label.setFont(font)
         title_label.setStyleSheet(_style)
 
-        user_label = QLabel(user.userInfo())
-        user_label.setFont(font)
-        user_label.setStyleSheet(_style)
+        # user_label = QLabel(user.userInfo())
+        # user_label.setFont(font)
+        # user_label.setStyleSheet(_style)
 
+
+        self.plot_time_combo = QComboBox()
+        self.plot_time_combo.setFont(font)
+        self.plot_time_combo.addItems(['1秒','1分','5分','10分','30分','1小時'])
+
+        set_button = QPushButton('設定', self)
+        set_button.setFont(font)
+        
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0) 
-        main_layout.addWidget(title_label)
-        main_layout.addWidget(user_label)
 
-        print('終節點測試畫面：', title)
+        set_time_layout = QVBoxLayout()
+        set_time_layout.setContentsMargins(0, 0, 0, 0)
+        set_time_layout.setSpacing(0)
+        set_time_layout.addWidget(self.plot_time_combo)
+        set_time_layout.addWidget(set_button)
+
+        main_layout.addWidget(title_label)
+        main_layout.addLayout(set_time_layout)
+        # main_layout.addWidget(user_label)
+
+        # print('終節點測試畫面：', title)
 
         self.stacked_widget = stacked_widget
         setPlotTime_frame_index = self.stacked_widget.addWidget(self)

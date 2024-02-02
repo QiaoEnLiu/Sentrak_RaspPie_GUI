@@ -92,7 +92,7 @@ class displayOptionFrame(QWidget):
         if option not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[option]):
             print(f'進入：{option}')
             if option == '波形圖週期': # 波形圖週期
-                next_frame = testEndFrame(option, _style, self.user, self.stacked_widget, self.sub_pages)
+                next_frame = setPlotTimeFrame(option, _style, self.user, self.stacked_widget, self.sub_pages)
             elif option == '單位': # 單位
                 next_frame = setUnitFrame(option, _style, self.user, self.stacked_widget, self.sub_pages, self.it_4x)
             else:
