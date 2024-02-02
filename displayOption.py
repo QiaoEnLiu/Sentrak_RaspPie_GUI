@@ -1,9 +1,9 @@
 #zh-tw
 # displayOption.py
 
-# 此程式碼為設定-顯示選項
-#-- 「波形圖週期」為進入波形圖週期的設定
-#-- 「單位」為進入溫度及氧氣濃度單位的設定
+# 此程式碼為「設定」底下的「顯示」選項
+    # 「波形圖週期」為進入波形圖週期的設定
+    # 「單位」為進入溫度及氧氣濃度單位的設定
 
 try:
     import traceback
@@ -13,6 +13,7 @@ try:
 
     from setUnit import setUnitFrame
     from testEndFrame import testEndFrame
+    from setPlotTime import setPlotTimeFrame
     
 except Exception as e:
     print(f"An error occurred: {e}")
@@ -25,13 +26,13 @@ font = QFont()
 class displayOptionFrame(QWidget):
     def __init__(self, title, _style, user, stacked_widget, sub_pages,it_4x):
         super().__init__()
-        
+        self.title=title
         self.user=user
         self.stacked_widget=stacked_widget
         self.sub_pages=sub_pages
         self.it_4x=it_4x
 
-        print(title,self.user.userInfo())
+        # print(self.title,self.user.userInfo())
 
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
@@ -44,7 +45,7 @@ class displayOptionFrame(QWidget):
         unit_layout = QVBoxLayout()
         displayOption_layout =QVBoxLayout()
                 
-        self.title_label = QLabel(title, self)
+        self.title_label = QLabel(self.title, self)
         self.title_label.setAlignment(Qt.AlignCenter)  
         self.title_label.setContentsMargins(0, 0, 0, 0)
         font.setPointSize(72)
@@ -76,13 +77,12 @@ class displayOptionFrame(QWidget):
         # main_layout.addStretch()
         main_layout.addLayout(displayOption_layout)
 
-        # print('終節點測試畫面：', title)
-        print(user.userInfo())
+        # print(user.userInfo())
 
         displayOption_frame_index = self.stacked_widget.addWidget(self)
         self.current_page_index = displayOption_frame_index # 將當前的畫面索引設為 plot_page_index
         # 設定當前顯示的子畫面索引
-        print('Current Page Index:', self.current_page_index)
+        print(f'{self.title} Index: {self.stacked_widget.count()}')
         
         time.clicked.connect(lambda:self.displayOptionClick(time.text(),self.title_label.styleSheet()))
         unit.clicked.connect(lambda:self.displayOptionClick(unit.text(),self.title_label.styleSheet()))
@@ -90,12 +90,10 @@ class displayOptionFrame(QWidget):
     
     def displayOptionClick(self, option, _style):
         if option not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[option]):
-
-            if option == '波形圖週期':
-                print(option)
+            print(f'進入：{option}')
+            if option == '波形圖週期': # 波形圖週期
                 next_frame = testEndFrame(option, _style, self.user, self.stacked_widget, self.sub_pages)
-            elif option == '單位':
-                print(option)
+            elif option == '單位': # 單位
                 next_frame = setUnitFrame(option, _style, self.user, self.stacked_widget, self.sub_pages, self.it_4x)
             else:
                 print('Wrong Option:',option)

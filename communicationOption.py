@@ -1,9 +1,9 @@
 #zh-tw
 # communicationOption.py
 
-# 此程式碼為設定-通訊選項
-#-- RS-486為進入RS-486的設定
-#-- HTTP \ TCPIP為進入HTTP \ TCPIP的設定
+# 此程式碼為「設定」底下「通訊」選項
+    # RS-486為進入Slaver的RS-486的設定
+    # HTTP \ TCPIP為進入HTTP \ TCPIP的設定
 
 try:
     import traceback
@@ -30,7 +30,7 @@ class comOptionFrame(QWidget):
         self.sub_pages=sub_pages
         self.it_4x=it_4x
 
-        print(title,self.user.userInfo())
+        # print(title,self.user.userInfo())
 
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
@@ -79,12 +79,12 @@ class comOptionFrame(QWidget):
         main_layout.addLayout(comOption_layout)
 
         # print('終節點測試畫面：', title)
-        print(user.userInfo())
+        # print(user.userInfo())
 
         comOption_frame_index = self.stacked_widget.addWidget(self)
         self.current_page_index = comOption_frame_index # 將當前的畫面索引設為 plot_page_index
         # 設定當前顯示的子畫面索引
-        print('Current Page Index:', self.current_page_index)
+        print(f'{title} Index: {self.stacked_widget.count()}')
         
         rs485.clicked.connect(lambda:self.comOptionClick(rs485.text(),self.title_label.styleSheet()))
         HTTP_TCPIP.clicked.connect(lambda:self.comOptionClick(HTTP_TCPIP.text(),self.title_label.styleSheet()))
@@ -92,14 +92,10 @@ class comOptionFrame(QWidget):
     
     def comOptionClick(self, option, _style):
         if option not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[option]):
-
-            if option == 'RS485':
-                # 設定RS485
-                print(option)
+            print(f'進入：{option}')
+            if option == 'RS485': # 設定RS485
                 next_frame = rs485_Frame(option, _style, self.user, self.stacked_widget, self.sub_pages)
-            elif option == 'HTTP / TCPIP':
-                # 設定HTTP / TCPIP
-                print(option)
+            elif option == 'HTTP / TCPIP': # 設定HTTP / TCPIP
                 next_frame = internetFrame(option, _style, self.user, self.stacked_widget, self.sub_pages)
             else:
                 next_frame = testEndFrame(option, _style, self.user, self.stacked_widget, self.sub_pages)

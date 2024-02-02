@@ -2,11 +2,10 @@
 
 # id_Frame.py
 
-#此介面已取消
+#此介面已取消，或未來改成新增使用者的介面
 
-#此程式碼為「識別」底下「登入身份」程式碼
-#--「登入身份」為id_LogIn_Fram
-#--「感測器資訊」暫時進入testEndFrame.py
+# 此程式碼為「識別」底下「登入身份」程式碼
+    # 「登入身份」為id_LogIn_Fram
 
 try:
     import traceback
@@ -23,7 +22,7 @@ font = QFont()
 class id_LogIn_Frame(QWidget):
     login_successful = pyqtSignal(bool)
 
-    def __init__(self, title, _style, sub_pages): # ,main_window
+    def __init__(self, title, _style, user, stacked_widget, sub_pages): # ,main_window
         super().__init__()
         print('進入畫面：', title)  
         self.sub_pages=sub_pages
@@ -147,6 +146,11 @@ class id_LogIn_Frame(QWidget):
 
             
         # print("Connected handle_login_success to login_successful signal.")
+        self.stacked_widget = stacked_widget
+        id_frame_index = self.stacked_widget.addWidget(self)
+        self.current_page_index = id_frame_index # 將當前的畫面索引設為 plot_page_index
+
+        print(f'{title} Index: {self.stacked_widget.count()}')
         
     def login_successful_callback(self, checkLogin):
         # print('login_successful signal received in id_LogIn_Frame:', checkLogin)

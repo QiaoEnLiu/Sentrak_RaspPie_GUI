@@ -1,7 +1,20 @@
 #zh-tw 下列程式碼找出上述問題
 
 # menuSubFrame.py
-# 些程式碼為選單畫面：當main.py的功能選單的四個按鈕（設定、校正、記錄、識別）偵測到點擊事件時，所執行的程式碼並將子畫面刷新為清單畫面
+# 此程式碼為子選單畫面（第三層）：當main.py的功能選單的四個按鈕（設定、校正、記錄、識別）偵測到點擊事件時，所執行的程式碼並將子畫面刷新為清單畫面
+    # 各別進入的子選單清單畫面為底下第四層
+
+    # 設定
+        # 顯示、警報輸出、類比輸出、感測器溫度保護、診斷、通訊、時間、語言
+
+    # 校正
+        # 感測器校正、大氣壓力校正、類比輸出校正
+
+    # 記錄
+        # 觀看記錄、統計表、下載記錄至隨身碟、記錄方式設定
+
+    # 識別
+        # 登入身份、儀器資訊、感測器資訊
 
 try:
     import sys
@@ -27,7 +40,7 @@ except Exception as e:
     input("Press Enter to exit")
 
 font = QFont()
-class menuSubFrame(QWidget):
+class subMenuFrame(QWidget):
 
     #region 清單畫面
     def __init__(self, title, _style, sub_pages, stacked_widget, main_window, it_4x):
@@ -39,9 +52,8 @@ class menuSubFrame(QWidget):
         self.id_login_frame = id_LogIn_Frame
 
         self.title = title
-        print(self.title)
         self.user=main_window.get_global_presentUser()
-        print(title,self.user.userInfo())
+        # print(title,self.user.userInfo())
 
         # 標題列
         #region 標題列
@@ -89,6 +101,7 @@ class menuSubFrame(QWidget):
         content_layout.addWidget(self.list_widget)
         #endregion
 
+        # print(f'{self.title} Index: {self.stacked_widget.count()} （menySubFrame.py）')
 
         # 整體佈局
         #region 標題列及清單配制
@@ -279,7 +292,7 @@ class menuSubFrame(QWidget):
 
             elif item_text == '登入身份':
                 # 由「識別」進入「登入身份」介面，此功能須再與解鎖功能區分
-                # next_frame = id_LogIn_Frame(item_text, self.title_label.styleSheet(), self.user)
+                # next_frame = id_LogIn_Frame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages)
                 next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages)
 
             elif item_text == '儀器資訊': 

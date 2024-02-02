@@ -1,8 +1,9 @@
 #zh-tw
-# testEndFrame.py
+# setPlotTime.py
 
-# 此程式碼為子畫面最終刷新測試碼
-    # 尚未實作的功能介面都會先以此介面顯示
+# 此程式碼為「顯示」底下的「波形圖週期」介面
+    # 設定折線圖顯示的時間單位（尚未套用於折線圖上）
+
 try:
     import traceback
     from PyQt5.QtCore import Qt
@@ -14,7 +15,7 @@ except Exception as e:
     input("Press Enter to exit")
 
 font = QFont()
-class testEndFrame(QWidget):
+class setPlotTimeFrame(QWidget):
     def __init__(self, title, _style, user, stacked_widget, sub_pages):
         super().__init__()
         print(title)
@@ -40,7 +41,7 @@ class testEndFrame(QWidget):
         print('終節點測試畫面：', title)
 
         self.stacked_widget = stacked_widget
-        end_frame_index = self.stacked_widget.addWidget(self)
-        self.current_page_index = end_frame_index # 將當前的畫面索引設為 plot_page_index
+        setPlotTime_frame_index = self.stacked_widget.addWidget(self)
+        self.current_page_index = setPlotTime_frame_index # 將當前的畫面索引設為 plot_page_index
         # 設定當前顯示的子畫面索引
         print(f'{title} Index: {self.stacked_widget.count()}')

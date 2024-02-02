@@ -2,7 +2,8 @@
 
 # main.py
 # 此程式碼為主畫面，顯示折線圖為主
-# 折線圖為第零層，進入主選單為第一層
+# 由於介面往上堆疊，排除初始化介面，折線圖為第一層，進入主選單為第二層，主選單後進入各個子選單為第三層
+    # 介面順序由下而上疊：self.plot_canvas/self.menu_page/self.menuSub_page
 
 try:
     import sys, os, traceback, minimalmodbus, threading
@@ -19,10 +20,9 @@ try:
     from modbus_RTU_Connect_GUI import ModbusRTUConfigurator
 
     from unit_transfer import unit_transfer
-    from plotCanvas import plotCanvas
-    from menuSubFrame import menuSubFrame
+    from plotCanvas import plotCanvas #圖表內部配制
+    from subMenuFrame import subMenuFrame #子選單內部配制
     from img_to_base64 import image_to_base64
-    from testRTU import testRTU_Frame
     from login import LoginDialog
 
 
@@ -159,8 +159,8 @@ class MyWindow(QMainWindow):
 
         #endregion
 
-        #region 子畫面
-        # 創建子畫面
+        #region 折線圖畫面
+        # 創建折線圖畫面
         self.sub_frame = QFrame(self)
         self.sub_frame.setGeometry(960, 100, 960, 780)
 
@@ -266,8 +266,6 @@ class MyWindow(QMainWindow):
         function_bar_layout.addLayout(function_bar_layout3, 1)
 
 
-
-
         #endregion
 
         # 整體畫面配制
@@ -297,14 +295,12 @@ class MyWindow(QMainWindow):
         #region 畫面堆疊
         # 在 MyWindow 類別的 __init__ 方法中初始化 QStackedWidget
         self.stacked_widget = QStackedWidget(self.sub_frame)
+        print('Main Index:', self.stacked_widget.count()) #初始畫面頁數0
         self.plot_page_index = self.stacked_widget.addWidget(self.plot_canvas) # 此處僅添加 plot 畫面
-        self.menu_page_index = self.stacked_widget.addWidget(self.create_menu_page()) #此處添加了 menu 畫面
-        self.tsRTU_page_index = None
+        print('Plot Index:', self.stacked_widget.count()) #折線圖為第一頁
         self.stacked_widget.setCurrentIndex(self.plot_page_index) #設定初始顯示的畫面
         self.current_page_index = self.plot_page_index # 將當前的畫面索引設為 plot_page_index
 
-        # 設定當前顯示的子畫面索引
-        print('Current Page Index:', self.current_page_index)
 
         # 在 MyWindow 類別中添加 sub_pages 作為成員變數
         self.sub_pages = {}
@@ -379,7 +375,7 @@ class MyWindow(QMainWindow):
 
                 except minimalmodbus.NoResponseError as e:
                     self.state_label.setText('未連線')
-                    print(f'No response from the instrument: {e}')
+                    # print(f'No response from the instrument: {e}')
                 except Exception as e:
                     traceback.print_exc()
                     print(f'Exception: {e}')
@@ -498,21 +494,25 @@ class MyWindow(QMainWindow):
             print('Totle Pages:', self.stacked_widget.count())
             if self.stacked_widget.count() > 1:
                 print('Remove Pages:', self.stacked_widget.count()-1)
-                while self.stacked_widget.count() > 2:
+                
+                while self.stacked_widget.count() > 1:
                     widget = self.stacked_widget.widget(self.stacked_widget.count() - 1)  # 取得最頂層的頁面
-                    print('Remaining Pages:', self.stacked_widget.count() - 1)
+                    print('Remaining Pages:', self.stacked_widget.count())
                     if widget:
                         self.stacked_widget.removeWidget(widget)
                         widget.deleteLater()
-                print('Back to First Pages:', self.stacked_widget.count())
-            
+                # print('Back to First Pages:', self.stacked_widget.count())
+                        
+                self.sub_pages={}
+                
             else:
-                print('First Pages:', self.stacked_widget.count())
-
+                print(f'主畫面登出（{self.stacked_widget.count()}）')
+            
             self.stacked_widget.setCurrentIndex(self.plot_page_index)
             self.current_page_index = self.plot_page_index
             
-            # print('Current Index:', self.plot_page_index)
+            # print('Plot Index:', self.plot_page_index)
+            print('Plot Index:',self.stacked_widget.count())
 
             self.lock_button.setVisible(not self.isLogin)
             self.return_button.setVisible(False)
@@ -544,33 +544,8 @@ class MyWindow(QMainWindow):
     #endregion
 
 
-    #region 取得模擬RTU數據測試畫面
-    # # 取得模擬RTU數據測試畫面
-    # def switch_to_TestRTU(self):
-    #     print(self.test_RTU_button.text())
-    #     if self.tsRTU_page_index is None:
-    #         tsRTU_page = testRTU_Frame(self.test_RTU_button.text(),"background-color: orange;")
-    #         self.tsRTU_page_index = self.stacked_widget.addWidget(tsRTU_page)
-
-    #     if self.current_page_index != self.tsRTU_page_index:
-    #         self.stacked_widget.setCurrentIndex(self.tsRTU_page_index)
-    #         self.current_page_index = self.tsRTU_page_index
-
-    #     else:
-    #         # 如果當前已經是主選單索引，再次切換到主選單
-    #         self.stacked_widget.setCurrentIndex(self.tsRTU_page_index)
-
-    #     # 根據當前的畫面索引顯示或隱藏按鈕
-    #     self.menu_button.setVisible(self.current_page_index == self.plot_page_index)
-    #     self.test_RTU_button.setVisible(self.current_page_index == self.plot_page_index)
-    #     self.return_button.setVisible(self.current_page_index == self.tsRTU_page_index)
-
-    #     print('Current Page Index:', self.current_page_index)
-    
-    #endregion
-
     # 在MyWindow類別中新增一個方法用於由主畫面切換主選單
-    #region 前往主選單
+    #region 前往主選單（第二頁）
     def switch_to_menu(self):
         if self.isLogin == False:
             print('請先登入解鎖')
@@ -578,9 +553,10 @@ class MyWindow(QMainWindow):
             
         else:
             print('進入目錄成功')
+            self.menu_page_index = self.stacked_widget.addWidget(self.create_menu_page()) #此處添加了目錄畫面（第二頁）
             if self.menu_page_index is None:
-                menu_page = self.create_menu_page()
-                self.menu_page_index = self.stacked_widget.addWidget(menu_page)
+                self.menu_page = self.create_menu_page()
+                self.menu_page_index = self.stacked_widget.addWidget(self.menu_page)
 
             if self.current_page_index != self.menu_page_index:
                 self.stacked_widget.setCurrentIndex(self.menu_page_index)
@@ -595,11 +571,11 @@ class MyWindow(QMainWindow):
             # self.test_RTU_button.setVisible(self.current_page_index == self.plot_page_index)
             self.return_button.setVisible(self.current_page_index == self.menu_page_index)
 
-            print('Current Page Index:', self.current_page_index)
+            print('主選單 Index:', self.stacked_widget.count())
 
     #endregion
     
-    # 在MyWindow中新增一個方法用於創建主選單畫面 
+    # 創建主選單畫面
     #region 建立主選單及其元件、配制
     def create_menu_page(self):       
 
@@ -640,10 +616,10 @@ class MyWindow(QMainWindow):
         self.identify_button.setFont(font)
 
         # 連接按鈕點擊事件（前往各個子選單）
-        self.set_button.clicked.connect(lambda: self.show_sub_page(self.set_button.text(),self.set_button.styleSheet()))
-        self.calibrate_button.clicked.connect(lambda: self.show_sub_page(self.calibrate_button.text(),self.calibrate_button.styleSheet()))
-        self.record_button.clicked.connect(lambda: self.show_sub_page(self.record_button.text(),self.record_button.styleSheet()))
-        self.identify_button.clicked.connect(lambda: self.show_sub_page(self.identify_button.text(),self.identify_button.styleSheet()))
+        self.set_button.clicked.connect(lambda: self.sub_menu_page(self.set_button.text(),self.set_button.styleSheet()))
+        self.calibrate_button.clicked.connect(lambda: self.sub_menu_page(self.calibrate_button.text(),self.calibrate_button.styleSheet()))
+        self.record_button.clicked.connect(lambda: self.sub_menu_page(self.record_button.text(),self.record_button.styleSheet()))
+        self.identify_button.clicked.connect(lambda: self.sub_menu_page(self.identify_button.text(),self.identify_button.styleSheet()))
 
         # 將按鈕添加到GridLayout中
         menu_page_layout.addWidget(self.set_button, 0, 0, 1, 1)
@@ -656,15 +632,11 @@ class MyWindow(QMainWindow):
     
     #endregion
 
-
-    #region 前往下一個頁面的堆疊功能
-    def show_sub_page(self, page_name, _style):
+    # 主選單前往子選單畫面
+    #region 在主選單中前往下一個子選單頁面（第三頁）
+    def sub_menu_page(self, page_name, _style):
         print('登入：',self.logout_button.isVisible())
-
-        # if self.logout_button.isVisible()==False and page_name!='識別':
-        #     print(self.logout_button.isVisible(),page_name!='識別')
-        #     self.is_login_dialog(page_name)
-        # else:
+        print('進入：', page_name)
 
         # 隱藏選單按鈕
         self.menu_button.setVisible(False)
@@ -672,26 +644,24 @@ class MyWindow(QMainWindow):
         # 判斷是否已經創建了該子畫面
         if page_name not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[page_name]):
             # 如果還沒有，則創建一個新的子畫面
-            sub_page = menuSubFrame(page_name, _style, self.sub_pages, self.stacked_widget, self, it_4x)
+            self.subMenu_page = subMenuFrame(page_name, _style, self.sub_pages, self.stacked_widget, self, it_4x)
 
             # 添加到堆疊中
-            sub_page_index = self.stacked_widget.addWidget(sub_page)
+            sub_page_index = self.stacked_widget.addWidget(self.subMenu_page)
             self.sub_pages[page_name] = sub_page_index
         else:
             # 如果已經存在，取得子畫面的索引
             sub_page_index = self.sub_pages[page_name]
 
             # 強制刷新子畫面
-            sub_page = self.stacked_widget.widget(sub_page_index)
-            # sub_page.update()  # 假設您的子畫面有 update 方法
+            self.menuSub_page = self.stacked_widget.widget(sub_page_index)
+            # menuSub_page.update()  # 假設您的子畫面有 update 方法
 
         # # 設定當前顯示的子畫面索引
         self.stacked_widget.setCurrentIndex(sub_page_index)
         self.current_page_index = sub_page_index
-        print('Current Page Index:', self.current_page_index)
 
-        # 觸發標題的 print
-        print('進入：', page_name)
+        print(f'{page_name} Index: {self.stacked_widget.count()}')
 
         # 顯示返回按鈕
         self.return_button.setVisible(True)
@@ -716,14 +686,9 @@ class MyWindow(QMainWindow):
         
             # 如果當前是選單畫面，直接返回主畫面
             if self.current_page_index == self.menu_page_index:
-                self.stacked_widget.setCurrentIndex(self.plot_page_index)
+                self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
                 self.current_page_index = self.plot_page_index
-
-            # RTU測試畫面返回主畫面
-            # elif self.current_page_index == self.tsRTU_page_index:
-            #     self.stacked_widget.setCurrentIndex(self.plot_page_index)
-            #     self.current_page_index = self.plot_page_index
-                
+        
             else:
                 # 清除之前的子畫面
                 previous_sub_frame = self.stacked_widget.currentWidget()
@@ -736,20 +701,19 @@ class MyWindow(QMainWindow):
                 if self.current_page_index == self.plot_page_index:
                     self.menu_page_index = None
 
-                # 刪除已經移除的子畫面的索引
-                for title, sub_page_index in list(self.sub_pages.items()):
-                    if sub_page_index not in range(self.stacked_widget.count()):
-                        del self.sub_pages[title]
-
                 # 切換到更新後的畫面索引
                 self.stacked_widget.setCurrentIndex(self.current_page_index)
 
+            # 刪除已經移除的子畫面的索引
+            for title, sub_page_index in list(self.sub_pages.items()):
+                if sub_page_index not in range(self.stacked_widget.count()):
+                    del self.sub_pages[title]
+
             # 根據當前的畫面索引顯示或隱藏按鈕
             self.menu_button.setVisible(self.current_page_index == self.plot_page_index)
-            # self.test_RTU_button.setVisible(self.current_page_index == self.plot_page_index)
             self.return_button.setVisible(self.current_page_index != self.plot_page_index)
 
-        print('Current Page Index:', self.current_page_index)
+        print('Last Index:', self.stacked_widget.count())
 
     #endregion 
 

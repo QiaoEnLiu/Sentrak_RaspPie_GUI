@@ -1,7 +1,7 @@
 #zh-tw
 # userPermissions.py
 
-#權限類別
+# 權限類別
 
 class Permissions:
     def __init__(self, username, password, 

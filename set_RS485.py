@@ -2,7 +2,7 @@
 # set_RS485.py
 
 # 此程式碼為「設定」底下進入「rs-485」並實作Slaver設定的介面
-# 尚未能直接設定Slaver通訊
+    # 尚未能直接設定Slaver通訊
 
 try:
     import traceback
@@ -145,8 +145,6 @@ class rs485_Frame(QWidget):
         main_layout.addLayout(title_layout)
         main_layout.addLayout(rs485_layout)
 
-       
-
         print('RS485測試畫面：', title)
 
         self.sub_pages=sub_pages
@@ -154,7 +152,7 @@ class rs485_Frame(QWidget):
         end_frame_index = self.stacked_widget.addWidget(self)
         self.current_page_index = end_frame_index # 將當前的畫面索引設為 plot_page_index
         # 設定當前顯示的子畫面索引
-        print('Current Page Index:', self.current_page_index)
+        print(f'{title} Index: {self.stacked_widget.count()}')
 
 
     def populate_com_ports(self):

@@ -1,9 +1,8 @@
 #zh-tw
 # deviceInFo.py
 
-#此程式碼為「識別」底下「儀器資訊」
-#--「儀器資訊」為deviceInfoFrame
-#--「感測器資訊」暫時進入testEndFrame.py
+# 此程式碼為「識別」底下「儀器資訊」
+    # 顯示儀器資訊
 
 try:
     
@@ -98,14 +97,14 @@ class deviceInfoFrame(QWidget):
         self.deviceInfo_label.setText(cpu_info + gpu_info + memory_info + disk_info + network_info + gpio_info)
 
         
-        print(title ,user.userInfo())
+        # print(title ,user.userInfo())
 
 
         self.stacked_widget = stacked_widget
         deviceInfo_index = self.stacked_widget.addWidget(self)
         self.current_page_index = deviceInfo_index # 將當前的畫面索引設為 plot_page_index
         # 設定當前顯示的子畫面索引
-        print('Current Page Index:', self.current_page_index)
+        print(f'{title} Index: {self.stacked_widget.count()}')
 
 
     def get_cpu_info(self):

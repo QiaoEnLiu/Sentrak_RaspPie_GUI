@@ -2,7 +2,7 @@
 # HTTP_TCPIP.py
 
 # 此程式碼為「設定」底下進入「HTTP \ TCPIP」並實作網路設定的頁面
-# 尚未能直接設定網路
+    # 尚未能直接設定網路
 
 try:
     
@@ -44,7 +44,7 @@ class internetFrame(QWidget):
         self.user=user
         self.sub_pages=sub_pages
 
-        print(self.title, self.user.userInfo())
+        # print(self.title, self.user.userInfo())
 
         # 標題列
         title_layout = QVBoxLayout()        
@@ -126,7 +126,7 @@ class internetFrame(QWidget):
         deviceInfo_index = self.stacked_widget.addWidget(self)
         self.current_page_index = deviceInfo_index
         # 設定當前顯示的子畫面索引
-        print('Current Page Index:', self.current_page_index)
+        print(f'{title} Index: {self.stacked_widget.count()}')
 
 
     def ip_input_layout(self, name):

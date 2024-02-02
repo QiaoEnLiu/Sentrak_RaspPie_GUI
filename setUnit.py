@@ -1,9 +1,9 @@
 #zh-tw
-# testEndFrame.py
+# setUnit.py
 
-#此程式碼為子畫面最終刷新測試碼
-#--第一子畫面最終測試碼執行結果 Sentrak_RaspberryPie_GUI.py -> menuSubFrame.py
-#--最新最子畫面最終測試碼執行結果 menuSubFrame.py -> testEndFrame.py
+# 此程式碼為「顯示」底下的「單位」介面
+    # 設定溫度及氧氣濃度單位，並回傳給Slaver（暫不處理切換單位之間的數據轉換）
+
 try:
     import traceback, minimalmodbus, threading
     from PyQt5.QtCore import Qt, QTimer
@@ -142,51 +142,9 @@ class setUnitFrame(QWidget):
         end_frame_index = self.stacked_widget.addWidget(self)
         self.current_page_index = end_frame_index # 將當前的畫面索引設為 plot_page_index
         # 設定當前顯示的子畫面索引
-        print('Current Page Index:', self.current_page_index)
+        print(f'{title} Index: {self.stacked_widget.count()}')
 
-        # #region 更新日期時間並持續讓modbus讀取資料進圖表    
-        # self.timer = QTimer(self) # 更新日期時間的 QTimer
-        # self.timer.timeout.connect(self.update_modbus_data)
-        # self.timer.start(1000)  # 每秒更新一次
-
-
-
-
-    #region modbus RTU讀取（氧氣濃度、溫度）
-    # def update_modbus_data(self):
-    #     try:
-    #         # 定義一個函數，用於在執行緒中執行Modbus讀取
-    #         def modbus_read_thread():
-    #             try:
-    #                 # 讀取浮點數值，地址為1
-    #                 temp_unit = self.it_4x.read_register(tempUnit_address,functioncode=3)
-    #                 setGasUnit = self.it_4x.read_register(o2_GasUnit_address,functioncode=3)
-
-    #                 if temp_unit==0:
-    #                     self.celsius_radio.setChecked(True)
-    #                 elif temp_unit==1:
-    #                     self.fahrenheit_radio.setChecked(True)
-    #                 else:
-    #                     pass
-
-    #                 self.gas_unit_ComboBox.setCurrentText(o2_GasUnitDist[setGasUnit])
-
-    #                 print(f'溫度單位{tempUnitDist[temp_unit]}（{temp_unit}），濃度單位{o2_GasUnitDist[setGasUnit]}（{setGasUnit}）')
-    #             except minimalmodbus.NoResponseError as e:
-    #                 print(f'Set Unit Interface: {e}')
-    #             except Exception as e:
-    #                 traceback.print_exc()
-    #                 print(f'Exception: {e}')
-
-    #         # 建立一個新的執行緒並啟動
-    #         modbus_thread = threading.Thread(target=modbus_read_thread)
-    #         modbus_thread.start()
-    #     except Exception as e:
-    #         traceback.print_exc()
-    #         print(f'Exception: {e}')
-
-    #endregion
-            
+    
     #region
     def setUnit(self):
         print('Set Unit')
