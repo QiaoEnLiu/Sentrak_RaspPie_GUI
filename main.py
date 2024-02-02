@@ -2,6 +2,7 @@
 
 # main.py
 # 此程式碼為主畫面，顯示折線圖為主
+# 折線圖為第零層，進入主選單為第一層
 
 try:
     import sys, os, traceback, minimalmodbus, threading
