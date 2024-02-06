@@ -27,11 +27,18 @@ try:
     from PyQt5.QtCore import Qt, QByteArray
     from PyQt5.QtGui import QFont, QPixmap, QImage
 
+    # 未實作功能測試介面
     from testEndFrame import testEndFrame
-    from displayOption import displayOptionFrame # 設定 >> 顯示
-    from communicationOption import comOptionFrame # 設定 >> 通訊
-    from id_Frame import id_LogIn_Frame # 識別 >> 登入訊息
-    from deviceInfo import deviceInfoFrame # 識別 >> 儀器資訊
+
+    # 設定 >>
+    from setDisplayOption import displayOptionFrame # 「顯示」
+    from setAnalogyOutputOption import analogyOutputOptionFrame # 「類比輸出」選項介面
+    from setCommunicationOption import comOptionFrame # 「通訊」選項介面
+
+    # 識別 >>
+    from id_Frame import id_LogIn_Frame # 登入訊息
+    from id_deviceInfo import deviceInfoFrame # 儀器資訊
+
     from img_to_base64 import image_to_base64
 
 except Exception as e:
@@ -43,16 +50,17 @@ font = QFont()
 class subMenuFrame(QWidget):
 
     #region 清單畫面
-    def __init__(self, title, _style, sub_pages, stacked_widget, main_window, it_4x):
+    def __init__(self, title, _style, sub_pages, stacked_widget, user, it_4x):
         super().__init__()
         self.sub_pages = sub_pages
-        self.main_window = main_window
+        # self.main_window = main_window
+        self.user = user
         self.stacked_widget = stacked_widget
-        self.it_4x=it_4x
+        self.it_4x = it_4x
         self.id_login_frame = id_LogIn_Frame
 
         self.title = title
-        self.user=main_window.get_global_presentUser()
+        # self.user=main_window.get_global_presentUser()
         # print(title,self.user.userInfo())
 
         # 標題列
@@ -284,7 +292,11 @@ class subMenuFrame(QWidget):
             print('進入選項：', item_text)
             if item_text == '顯示':
                 # 由「設定」進入「顯示」介面
-                next_frame = displayOptionFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages,self.it_4x)
+                next_frame = displayOptionFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages, self.it_4x)
+            
+            elif item_text == '類比輸出':
+                # 由「設定」進入「類比輸出」介面
+                next_frame = analogyOutputOptionFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages, self.it_4x)
 
             elif item_text == '通訊':
                 # 由「設定」進入「通訊」介面

@@ -8,6 +8,8 @@ try:
     from matplotlib.font_manager import FontProperties, FontManager
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
     from unit_transfer import unit_transfer
+
+    import ProjectPublicVariable
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -29,6 +31,9 @@ for font in font_list:
         selected_font = font
         break
 
+plotTime_limit=0
+
+
 #region plotCanvas
 class plotCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -45,7 +50,7 @@ class plotCanvas(FigureCanvas):
         self.ax.spines['top'].set_visible(False)
 
     def plot(self, temperature_unit, oxygen_concentration, temperature):
-
+        global plotTime_limit
         # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
 
         # 使用選擇的字型進行圖表繪製
@@ -62,11 +67,22 @@ class plotCanvas(FigureCanvas):
         self.oxygen_concentration_data.append(oxygen_concentration)
 
         # print(f'{self.x_data[-1]} O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
+        if ProjectPublicVariable.plotTime=='5秒':
+            plotTime_limit=5
+        elif ProjectPublicVariable.plotTime=='10秒':
+            plotTime_limit=10
+        elif ProjectPublicVariable.plotTime=='15秒':
+            plotTime_limit=15
+        else:
+            plotTime_limit=10
 
-        if len(self.x_data) > 10:
-            self.x_data.pop(0)
-            self.temperature_data.pop(0)
-            self.oxygen_concentration_data.pop(0)
+        if len(self.x_data) > plotTime_limit:
+            remove_count = len(self.x_data) - plotTime_limit
+            print(f'X軸溢出：{remove_count}')
+            for _ in range(remove_count):
+                self.x_data.pop(0)
+                self.temperature_data.pop(0)
+                self.oxygen_concentration_data.pop(0)
 
         # 繪製折線圖
         lineTemp, = self.ax.plot(self.x_data, self.temperature_data, label='溫度'+self.temperature_unit, color='blue')  # Temperature
@@ -89,9 +105,11 @@ class plotCanvas(FigureCanvas):
             fontdict={'fontsize': 18, 'fontweight': 'bold'},
             fontproperties=font)  # Temperature and Oxygen Concentration
         self.ax.set_xlabel(
-            '時間',
+            f'時間（每{ProjectPublicVariable.plotTime}）',
             fontdict={'fontsize': 14, 'fontweight': 'bold'},
             fontproperties=font)
+        print(f'X時間軸：{self.ax.get_xlabel()}')
+        print(f'X時間軸最大值：{len(self.x_data)}')
         self.ax.set_ylabel(
             '溫度、氧氣濃度數值',
             fontdict={'fontsize': 14, 'fontweight': 'bold'},

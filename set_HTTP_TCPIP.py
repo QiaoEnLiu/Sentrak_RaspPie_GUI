@@ -1,5 +1,6 @@
 #zh-tw
-# HTTP_TCPIP.py
+# set_HTTP_TCPIP.py
+# 「HTTP \ TCPIP」
 
 # 此程式碼為「設定」底下進入「HTTP \ TCPIP」並實作網路設定的頁面
     # 尚未能直接設定網路

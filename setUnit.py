@@ -1,5 +1,6 @@
 #zh-tw
 # setUnit.py
+# 「單位」
 
 # 此程式碼為「顯示」底下的「單位」介面
     # 設定溫度及氧氣濃度單位，並回傳給Slaver（暫不處理切換單位之間的數據轉換）
@@ -26,10 +27,10 @@ o2_GasUnitDist={0:'ppb',1:'PPM',2:'mg/l',3:'PPMV',4:'%',5:'PPM',6:'mg/l',7:'ppb'
 
 
 class setUnitFrame(QWidget):
-    def __init__(self, title, _style, user, stacked_widget, sub_pages,it_4x):
+    def __init__(self, title, _style, user, stacked_widget, sub_pages, it_4x):
         super().__init__()
         print(title)
-        self.sub_pages=sub_pages
+        self.sub_pages = sub_pages
         self.it_4x=it_4x[0]
 
         self.temp_unit = self.it_4x.read_register(tempUnit_address,functioncode=3)

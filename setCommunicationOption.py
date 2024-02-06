@@ -1,5 +1,6 @@
 #zh-tw
-# communicationOption.py
+# setCommunicationOption.py
+# 「通訊」
 
 # 此程式碼為「設定」底下「通訊」選項
     # RS-486為進入Slaver的RS-486的設定

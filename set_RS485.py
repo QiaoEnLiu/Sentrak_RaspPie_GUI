@@ -1,5 +1,6 @@
 #zh-tw
 # set_RS485.py
+# 「rs-485」
 
 # 此程式碼為「設定」底下進入「rs-485」並實作Slaver設定的介面
     # 尚未能直接設定Slaver通訊
@@ -36,6 +37,7 @@ class rs485_Frame(QWidget):
         font.setPointSize(36)
 
         # COM Port
+        #暫以本機端通訊埠顯示
         com_layout = QHBoxLayout()
         com_layout.setContentsMargins(0, 0, 0, 0)
         com_layout.setSpacing(0) 
@@ -122,6 +124,7 @@ class rs485_Frame(QWidget):
         setting_layout.setSpacing(0) 
         set_button = QPushButton('設定', self)
         set_button.setFont(font)
+        set_button.clicked.connect(self.slaverConnect)
         setting_layout.addWidget(set_button)
 
 
@@ -159,3 +162,19 @@ class rs485_Frame(QWidget):
         com_ports = [port.portName() for port in QSerialPortInfo.availablePorts()]
         self.com_combo.addItems(com_ports)
         print('COM Ports:',com_ports)
+
+    def slaverConnect(self):
+        com_port = self.com_combo.currentText()
+        baud_rate = int(self.baud_combo.currentText())
+        parity_text = self.parity_combo.currentText()
+        stop_bits = int(self.stop_bits_combo.currentData())
+        data_bits = int(self.data_bits_combo.currentText())
+        
+
+        slaver_Connect_Info=f'COM Port: {com_port}\r\n' +  \
+        f'Baud Rate: {baud_rate}\r\n' + \
+        f'Parity: {parity_text}\r\n' + \
+        f'Stop Bits: {stop_bits}\r\n' + \
+        f'Data Bits: {data_bits}\r\n'
+
+        print(slaver_Connect_Info)

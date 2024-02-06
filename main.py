@@ -75,6 +75,7 @@ temperature_unit_text='Celsius' # Celsius, Fahrenheit
 temperature_unit_default='°C'
 temperature = 16.8 # 攝氏 16.8
 
+# plotTime='10秒'
 #endregion
 
 #class MyWindow
@@ -402,9 +403,10 @@ class MyWindow(QMainWindow):
             self.plot_canvas.ax.clear()
 
             # 重新繪製折線圖
-            self.plot_canvas.plot(temperature_unit=temperature_unit_text,
-                                oxygen_concentration=oxygen_concentration,
-                                temperature=temperature)  # Celsius, Fahrenheit
+            self.plot_canvas.plot(temperature_unit = temperature_unit_text, 
+                                oxygen_concentration = oxygen_concentration, 
+                                temperature = temperature #temperature: Celsius, Fahrenheit
+                                )  
 
             # 在這裡更新畫布
             self.plot_canvas.draw()
@@ -451,8 +453,8 @@ class MyWindow(QMainWindow):
     #endregion
 
     #region 取得使用者訊息
-    def get_global_presentUser(self):
-        return global_presentUser
+    # def get_global_presentUser(self):
+    #     return global_presentUser
     #endregion
 
     #region 登入成功行為
@@ -644,7 +646,7 @@ class MyWindow(QMainWindow):
         # 判斷是否已經創建了該子畫面
         if page_name not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[page_name]):
             # 如果還沒有，則創建一個新的子畫面
-            self.subMenu_page = subMenuFrame(page_name, _style, self.sub_pages, self.stacked_widget, self, it_4x)
+            self.subMenu_page = subMenuFrame(page_name, _style, self.sub_pages, self.stacked_widget, global_presentUser, it_4x)
 
             # 添加到堆疊中
             sub_page_index = self.stacked_widget.addWidget(self.subMenu_page)

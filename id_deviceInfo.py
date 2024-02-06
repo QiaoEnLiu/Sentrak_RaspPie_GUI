@@ -1,5 +1,6 @@
 #zh-tw
-# deviceInFo.py
+# id_deviceInFo.py
+# 「儀器資訊」
 
 # 此程式碼為「識別」底下「儀器資訊」
     # 顯示儀器資訊

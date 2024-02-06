@@ -1,5 +1,7 @@
 #zh-tw
 
+# 測試通訊埠連線設定介面
+
 
 import sys, minimalmodbus, traceback, time
 from PyQt5.QtSerialPort import QSerialPort, QSerialPortInfo
