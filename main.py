@@ -6,9 +6,12 @@
     # 介面順序由下而上疊：self.plot_canvas/self.menu_page/self.menuSub_page
 
 try:
+    
     import sys, os, traceback, minimalmodbus, threading
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
+
+    import ProjectPublicVariable as PPV
 
     from PyQt5.QtWidgets import \
         QApplication, QMainWindow, QWidget, QStatusBar, QVBoxLayout,\
@@ -32,50 +35,15 @@ except Exception as e:
     input("Press Enter to exit")
 
 
-#region 連接modbus RTU
-# 定義Modbus裝置的串口及地址
-instrument_3x_1 = minimalmodbus.Instrument('COM4', 1)  # Read Only :read f=3,4
-instrument_4x_2 = minimalmodbus.Instrument('COM4', 2)  # Write Allow :write f=6,16
-# 第一個參數是串口，第二個參數是Modbus地址
-
-it_3x=[instrument_3x_1] 
-it_4x=[instrument_4x_2] 
-
-
-
-# 設定串口波特率，Parity和Stop bits（這些參數需與Modbus設備一致）
-for i in it_3x+it_4x:
-    i.serial.baudrate = 9600
-    i.serial.parity = minimalmodbus.serial.PARITY_NONE
-    i.serial.stopbits = 1
-    i.serial.timeout = 1.0
-
-#endregion
-    
-#region 數據位址
-
-_3x_1_o2_address = 0
-_3x_1_temperature_address = 2
-
-_4x_2_TempUnit=0
-tempUnitDist={0:'°C',1:'°F'}
-
-_4x_2_SetGasUnit=4
-o2_GasUnitDist={0:'ppb',1:'PPM',2:'mg/l',3:'PPMV',4:'%',5:'PPM',6:'mg/l',7:'ppb',8:'PPMV',9:'kPa'}
-
-#endregion
 
 #region 其他全域變數
 font = QFont()
-
-global_presentUser = None
 
 oxygen_concentration = 12.56 # 12.56
 temperature_unit_text='Celsius' # Celsius, Fahrenheit
 temperature_unit_default='°C'
 temperature = 16.8 # 攝氏 16.8
 
-# plotTime='10秒'
 #endregion
 
 #class MyWindow
@@ -361,14 +329,14 @@ class MyWindow(QMainWindow):
                 global oxygen_concentration, temperature
                 try:
                     # 讀取浮點數值，地址為1
-                    oxygen_concentration = instrument_3x_1.read_float(_3x_1_o2_address,functioncode=4)
-                    temperature = instrument_3x_1.read_float(_3x_1_temperature_address,functioncode=4)
+                    oxygen_concentration = PPV.instrument_3x.read_float(PPV.R3X_address('Gas'), functioncode=4)
+                    temperature = PPV.instrument_3x.read_float(PPV.R3X_address('Temperature'), functioncode=4)
 
-                    setGasUnit=instrument_4x_2.read_register(_4x_2_SetGasUnit,functioncode=3)
-                    temp_unit=instrument_4x_2.read_register(_4x_2_TempUnit,functioncode=3)
+                    setGasUnit = PPV.instrument_4x.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
+                    temp_unit = PPV.instrument_4x.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
 
 
-                    self.main_label.setText(f"O<sub>2</sub>: {oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}<br>T: {temperature:.2f} {tempUnitDist[temp_unit]}")
+                    self.main_label.setText(f"O<sub>2</sub>: {oxygen_concentration:.2f} {PPV.o2_GasUnitDist[setGasUnit]}<br>T: {temperature:.2f} {PPV.tempUnitDist[temp_unit]}")
                     # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
                     self.state_label.setText('已連線')
@@ -435,7 +403,6 @@ class MyWindow(QMainWindow):
         result = login_dialog.exec_()
 
         if result == LoginDialog.Accepted: # 使用者按下確定按鈕，取得輸入的值
-            global global_presentUser
             self.isLogin=True
             # username = login_dialog.username_input.text()
             # password = login_dialog.password_input.text()
@@ -443,19 +410,16 @@ class MyWindow(QMainWindow):
             self.lock_button.setVisible(not self.isLogin)
             # print('logout_button:',self.logout_button.isVisible())
             print('登入成功', login_dialog.get_global_loginUser())
-            global_presentUser = login_dialog.get_global_loginUser()
+            PPV.presentUser = login_dialog.get_global_loginUser()
 
-            print('main.py:',global_presentUser.userInfo())
+            print('main.py:',PPV.presentUser.userInfo())
 
         else:
             print('登入取消')
 
     #endregion
 
-    #region 取得使用者訊息
-    # def get_global_presentUser(self):
-    #     return global_presentUser
-    #endregion
+
 
     #region 登入成功行為
     def handle_login_success(self, checkLogin):
@@ -479,7 +443,6 @@ class MyWindow(QMainWindow):
         if reply == QMessageBox.Yes:
             # 如果用戶選擇 "Yes"，則登出應用程式
                     
-            global global_presentUser
             self.isLogin=False
 
             QMessageBox.information(self, '登出成功', '返回主頁面')
@@ -646,7 +609,7 @@ class MyWindow(QMainWindow):
         # 判斷是否已經創建了該子畫面
         if page_name not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[page_name]):
             # 如果還沒有，則創建一個新的子畫面
-            self.subMenu_page = subMenuFrame(page_name, _style, self.sub_pages, self.stacked_widget, global_presentUser, it_4x)
+            self.subMenu_page = subMenuFrame(page_name, _style, self.sub_pages, self.stacked_widget)
 
             # 添加到堆疊中
             sub_page_index = self.stacked_widget.addWidget(self.subMenu_page)

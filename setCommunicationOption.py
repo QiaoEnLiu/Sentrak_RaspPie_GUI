@@ -23,15 +23,13 @@ except Exception as e:
 font = QFont()
 
 class comOptionFrame(QWidget):
-    def __init__(self, title, _style, user, stacked_widget, sub_pages, it_4x):
+    def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
         
-        self.user=user
         self.stacked_widget=stacked_widget
         self.sub_pages=sub_pages
-        self.it_4x=it_4x
 
-        # print(title,self.user.userInfo())
+        # print(title, PPV.presentUser.userInfo())
 
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
@@ -95,11 +93,11 @@ class comOptionFrame(QWidget):
         if option not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[option]):
             print(f'進入：{option}')
             if option == 'RS485': # 設定RS485
-                next_frame = rs485_Frame(option, _style, self.user, self.stacked_widget, self.sub_pages)
+                next_frame = rs485_Frame(option, _style, self.stacked_widget, self.sub_pages)
             elif option == 'HTTP / TCPIP': # 設定HTTP / TCPIP
-                next_frame = internetFrame(option, _style, self.user, self.stacked_widget, self.sub_pages)
+                next_frame = internetFrame(option, _style, self.stacked_widget, self.sub_pages)
             else:
-                next_frame = testEndFrame(option, _style, self.user, self.stacked_widget, self.sub_pages)
+                next_frame = testEndFrame(option, _style, self.stacked_widget, self.sub_pages)
                 print('Wrong Option:',option)
 
             next_frame_index = self.stacked_widget.addWidget(next_frame)

@@ -9,7 +9,7 @@ try:
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
     from unit_transfer import unit_transfer
 
-    import ProjectPublicVariable
+    import ProjectPublicVariable as PPV
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -67,18 +67,18 @@ class plotCanvas(FigureCanvas):
         self.oxygen_concentration_data.append(oxygen_concentration)
 
         # print(f'{self.x_data[-1]} O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
-        if ProjectPublicVariable.plotTime=='5秒':
+        if PPV.plotTime=='5秒':
             plotTime_limit=5
-        elif ProjectPublicVariable.plotTime=='10秒':
+        elif PPV.plotTime=='10秒':
             plotTime_limit=10
-        elif ProjectPublicVariable.plotTime=='15秒':
+        elif PPV.plotTime=='15秒':
             plotTime_limit=15
         else:
             plotTime_limit=10
 
         if len(self.x_data) > plotTime_limit:
             remove_count = len(self.x_data) - plotTime_limit
-            print(f'X軸溢出：{remove_count}')
+            # print(f'X軸溢出：{remove_count}')
             for _ in range(remove_count):
                 self.x_data.pop(0)
                 self.temperature_data.pop(0)
@@ -105,11 +105,11 @@ class plotCanvas(FigureCanvas):
             fontdict={'fontsize': 18, 'fontweight': 'bold'},
             fontproperties=font)  # Temperature and Oxygen Concentration
         self.ax.set_xlabel(
-            f'時間（每{ProjectPublicVariable.plotTime}）',
+            f'時間（每{PPV.plotTime}）',
             fontdict={'fontsize': 14, 'fontweight': 'bold'},
             fontproperties=font)
-        print(f'X時間軸：{self.ax.get_xlabel()}')
-        print(f'X時間軸最大值：{len(self.x_data)}')
+        # print(f'X時間軸：{self.ax.get_xlabel()}')
+        # print(f'X時間軸最大值：{len(self.x_data)}')
         self.ax.set_ylabel(
             '溫度、氧氣濃度數值',
             fontdict={'fontsize': 14, 'fontweight': 'bold'},

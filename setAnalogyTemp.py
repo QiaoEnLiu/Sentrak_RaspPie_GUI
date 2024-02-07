@@ -8,6 +8,8 @@ try:
     from PyQt5.QtCore import Qt
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
     from PyQt5.QtGui import QFont
+
+    import ProjectPublicVariable as PPV
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -15,7 +17,7 @@ except Exception as e:
 
 font = QFont()
 class analogyTempFrame(QWidget):
-    def __init__(self, title, _style, user, stacked_widget, sub_pages,it_4x):
+    def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
         print(title)
 
@@ -27,7 +29,7 @@ class analogyTempFrame(QWidget):
         title_label.setFont(font)
         title_label.setStyleSheet(_style)
 
-        user_label = QLabel(user.userInfo())
+        user_label = QLabel(PPV.presentUser.userInfo())
         user_label.setFont(font)
         user_label.setStyleSheet(_style)
 

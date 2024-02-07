@@ -11,7 +11,7 @@ try:
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QComboBox, QPushButton
     from PyQt5.QtGui import QFont
 
-    import ProjectPublicVariable
+    import ProjectPublicVariable as PPV
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -19,7 +19,7 @@ except Exception as e:
 
 font = QFont()
 class setPlotTimeFrame(QWidget):
-    def __init__(self, title, _style, user, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
         print(title)
 
@@ -39,7 +39,7 @@ class setPlotTimeFrame(QWidget):
         self.plot_time_combo = QComboBox()
         self.plot_time_combo.setFont(font)
         self.plot_time_combo.addItems(['5秒','10秒','15秒']) # ['1分','5分','10分','30分','1小時']
-        default_plotTime_Index = self.plot_time_combo.findText(ProjectPublicVariable.plotTime)
+        default_plotTime_Index = self.plot_time_combo.findText(PPV.plotTime)
         self.plot_time_combo.setCurrentIndex(default_plotTime_Index)
 
         set_button = QPushButton('設定', self)
@@ -71,5 +71,5 @@ class setPlotTimeFrame(QWidget):
         print(f'{title} Index: {self.stacked_widget.count()}')
 
     def setPlotTimes(self):
-        ProjectPublicVariable.plotTime = self.plot_time_combo.currentText()
-        print('更改圖表週期為：' + ProjectPublicVariable.plotTime)
+        PPV.plotTime = self.plot_time_combo.currentText()
+        print('更改圖表週期為：' + PPV.plotTime)

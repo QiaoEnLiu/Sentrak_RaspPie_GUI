@@ -15,6 +15,8 @@ try:
 
     import os, traceback, json, psutil
 
+    import ProjectPublicVariable as PPV
+
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -37,15 +39,14 @@ font = QFont()
 
 
 class internetFrame(QWidget):
-    def __init__(self, title, _style, user, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
         # print(title)
         
         self.title = title
-        self.user=user
         self.sub_pages=sub_pages
 
-        # print(self.title, self.user.userInfo())
+        # print(self.title, ProjectPublicVariable.presentUser.userInfo())
 
         # 標題列
         title_layout = QVBoxLayout()        
@@ -121,7 +122,7 @@ class internetFrame(QWidget):
         main_layout.addLayout(title_layout)
         main_layout.addLayout(internetInfo_layout)
 
-        print(title ,user.userInfo())
+        print(title ,PPV.presentUser.userInfo())
 
         self.stacked_widget = stacked_widget
         deviceInfo_index = self.stacked_widget.addWidget(self)
@@ -178,8 +179,8 @@ class internetFrame(QWidget):
 
     def setInternet(self):
 
-        if self.user.write == True:
-            print('設定網路:',self.user.write)
+        if PPV.presentUser.write == True:
+            print('設定網路:', PPV.presentUser.write)
 
             # 建立一個字典，用於儲存各個類別的 IP 資訊
             ip_values = {}
@@ -204,12 +205,12 @@ class internetFrame(QWidget):
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             if reply == QMessageBox.Yes:
                 QMessageBox.information(self, '設定成功', '設定後請注意是否連線成功')
-                self.write_ip_info(self.user.username)
+                self.write_ip_info(PPV.presentUser.username)
             else:
                 return
 
         else:
-            print('您沒有權限設定網路:',self.user.control)
+            print('您沒有權限設定網路:', PPV.presentUser.control)
 
     def ip_to_default(self):
 

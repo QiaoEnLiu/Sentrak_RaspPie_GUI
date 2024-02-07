@@ -11,6 +11,7 @@ try:
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton
     from PyQt5.QtGui import QFont
     from PyQt5.QtSerialPort import QSerialPort, QSerialPortInfo
+    import ProjectPublicVariable as PPV
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -18,7 +19,7 @@ except Exception as e:
 
 font = QFont()
 class rs485_Frame(QWidget):
-    def __init__(self, title, _style, user, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
         print(title)
 

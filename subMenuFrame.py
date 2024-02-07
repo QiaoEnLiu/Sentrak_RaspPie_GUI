@@ -26,6 +26,7 @@ try:
         QListWidgetItem, QHBoxLayout
     from PyQt5.QtCore import Qt, QByteArray
     from PyQt5.QtGui import QFont, QPixmap, QImage
+    import ProjectPublicVariable as PPV
 
     # 未實作功能測試介面
     from testEndFrame import testEndFrame
@@ -50,18 +51,14 @@ font = QFont()
 class subMenuFrame(QWidget):
 
     #region 清單畫面
-    def __init__(self, title, _style, sub_pages, stacked_widget, user, it_4x):
+    def __init__(self, title, _style, sub_pages, stacked_widget):
         super().__init__()
         self.sub_pages = sub_pages
-        # self.main_window = main_window
-        self.user = user
         self.stacked_widget = stacked_widget
-        self.it_4x = it_4x
         self.id_login_frame = id_LogIn_Frame
 
         self.title = title
-        # self.user=main_window.get_global_presentUser()
-        # print(title,self.user.userInfo())
+        # print(title,PPV.presentUser.userInfo())
 
         # 標題列
         #region 標題列
@@ -292,28 +289,28 @@ class subMenuFrame(QWidget):
             print('進入選項：', item_text)
             if item_text == '顯示':
                 # 由「設定」進入「顯示」介面
-                next_frame = displayOptionFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages, self.it_4x)
+                next_frame = displayOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             
             elif item_text == '類比輸出':
                 # 由「設定」進入「類比輸出」介面
-                next_frame = analogyOutputOptionFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages, self.it_4x)
+                next_frame = analogyOutputOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
 
             elif item_text == '通訊':
                 # 由「設定」進入「通訊」介面
-                next_frame = comOptionFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages,self.it_4x)
+                next_frame = comOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
 
             elif item_text == '登入身份':
                 # 由「識別」進入「登入身份」介面，此功能須再與解鎖功能區分
-                # next_frame = id_LogIn_Frame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages)
-                next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages)
+                # next_frame = id_LogIn_Frame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
 
             elif item_text == '儀器資訊': 
                 # 由「識別」進入「儀器資訊」介面，暫以本機開發硬體測試
-                next_frame = deviceInfoFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages)
+                next_frame = deviceInfoFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
 
             else:
                 # 如果還沒有，則創建一個新的 testEndFrame 為終節點畫面測試
-                next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.user, self.stacked_widget, self.sub_pages)
+                next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
                 
             # 添加到堆疊中
             next_frame_index = self.stacked_widget.addWidget(next_frame)

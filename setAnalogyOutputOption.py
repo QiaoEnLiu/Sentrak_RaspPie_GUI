@@ -24,15 +24,13 @@ except Exception as e:
 font = QFont()
 
 class analogyOutputOptionFrame(QWidget):
-    def __init__(self, title, _style, user, stacked_widget, sub_pages,it_4x):
+    def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
         self.title=title
-        self.user=user
         self.stacked_widget=stacked_widget
         self.sub_pages=sub_pages
-        self.it_4x=it_4x
 
-        # print(self.title,self.user.userInfo())
+        # print(self.title,ProjectPublicVariable.presentUser.userInfo())
 
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
@@ -92,9 +90,9 @@ class analogyOutputOptionFrame(QWidget):
         if option not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[option]):
             print(f'進入：{option}')
             if option == '類比濃度': # 類比濃度
-                next_frame = analogyTempFrame(option, _style, self.user, self.stacked_widget, self.sub_pages, self.it_4x)
+                next_frame = analogyTempFrame(option, _style, self.stacked_widget, self.sub_pages)
             elif option == '類比溫度': # 類比溫度
-                next_frame = analogyConcentrationFrame(option, _style, self.user, self.stacked_widget, self.sub_pages, self.it_4x)
+                next_frame = analogyConcentrationFrame(option, _style, self.stacked_widget, self.sub_pages)
             else:
                 print('Wrong Option:',option)
 
