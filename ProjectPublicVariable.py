@@ -112,14 +112,14 @@ def R4X_address(searchName):
 
 #endregion
 
-#region R4X 地址狀態
+#region R4X 地址數值狀態
 
-#endregion
 tempUnitDist={0:'°C',1:'°F'}
 
-
 o2_GasUnitDist={0:'ppb',1:'PPM',2:'mg/l',3:'PPMV',4:'%',5:'PPM',6:'mg/l',7:'ppb',8:'PPMV',9:'kPa'}
+
 #endregion
+
 
 
 #region 圖表區域
