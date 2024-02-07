@@ -1,7 +1,7 @@
 #zh-tw
 # ProjectPublicVariable.py
 
-# 專案用全域變數
+# 專案用全域變數、方法
 
 import minimalmodbus
 
