@@ -36,6 +36,8 @@ try:
     from setAnalogyOutputOption import analogyOutputOptionFrame # 「類比輸出」選項介面
     from setCommunicationOption import comOptionFrame # 「通訊」選項介面
 
+    from setTime import setTimeFrame # 「時間」選項介面
+
     # 識別 >>
     from id_Frame import id_LogIn_Frame # 登入訊息
     from id_deviceInfo import deviceInfoFrame # 儀器資訊
@@ -298,6 +300,10 @@ class subMenuFrame(QWidget):
             elif item_text == '通訊':
                 # 由「設定」進入「通訊」介面
                 next_frame = comOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                
+            elif item_text == '時間':
+                # 由「設定」進入「時間」介面
+                next_frame = setTimeFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
 
             elif item_text == '登入身份':
                 # 由「識別」進入「登入身份」介面，此功能須再與解鎖功能區分

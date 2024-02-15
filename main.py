@@ -16,7 +16,8 @@ try:
     from PyQt5.QtWidgets import \
         QApplication, QMainWindow, QWidget, QStatusBar, QVBoxLayout,\
         QHBoxLayout, QLabel, QSpacerItem, QSizePolicy, QFrame, QGridLayout,\
-        QPushButton, QStackedWidget, QMessageBox, QDesktopWidget
+        QPushButton, QStackedWidget, QMessageBox, QDesktopWidget,\
+        QRadioButton, QButtonGroup
     from PyQt5.QtCore import Qt, QTimer, QDateTime, QByteArray, pyqtSlot, pyqtSignal
     from PyQt5.QtGui import QFont, QPixmap, QImage
 
@@ -39,6 +40,9 @@ except Exception as e:
 #region 其他全域變數
 font = QFont()
 
+
+dateFormateIndex=2
+format_wedget = None
 oxygen_concentration = 12.56 # 12.56
 temperature_unit_text='Celsius' # Celsius, Fahrenheit
 temperature_unit_default='°C'
@@ -94,16 +98,21 @@ class MyWindow(QMainWindow):
         self.alarm_label.setFont(font)
 
         # 在狀態列中央加入日期時間
-        self.datetime_label = QLabel(self)
-        self.datetime_label.setAlignment(Qt.AlignCenter)  # 文字置中
-        self.datetime_label.setFont(font)
-
+        self.datetime = QLabel(self)
+        self.datetime.setAlignment(Qt.AlignCenter)  # 文字置中
+        # self.datetime=QPushButton(self)
+        # self.datetime.setFlat(True)
+        # self.datetime.setStyleSheet("border: none;")
+        # self.datetime.setStyleSheet("padding: 0; margin: 0;")
+        self.datetime.setFont(font)
+        # self.datetime.clicked.connect(self.datetimeFormatChange)
+        
         self.state_label = QLabel('未連線', self)
         self.state_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.state_label.setFont(font)
 
         status_bar.addWidget(self.alarm_label,1) # 將 QLabel 加入狀態列，並指定伸縮因子為1
-        status_bar.addWidget(self.datetime_label,1)
+        status_bar.addWidget(self.datetime,1)
         status_bar.addWidget(self.state_label,1)
         #endregion
 
@@ -313,7 +322,57 @@ class MyWindow(QMainWindow):
         self.show()
 
     #endregion
+        
+    #region 切換時間格式
+    def datetimeFormatChange(self):
 
+        if format_wedget is None or not format_wedget.isVisible():
+
+            format_wedget = QWidget()
+            format_wedget.setWindowTitle('切換時間格式')
+            format_wedget.setGeometry(100, 100, 960, 780)
+
+            # format_wedget.setText('請選擇你要的時間格式：')
+
+            current_datetime = QDateTime.currentDateTime()
+            EU_format = PPV.dateFormate[0]
+            USA_format = PPV.dateFormate[1]
+            ISO_format = PPV.dateFormate[2]
+            EU_format_datetime=current_datetime.toString(f"EU: {EU_format} hh:mm:ss")
+            USA_format_datetime=current_datetime.toString(f"USA: {USA_format} hh:mm:ss")
+            ISO_format_datetime=current_datetime.toString(f"ISO: {ISO_format} hh:mm:ss")
+            EU_RadioButton = QRadioButton(f"{EU_format_datetime}")
+            USA_RadioButton = QRadioButton(f"{USA_format_datetime}")
+            ISO_RadioButton = QRadioButton(f"{ISO_format_datetime}")
+
+            layout = QVBoxLayout()
+            layout.addWidget(EU_RadioButton)
+            layout.addWidget(USA_RadioButton)
+            layout.addWidget(ISO_RadioButton)
+            format_wedget.setLayout(layout)
+            # format_wedget.adjustSize()
+            format_wedget.show()
+
+
+            # for button in formatGroup.buttons():
+            #     dialog.layout().addWidget(button)
+        
+            # result = dialog.exec_()
+
+            # if result == QMessageBox.Accepted:
+            #     # 使用者選擇了一個選項，這裡可以根據選項執行相應的操作
+            #     selected_button = formatGroup.checkedButton()
+            #     if selected_button:
+            #         print(f'選擇的選項是：{selected_button.text()}')
+            #     else:
+            #         print('未選擇任何選項')      
+
+
+            
+            # print(current_datetime.toString(f"{PPV.dateFormate[0]} hh:mm:ss"))
+            # print(current_datetime.toString(f"{PPV.dateFormate[1]} hh:mm:ss"))
+            # print(current_datetime.toString(f"{PPV.dateFormate[2]} hh:mm:ss"))
+    #endregion
 
     #region testClicked    
     def testClicked(self):
@@ -323,35 +382,46 @@ class MyWindow(QMainWindow):
     #region modbus RTU讀取（氧氣濃度、溫度）
     def update_modbus_data(self):
         global oxygen_concentration, temperature
+        current_datetime = QDateTime.currentDateTime()
         try:
             # 定義一個函數，用於在執行緒中執行Modbus讀取
             def modbus_read_thread():
                 global oxygen_concentration, temperature
                 try:
+                    
                     # 讀取浮點數值，地址為1
                     oxygen_concentration = PPV.instrument_3x.read_float(PPV.R3X_address('Gas'), functioncode=4)
                     temperature = PPV.instrument_3x.read_float(PPV.R3X_address('Temperature'), functioncode=4)
 
                     setGasUnit = PPV.instrument_4x.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
+                    dateFormateIndex =PPV.instrument_4x.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
                     temp_unit = PPV.instrument_4x.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
 
-
+                    
                     self.main_label.setText(f"O<sub>2</sub>: {oxygen_concentration:.2f} {PPV.o2_GasUnitDist[setGasUnit]}<br>T: {temperature:.2f} {PPV.tempUnitDist[temp_unit]}")
                     # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
                     self.state_label.setText('已連線')
                     # print(f'O2:{oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}, T:{temperature:.2f} {tempUnitDist[temp_unit]}')
 
+
                 except minimalmodbus.NoResponseError as e:
+                    dateFormateIndex=2
                     self.state_label.setText('未連線')
                     # print(f'No response from the instrument: {e}')
                 except Exception as e:
                     traceback.print_exc()
                     print(f'Exception: {e}')
+                finally:
+                    formatted_datetime = current_datetime.toString(f"{PPV.dateFormate[dateFormateIndex]} hh:mm:ss")
+                    # print(current_datetime.toString(f"{PPV.dateFormate[dateFormateIndex]} hh:mm:ss"))
+                    self.datetime.setText(formatted_datetime)
 
             # 建立一個新的執行緒並啟動
             modbus_thread = threading.Thread(target=modbus_read_thread)
             modbus_thread.start()
+
+
         except Exception as e:
             traceback.print_exc()
             print(f'Exception: {e}')
@@ -361,12 +431,11 @@ class MyWindow(QMainWindow):
     #region 時間更新
     def update_datetime(self):
         global oxygen_concentration, temperature
+        # current_datetime = QDateTime.currentDateTime()
         try:
-            # 使用全域變數的數據
+            # formatted_datetime = current_datetime.toString("yyyy-MM-dd hh:mm:ss")
+            # self.datetime_label.setText(formatted_datetime)
             # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit_default}')
-            current_datetime = QDateTime.currentDateTime()
-            formatted_datetime = current_datetime.toString("yyyy-MM-dd hh:mm:ss")
-            self.datetime_label.setText(formatted_datetime)
             # 清除之前的圖例
             self.plot_canvas.ax.clear()
 
@@ -381,6 +450,7 @@ class MyWindow(QMainWindow):
         except Exception as e:
             traceback.print_exc()
             print(f'Exception in update_datetime: {e}')
+
     #endregion
 
     #region 關閉程式警告視窗

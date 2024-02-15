@@ -83,7 +83,7 @@ R4X_Mapping={0:'Temp unit',
              5:'Set Alarm flg',
 
 
-             
+
              9:'set baudrate',
              10:'set ct range',
              11:'set CT1',
@@ -115,6 +115,8 @@ def R4X_address(searchName):
 #region R4X 地址數值狀態
 
 tempUnitDist={0:'°C',1:'°F'}
+
+dateFormate={0:"dd-MM-yyyy",1:"MM-dd-yyyy",2:"yyyy-MM-dd"} #大寫M為月份，小寫m為分鐘
 
 o2_GasUnitDist={0:'ppb',1:'PPM',2:'mg/l',3:'PPMV',4:'%',5:'PPM',6:'mg/l',7:'ppb',8:'PPMV',9:'kPa'}
 
