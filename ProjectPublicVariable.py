@@ -80,10 +80,10 @@ R4X_Mapping={0:'Temp unit',
              2:'Thermal Limit',
              3:'Thermal cut off',
              4:'Set Gas Unit',
-             5:'Set Alarm flg1',
-             6:'Set Alarm flg2',
-             7:'Set Alarm flg3',
-             8:'Set Alarm flg4',
+             5:'Set Alarm flg',
+
+
+             
              9:'set baudrate',
              10:'set ct range',
              11:'set CT1',
