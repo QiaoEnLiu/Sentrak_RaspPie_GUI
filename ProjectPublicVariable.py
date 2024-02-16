@@ -80,10 +80,10 @@ R4X_Mapping={0:'Temp unit',
              2:'Thermal Limit',
              3:'Thermal cut off',
              4:'Set Gas Unit',
-             5:'Set Alarm flg',
-
-
-
+             5:'Set Alarm flg0',
+             6:'Set Alarm flg1',
+             7:'Set Alarm flg NoSens',
+             8:'Set Alarm flg Thermal',
              9:'set baudrate',
              10:'set ct range',
              11:'set CT1',
@@ -116,7 +116,7 @@ def R4X_address(searchName):
 
 tempUnitDist={0:'°C',1:'°F'}
 
-dateFormate={0:"dd-MM-yyyy",1:"MM-dd-yyyy",2:"yyyy-MM-dd"} #大寫M為月份，小寫m為分鐘
+dateFormat={0:["EU","dd-MM-yyyy"],1:["USA","MM-dd-yyyy"],2:["ISO","yyyy-MM-dd"]} #大寫M為月份，小寫m為分鐘
 
 o2_GasUnitDist={0:'ppb',1:'PPM',2:'mg/l',3:'PPMV',4:'%',5:'PPM',6:'mg/l',7:'ppb',8:'PPMV',9:'kPa'}
 

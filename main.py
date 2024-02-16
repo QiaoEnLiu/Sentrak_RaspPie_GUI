@@ -323,56 +323,6 @@ class MyWindow(QMainWindow):
 
     #endregion
         
-    #region 切換時間格式
-    def datetimeFormatChange(self):
-
-        if format_wedget is None or not format_wedget.isVisible():
-
-            format_wedget = QWidget()
-            format_wedget.setWindowTitle('切換時間格式')
-            format_wedget.setGeometry(100, 100, 960, 780)
-
-            # format_wedget.setText('請選擇你要的時間格式：')
-
-            current_datetime = QDateTime.currentDateTime()
-            EU_format = PPV.dateFormate[0]
-            USA_format = PPV.dateFormate[1]
-            ISO_format = PPV.dateFormate[2]
-            EU_format_datetime=current_datetime.toString(f"EU: {EU_format} hh:mm:ss")
-            USA_format_datetime=current_datetime.toString(f"USA: {USA_format} hh:mm:ss")
-            ISO_format_datetime=current_datetime.toString(f"ISO: {ISO_format} hh:mm:ss")
-            EU_RadioButton = QRadioButton(f"{EU_format_datetime}")
-            USA_RadioButton = QRadioButton(f"{USA_format_datetime}")
-            ISO_RadioButton = QRadioButton(f"{ISO_format_datetime}")
-
-            layout = QVBoxLayout()
-            layout.addWidget(EU_RadioButton)
-            layout.addWidget(USA_RadioButton)
-            layout.addWidget(ISO_RadioButton)
-            format_wedget.setLayout(layout)
-            # format_wedget.adjustSize()
-            format_wedget.show()
-
-
-            # for button in formatGroup.buttons():
-            #     dialog.layout().addWidget(button)
-        
-            # result = dialog.exec_()
-
-            # if result == QMessageBox.Accepted:
-            #     # 使用者選擇了一個選項，這裡可以根據選項執行相應的操作
-            #     selected_button = formatGroup.checkedButton()
-            #     if selected_button:
-            #         print(f'選擇的選項是：{selected_button.text()}')
-            #     else:
-            #         print('未選擇任何選項')      
-
-
-            
-            # print(current_datetime.toString(f"{PPV.dateFormate[0]} hh:mm:ss"))
-            # print(current_datetime.toString(f"{PPV.dateFormate[1]} hh:mm:ss"))
-            # print(current_datetime.toString(f"{PPV.dateFormate[2]} hh:mm:ss"))
-    #endregion
 
     #region testClicked    
     def testClicked(self):
@@ -413,8 +363,9 @@ class MyWindow(QMainWindow):
                     traceback.print_exc()
                     print(f'Exception: {e}')
                 finally:
-                    formatted_datetime = current_datetime.toString(f"{PPV.dateFormate[dateFormateIndex]} hh:mm:ss")
-                    # print(current_datetime.toString(f"{PPV.dateFormate[dateFormateIndex]} hh:mm:ss"))
+                    
+                    formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
+                    # print(current_datetime.toString(f"({PPV.dateFormat[dateFormateIndex[0]]}){PPV.dateFormat[dateFormateIndex[1]]} hh:mm:ss"))
                     self.datetime.setText(formatted_datetime)
 
             # 建立一個新的執行緒並啟動

@@ -19,17 +19,23 @@ except Exception as e:
 
 font = QFont()
 
+
 select_tempUnit=None
 
 class setUnitFrame(QWidget):
+
     def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
         print(title)
         self.sub_pages = sub_pages
 
+        self.delayTime = QTimer(self)
+        self.delayTime.start(1000)
+
         self.temp_unit = PPV.instrument_4x.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
         self.setGasUnit = PPV.instrument_4x.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
-        
+
+
         title_label = QLabel(title, self)
         title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(72)
@@ -139,14 +145,13 @@ class setUnitFrame(QWidget):
         # 設定當前顯示的子畫面索引
         print(f'{title} Index: {self.stacked_widget.count()}')
 
+
     
     #region
     def setUnit(self):
         print('Set Unit')
         try:
             
-            PPV.instrument_4x.write_register(PPV.R4X_address('Set Gas Unit'),self.gas_unit_ComboBox.currentIndex(),functioncode=6)
-
             if self.celsius_radio.isChecked():
                 select_tempUnit = 0  # 攝氏
             elif self.fahrenheit_radio.isChecked():
@@ -154,7 +159,9 @@ class setUnitFrame(QWidget):
             else:
                 select_tempUnit = -1
 
+            self.delayTime.start(1000)
             PPV.instrument_4x.write_register(PPV.R4X_address('Temp unit'),select_tempUnit,functioncode=6)
+            PPV.instrument_4x.write_register(PPV.R4X_address('Set Gas Unit'),self.gas_unit_ComboBox.currentIndex(),functioncode=6)
 
             print(f'溫度單位{PPV.tempUnitDist[select_tempUnit]}（{select_tempUnit}），濃度單位{PPV.o2_GasUnitDist[self.gas_unit_ComboBox.currentIndex()]}（{self.gas_unit_ComboBox.currentIndex()}）')
         except minimalmodbus.NoResponseError as e:
