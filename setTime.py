@@ -1,8 +1,9 @@
 #zh-tw
-# testEndFrame.py
+# setTime.py
+# 「時間」
 
-# 此程式碼為子畫面最終刷新測試碼
-    # 尚未實作的功能介面都會先以此介面顯示
+# 此程式碼為設定時間程式碼
+    # 尚未實作調整時間
 try:
     import traceback, minimalmodbus, threading
     from PyQt5.QtCore import Qt, QTimer, QDateTime
