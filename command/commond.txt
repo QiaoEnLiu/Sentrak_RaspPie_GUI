@@ -7,6 +7,9 @@ pyinstaller --onefile --name Sentrak-GUI-RBPie-Py3_10 --add-data "picture;pictur
 .\venv-py3_10\Scripts\activate
 deactivate
 
+pip list
+pip list > requirements.txt
+
 
 
 Linux:
@@ -16,4 +19,6 @@ xrandr --output HDMI-1 --mode 1920x1080
 
 
 cd /media/joejoe/ESD-USB/
+cd /media/amin12-6/ESD-USB/
 sudo umount /media/joejoe/ESD-USB
+sudo umount /media/amin12-6/ESD-USB
