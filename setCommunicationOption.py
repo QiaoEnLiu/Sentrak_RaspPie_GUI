@@ -94,6 +94,7 @@ class comOptionFrame(QWidget):
             print(f'進入：{option}')
             if option == 'RS485': # 設定RS485
                 next_frame = rs485_Frame(option, _style, self.stacked_widget, self.sub_pages)
+                # next_frame = testEndFrame(option, _style, self.stacked_widget, self.sub_pages)
             elif option == 'HTTP / TCPIP': # 設定HTTP / TCPIP
                 next_frame = internetFrame(option, _style, self.stacked_widget, self.sub_pages)
             else:

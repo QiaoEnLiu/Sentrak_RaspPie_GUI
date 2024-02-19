@@ -124,7 +124,7 @@ class MyWindow(QMainWindow):
         main_frame.setStyleSheet("background-color: lightblue;")
         # main_frame.setStyleSheet("background-color: white;")  # 主畫面背景顏色
 
-        temperature_unit_default=unit_transfer.set_temperature_unit(unit=temperature_unit_text)
+        # temperature_unit_default=unit_transfer.set_temperature_unit(unit=temperature_unit_text)
         # temperature=unit_transfer.convert_temperature(temperature=temperature,unit=temperature_unit_text)
         self.main_label = QLabel(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature:.2f} {temperature_unit_default}") # ° 為Alt 0176
         self.main_label.setAlignment(Qt.AlignCenter)  # 文字置中

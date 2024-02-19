@@ -8,7 +8,9 @@ pyinstaller --onefile --name Sentrak-GUI-RBPie-Py3_10 --add-data "picture;pictur
 deactivate
 
 pip list
+pip freeze
 pip list > requirements.txt
+pip freeze > requirements.txt
 
 
 Linux:
