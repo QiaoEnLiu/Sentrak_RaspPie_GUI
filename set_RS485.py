@@ -30,12 +30,12 @@ class rs485_Frame(QWidget):
         title_layout.setSpacing(0) 
         title_label = QLabel(title, self)
         title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(72)
+        font.setPointSize(36)
         title_label.setFont(font)
         title_label.setStyleSheet(_style)
         title_layout.addWidget(title_label)
 
-        font.setPointSize(36)
+        font.setPointSize(18)
 
         # COM Port
         #暫以本機端通訊埠顯示

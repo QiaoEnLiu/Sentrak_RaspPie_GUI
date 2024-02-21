@@ -35,7 +35,7 @@ class id_LogIn_Frame(QWidget):
         title_label = QLabel(title, self)
         title_label.setContentsMargins(0, 0, 0, 0)
         title_label.setAlignment(Qt.AlignTop)  
-        font.setPointSize(36)
+        font.setPointSize(18)
         title_label.setFont(font)
         title_label.setStyleSheet(_style)
         title_layout.addWidget(title_label)
@@ -65,13 +65,13 @@ class id_LogIn_Frame(QWidget):
         self.password_denial_label.setFont(font)
         self.password_denial_label.setStyleSheet("color: red;")
 
-        font.setPointSize(42)
+        font.setPointSize(20)
         self.login_label = QLabel("登入成功！<p>若要重新登入，請登出再登入。", self)
         self.login_label.setFont(font)
 
 
          # 登入按鈕
-        font.setPointSize(24)
+        font.setPointSize(12)
         self.login_button = QPushButton("登入", self)
         self.login_button.setFont(font)
         self.login_button.clicked.connect(self.handle_login)

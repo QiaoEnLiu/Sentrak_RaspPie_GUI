@@ -68,10 +68,10 @@ class MyWindow(QMainWindow):
         screen_width, screen_height = screen_resolution.width(), screen_resolution.height()
 
         # 如果解析度為1920*1080，則全螢幕，否則使用固定解析度
-        if screen_width == 1920 and screen_height == 1080:
+        if screen_width == 800 and screen_height == 480:
             self.showFullScreen()
         else:
-            self.setFixedSize(1920, 1080)
+            self.setFixedSize(800, 480)
             print()
 
         window_size = self.size()
@@ -86,10 +86,10 @@ class MyWindow(QMainWindow):
 
         # 創建狀態列
         #region 狀態列
-        font.setPointSize(36)
+        font.setPointSize(18)
         status_bar = QStatusBar(self)
         self.setStatusBar(status_bar)
-        status_bar.setGeometry(0, 0, 1920, 100)  # 設置狀態列的尺寸
+        status_bar.setGeometry(0, 0, 800, 40)  # 設置狀態列的尺寸
         status_bar.setStyleSheet("background-color: lightgray;")  # 設置背景顏色
         status_bar.setSizeGripEnabled(False)  # 隱藏右下角的調整大小的三角形
 
@@ -120,7 +120,7 @@ class MyWindow(QMainWindow):
         # 創建中央主畫面及子畫面
         #region 主畫面
         main_frame = QFrame(self)
-        main_frame.setGeometry(0, 100, 960, 780)
+        main_frame.setGeometry(0, 40, 400, 360)
         main_frame.setStyleSheet("background-color: lightblue;")
         # main_frame.setStyleSheet("background-color: white;")  # 主畫面背景顏色
 
@@ -128,7 +128,7 @@ class MyWindow(QMainWindow):
         # temperature=unit_transfer.convert_temperature(temperature=temperature,unit=temperature_unit_text)
         self.main_label = QLabel(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature:.2f} {temperature_unit_default}") # ° 為Alt 0176
         self.main_label.setAlignment(Qt.AlignCenter)  # 文字置中
-        font.setPointSize(72)
+        font.setPointSize(36)
         self.main_label.setFont(font)
         main_frame_layout = QVBoxLayout(main_frame)
         # main_frame_layout.setContentsMargins(0, 0, 0, 0)
@@ -140,13 +140,13 @@ class MyWindow(QMainWindow):
         #region 折線圖畫面
         # 創建折線圖畫面
         self.sub_frame = QFrame(self)
-        self.sub_frame.setGeometry(960, 100, 960, 780)
+        self.sub_frame.setGeometry(400, 40, 400, 360)
 
         self.plot_canvas = plotCanvas(self, width=5, height=4)
         # self.sub_frame.setStyleSheet("background-color: lightblue;")  # 子畫面背景顏色
         # sub_label = QLabel('子畫面')
         # sub_label.setAlignment(Qt.AlignCenter)  # 文字置中
-        # font.setPointSize(72)
+        # font.setPointSize(36)
         # sub_label.setFont(font)
         self.sub_frame_layout = QVBoxLayout(self.sub_frame)
         self.sub_frame_layout.setContentsMargins(0, 0, 0, 0)
@@ -160,7 +160,7 @@ class MyWindow(QMainWindow):
         # 創建功能列
         #region 功能列
         function_bar = QFrame(self)
-        function_bar.setGeometry(0, 880, 1920, 200)  # 設置功能列的尺寸
+        function_bar.setGeometry(0, 400, 800, 80)  # 設置功能列的尺寸
         function_bar.setStyleSheet("background-color: lightgray;")  # 設置背景顏色
 
         # 在功能列中添加按鈕
@@ -175,7 +175,7 @@ class MyWindow(QMainWindow):
         self.return_button = QPushButton('返回', function_bar)
 
         # 設定按鈕大小
-        button_width, button_height = 200, 200
+        button_width, button_height = 80, 80
 
         save_button.setFixedSize(button_width, button_height)
         # test_button.setFixedSize(button_width, button_height)
@@ -187,7 +187,7 @@ class MyWindow(QMainWindow):
         self.menu_button.setFixedSize(button_width, button_height)
         self.return_button.setFixedSize(button_width, button_height)
         
-        font.setPointSize(36)
+        font.setPointSize(14)
         save_button.setFont(font)
         # test_button.setFont(font)
         # self.test_RTU_button.setFont(font)
@@ -568,7 +568,7 @@ class MyWindow(QMainWindow):
         menu_page = QFrame(self)
         menu_page.setStyleSheet("background-color: green;")  # 選單畫面背景顏色
 
-        font.setPointSize(32)
+        font.setPointSize(16)
         # menu_label = QLabel('選單')
         # menu_label.setAlignment(Qt.AlignCenter)  # 文字置中
         # menu_label.setFont(font)
@@ -583,7 +583,7 @@ class MyWindow(QMainWindow):
         self.identify_button = QPushButton('識別', menu_page)
 
             # 設定按鈕大小
-        button_width, button_height = 300, 300
+        button_width, button_height = 150, 150
 
         self.set_button.setFixedSize(button_width, button_height)
         self.calibrate_button.setFixedSize(button_width, button_height)

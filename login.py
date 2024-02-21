@@ -56,7 +56,7 @@ class LoginDialog(QDialog):
 
     def initUI(self):
         
-        font.setPointSize(36)
+        font.setPointSize(18)
 
         self.presentUser=None
 
@@ -83,7 +83,7 @@ class LoginDialog(QDialog):
         self.password_input.setEchoMode(QLineEdit.Password)  # 隱藏輸入的文字
         
 
-        font.setPointSize(42)
+        font.setPointSize(18)
         self.login_label = QLabel(self) #"登入成功！<p>若要重新登入，請登出再登入。",
         self.login_label.setFont(font)
 
@@ -100,7 +100,7 @@ class LoginDialog(QDialog):
         
         # 水平佈局1，包含帳號標籤和輸入框
         username_layout = QVBoxLayout()
-        username_layout.setContentsMargins(20, 20, 20, 20)
+        username_layout.setContentsMargins(5, 5, 5, 5)
         username_title_layout = QHBoxLayout()
         username_input_layout = QHBoxLayout()
         username_title_layout.addWidget(self.username_label)
@@ -113,7 +113,7 @@ class LoginDialog(QDialog):
 
         # 水平佈局2，包含密碼標籤和輸入框
         password_layout = QVBoxLayout()
-        password_layout.setContentsMargins(20, 20, 20, 20)
+        password_layout.setContentsMargins(5, 5, 5, 5)
         password_title_layout = QHBoxLayout()
         password_input_layout = QHBoxLayout()
         password_title_layout.addWidget(self.password_label)
@@ -124,12 +124,12 @@ class LoginDialog(QDialog):
         password_layout.addLayout(password_input_layout)
 
         loginSuccess_layout = QVBoxLayout()
-        loginSuccess_layout.setContentsMargins(20, 20, 20, 20)
+        loginSuccess_layout.setContentsMargins(5, 5, 5, 5)
         loginSuccess_layout.addWidget(self.login_label)
 
 
         login_bt_layout = QHBoxLayout()
-        login_bt_layout.setContentsMargins(20, 20, 20, 20)
+        login_bt_layout.setContentsMargins(5, 5, 5, 5)
 
         # 垂直佈局，包含所有元素
         id_LogIn_frame_layout = QVBoxLayout(self)
@@ -145,7 +145,7 @@ class LoginDialog(QDialog):
         self.setWindowTitle('員工登入')
 
         # 設置對話框大小
-        self.setFixedSize(960, 560)
+        self.setFixedSize(480, 280)
 
     def handle_login(self): #讀取字典
         # 獲取輸入的帳號和密碼

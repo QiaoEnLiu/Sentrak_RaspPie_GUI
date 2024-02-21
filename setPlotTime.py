@@ -27,7 +27,7 @@ class setPlotTimeFrame(QWidget):
         
         title_label = QLabel(title, self)
         title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(72)
+        font.setPointSize(36)
         title_label.setFont(font)
         title_label.setStyleSheet(_style)
 

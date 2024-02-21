@@ -52,7 +52,7 @@ class internetFrame(QWidget):
         title_layout = QVBoxLayout()        
         self.title_label = QLabel(self.title, self)
         # title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(36)
+        font.setPointSize(18)
         self.title_label.setFont(font)
         self.title_label.setStyleSheet(_style)
         title_layout.addWidget(self.title_label)
@@ -133,7 +133,7 @@ class internetFrame(QWidget):
 
     def ip_input_layout(self, name):
         # 創建水平佈局，包含標籤和輸入框
-        font.setPointSize(32)
+        font.setPointSize(16)
         layout = QVBoxLayout()
 
         label_layout = QVBoxLayout()
@@ -316,7 +316,7 @@ class MyDialog(QDialog):
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         internetInfo_label = QLabel(text,self)
-        font.setPointSize(24)
+        font.setPointSize(12)
         internetInfo_label.setFont(font)
         # internetInfo_label.setStyleSheet(_style) 
 
@@ -330,4 +330,4 @@ class MyDialog(QDialog):
         main_layout.addWidget(scroll_area)
 
         # 設定 QDialog 的大小
-        self.resize(960, 780)
+        self.resize(400, 360)

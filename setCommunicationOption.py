@@ -45,7 +45,7 @@ class comOptionFrame(QWidget):
         self.title_label = QLabel(title, self)
         self.title_label.setAlignment(Qt.AlignCenter)  
         self.title_label.setContentsMargins(0, 0, 0, 0)
-        font.setPointSize(72)
+        font.setPointSize(36)
         self.title_label.setFont(font)
         self.title_label.setStyleSheet(_style)
 
@@ -53,7 +53,7 @@ class comOptionFrame(QWidget):
         # user_label.setFont(font)
         # user_label.setStyleSheet(_style)
 
-        font.setPointSize(54)
+        font.setPointSize(24)
         rs485=QPushButton('RS485', self)
         rs485.setFont(font)
         # rs485.setStyleSheet(_style)

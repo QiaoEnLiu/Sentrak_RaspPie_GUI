@@ -34,11 +34,11 @@ class deviceInfoFrame(QWidget):
         title_layout = QVBoxLayout()        
         self.title_label = QLabel(self.title, self)
         # title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(36)
+        font.setPointSize(18)
         self.title_label.setFont(font)
         self.title_label.setStyleSheet(_style)
         title_layout.addWidget(self.title_label)
-        # font.setPointSize(72)
+        # font.setPointSize(36)
 
         # title_layout.setContentsMargins(0, 0, 0, 0)
         # title_layout.setSpacing(0)
@@ -49,7 +49,7 @@ class deviceInfoFrame(QWidget):
 
         self.deviceInfo_label = QLabel()
         # title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(24)
+        font.setPointSize(12)
         self.deviceInfo_label.setFont(font)
         # self.deviceInfo_label.setStyleSheet(_style) 
 

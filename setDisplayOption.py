@@ -47,12 +47,12 @@ class displayOptionFrame(QWidget):
         self.title_label = QLabel(self.title, self)
         self.title_label.setAlignment(Qt.AlignCenter)  
         self.title_label.setContentsMargins(0, 0, 0, 0)
-        font.setPointSize(72)
+        font.setPointSize(36)
         self.title_label.setFont(font)
         self.title_label.setStyleSheet(_style)
 
 
-        font.setPointSize(54)
+        font.setPointSize(24)
         time=QPushButton('波形圖週期', self)
         time.setFont(font)
         # time.setStyleSheet(_style)

@@ -46,12 +46,12 @@ class analogyOutputOptionFrame(QWidget):
         self.title_label = QLabel(self.title, self)
         self.title_label.setAlignment(Qt.AlignCenter)  
         self.title_label.setContentsMargins(0, 0, 0, 0)
-        font.setPointSize(72)
+        font.setPointSize(36)
         self.title_label.setFont(font)
         self.title_label.setStyleSheet(_style)
 
 
-        font.setPointSize(54)
+        font.setPointSize(24)
         analogyConcentrationBTN=QPushButton('類比濃度', self)
         analogyConcentrationBTN.setFont(font)
         # analogyConcentrationBTN.setStyleSheet(_style)

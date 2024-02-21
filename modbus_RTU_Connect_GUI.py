@@ -54,7 +54,7 @@ class ModbusRTUConfigurator(QDialog):
         self.serial_port = QSerialPort(self)  # 初始化 QSerialPort 實例
 
         self.setWindowTitle("Modbus RTU Configurator")
-        self.setFixedSize(420, 400)
+        self.setFixedSize(210, 200)
 
         self.init_ui()
         # 最後，顯示對話框
@@ -248,7 +248,7 @@ class ModbusRTUConfigurator(QDialog):
 
     def adjust_font_size(self):
         font = QFont()
-        font.setPointSize(32)  # 設置字型大小
+        font.setPointSize(16)  # 設置字型大小
 
         for widget in self.findChildren(QLabel):
             widget.setFont(font)

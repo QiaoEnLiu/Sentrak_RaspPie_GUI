@@ -38,13 +38,13 @@ class setUnitFrame(QWidget):
 
         title_label = QLabel(title, self)
         title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(72)
+        font.setPointSize(36)
         title_label.setFont(font)
         title_label.setStyleSheet(_style)
 
         temperture_label = QLabel('溫度', self)
         temperture_label.setAlignment(Qt.AlignLeft)  
-        font.setPointSize(36)
+        font.setPointSize(18)
         temperture_label.setFont(font)
 
         self.celsius_radio = QRadioButton('攝氏')
@@ -57,18 +57,18 @@ class setUnitFrame(QWidget):
         else:
             pass
 
-        font.setPointSize(24)
+        font.setPointSize(12)
         self.celsius_radio.setFont(font)
         self.fahrenheit_radio.setFont(font)
 
         oxygen_label = QLabel('氧氣濃度', self)
         oxygen_label.setAlignment(Qt.AlignLeft)  
-        font.setPointSize(36)
+        font.setPointSize(18)
         oxygen_label.setFont(font)
 
         partial_pressure_label = QLabel('氣體分壓', self)
         partial_pressure_label.setAlignment(Qt.AlignLeft)  
-        font.setPointSize(24)
+        font.setPointSize(12)
         partial_pressure_label.setFont(font)
 
         self.gas_unit_ComboBox=QComboBox(self)
@@ -78,7 +78,7 @@ class setUnitFrame(QWidget):
 
         dissolve_label = QLabel('溶解', self)
         dissolve_label.setAlignment(Qt.AlignLeft)  
-        font.setPointSize(24)
+        font.setPointSize(12)
         dissolve_label.setFont(font)
 
 

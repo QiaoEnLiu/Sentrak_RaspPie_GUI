@@ -67,7 +67,7 @@ class subMenuFrame(QWidget):
         title_layout = QVBoxLayout()        
         self.title_label = QLabel(self.title, self)
         # title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(36)
+        font.setPointSize(18)
         self.title_label.setFont(font)
         self.title_label.setStyleSheet(_style)
         title_layout.addWidget(self.title_label)
@@ -104,7 +104,7 @@ class subMenuFrame(QWidget):
                 self.itemDeescribe(option)
 
         # 將垂直滾動條設置為不可見
-        self.list_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        # self.list_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         content_layout.addWidget(self.list_widget)
         #endregion
 
@@ -136,9 +136,9 @@ class subMenuFrame(QWidget):
         list_icon_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "picture", "test_icon.png")
         icon_base64 = image_to_base64(list_icon_path)
         icon_bytes = QByteArray.fromBase64(icon_base64.encode())
-        list_icon.setPixmap(QPixmap.fromImage(QImage.fromData(icon_bytes)).scaled(144, 144))
+        list_icon.setPixmap(QPixmap.fromImage(QImage.fromData(icon_bytes)).scaled(72, 72))
         # print('icon Hright1:', list_icon.pixmap().height())
-        # print('icon Hright2:', pixmap.scaledToHeight(144).height())
+        # print('icon Hright2:', pixmap.scaledToHeight(72).height())
 
         # label_font = list_icon.font()  # 獲取 QLabel 的字型
         # font_size = label_font.pointSize()  # 獲取字型大小
@@ -148,8 +148,8 @@ class subMenuFrame(QWidget):
         item_label = QLabel(option)# 設置文字
         self.describe_label = QLabel()
 
-        font.setPointSize(pixmap.scaledToHeight(144).height()*30//80)
-        # font.setPointSize(42)
+        font.setPointSize(pixmap.scaledToHeight(72).height()*30//80)
+        # font.setPointSize(20)
         item_label.setFont(font)
         item_label.setStyleSheet("border: 5px solid black;border-bottom: 0px;")
         item_label.setContentsMargins(0, 0, 0, 0)
@@ -161,8 +161,8 @@ class subMenuFrame(QWidget):
         #region 清單描述及其配制
 
         self.describe_label.setText('描述')
-        font.setPointSize(pixmap.scaledToHeight(144).height()*15//80)
-        # font.setPointSize(12)
+        font.setPointSize(pixmap.scaledToHeight(72).height()*15//80)
+        # font.setPointSize(6)
         self.describe_label.setFont(font)
         self.describe_label.setStyleSheet("border: 5px solid black;border-top: 0px; color: gray")
         self.describe_label.setContentsMargins(0, 0, 0, 0)

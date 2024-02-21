@@ -36,7 +36,7 @@ plotTime_limit=0
 
 #region plotCanvas
 class plotCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
+    def __init__(self, parent=None, width=5, height=4, dpi=75):
         fig, self.ax = plt.subplots(figsize=(width, height), dpi=dpi)
         super().__init__(fig)
         self.setParent(parent)
@@ -54,7 +54,7 @@ class plotCanvas(FigureCanvas):
         # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
 
         # 使用選擇的字型進行圖表繪製
-        font = FontProperties(fname=selected_font.fname, size=12)
+        font = FontProperties(fname=selected_font.fname, size=10)
         self.temperature_unit=unit_transfer.set_temperature_unit(unit=temperature_unit)
 
         # 生成溫度和氧氣濃度的數據
