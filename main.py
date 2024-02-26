@@ -19,9 +19,11 @@ try:
         QPushButton, QStackedWidget, QMessageBox, QDesktopWidget,\
         QRadioButton, QButtonGroup
     from PyQt5.QtCore import Qt, QTimer, QDateTime, QByteArray, pyqtSlot, pyqtSignal
-    from PyQt5.QtGui import QFont, QPixmap, QImage
+    from PyQt5.QtGui import QFont, QPixmap, QImage, QIcon
+    from pkg_resources import resource_filename
+    from imgResource import setButtonIcon
 
-    from modbus_RTU_Connect_GUI import ModbusRTUConfigurator
+    # from modbus_RTU_Connect_GUI import ModbusRTUConfigurator
 
     from unit_transfer import unit_transfer
     from plotCanvas import plotCanvas #圖表內部配制
@@ -39,6 +41,7 @@ except Exception as e:
 
 #region 其他全域變數
 font = QFont()
+
 
 
 dateFormateIndex=2
@@ -126,14 +129,32 @@ class MyWindow(QMainWindow):
 
         # temperature_unit_default=unit_transfer.set_temperature_unit(unit=temperature_unit_text)
         # temperature=unit_transfer.convert_temperature(temperature=temperature,unit=temperature_unit_text)
-        self.main_label = QLabel(f"O<sub>2</sub>: {oxygen_concentration:.2f} ppb<br>T: {temperature:.2f} {temperature_unit_default}") # ° 為Alt 0176
-        self.main_label.setAlignment(Qt.AlignCenter)  # 文字置中
+        self.oxygen_label = QLabel("O<sub>2</sub>") # ° 為Alt 0176
+        self.o2Data = QLabel(f"{oxygen_concentration:.2f}")
+        self.o2Unite = QLabel(" ppb")
+        self.temperture_label=QLabel(f"T")
+        self.tempData = QLabel(f"{temperature:.2f}")
+        self.tempUnit = QLabel(" °C")
+        # self.oxygen_label.setAlignment(Qt.AlignCenter)  # 文字置中
+        # self.temperture_label.setAlignment(Qt.AlignCenter)
         font.setPointSize(36)
-        self.main_label.setFont(font)
-        main_frame_layout = QVBoxLayout(main_frame)
-        # main_frame_layout.setContentsMargins(0, 0, 0, 0)
-        main_frame_layout.setSpacing(0)  # 添加這一行以消除元素之間的間距
-        main_frame_layout.addWidget(self.main_label)
+        font.setBold(True)
+        self.oxygen_label.setFont(font)
+        self.o2Data.setFont(font)
+        self.o2Unite.setFont(font)
+        self.temperture_label.setFont(font)
+        self.tempData.setFont(font)
+        self.tempUnit.setFont(font)
+        font.setBold(False)
+        main_frame_layout = QGridLayout(main_frame)
+        main_frame_layout.setContentsMargins(50, 50, 50, 50)
+        # main_frame_layout.setSpacing(0)  # 添加這一行以消除元素之間的間距
+        main_frame_layout.addWidget(self.oxygen_label, 0, 0)
+        main_frame_layout.addWidget(self.o2Data, 0, 1)
+        main_frame_layout.addWidget(self.o2Unite, 0, 2)
+        main_frame_layout.addWidget(self.temperture_label, 1, 0)
+        main_frame_layout.addWidget(self.tempData, 1, 1)
+        main_frame_layout.addWidget(self.tempUnit, 1, 2)
 
         #endregion
 
@@ -164,15 +185,17 @@ class MyWindow(QMainWindow):
         function_bar.setStyleSheet("background-color: lightgray;")  # 設置背景顏色
 
         # 在功能列中添加按鈕
-        save_button = QPushButton('資料儲存', function_bar)
+        save_button = QPushButton(function_bar) # 資料儲存
         # test_button = QPushButton('測試', function_bar)
         # self.test_RTU_button = QPushButton('測試RTU', function_bar)
-        self.quit_button=QPushButton('離開',function_bar)
+        self.quit_button=QPushButton('離開', function_bar) # 離開
         # self.lock_label = QLabel('螢幕鎖',function_bar)
-        self.lock_button=QPushButton('解鎖',function_bar)
-        self.logout_button = QPushButton('登出', function_bar)
-        self.menu_button = QPushButton('選單', function_bar)
-        self.return_button = QPushButton('返回', function_bar)
+        self.lock_button=QPushButton(function_bar) # 解鎖
+        self.logout_button = QPushButton(function_bar) # 登出
+        self.menu_button = QPushButton(function_bar) # 選單
+        self.return_button = QPushButton(function_bar) # 返回
+
+
 
         # 設定按鈕大小
         button_width, button_height = 80, 80
@@ -197,6 +220,13 @@ class MyWindow(QMainWindow):
         self.logout_button.setFont(font)
         self.menu_button.setFont(font)
         self.return_button.setFont(font)
+
+        # 按鈕圖示
+        setButtonIcon(save_button, 'Save-icon.png')
+        setButtonIcon(self.lock_button, 'Lock icon.jpg')
+        setButtonIcon(self.logout_button, 'Unlock icon.jpg')
+        setButtonIcon(self.menu_button, 'Menu button.png')
+        setButtonIcon(self.return_button, 'return icon.png')
 
         self.quit_button.clicked.connect(self.show_confirmation_dialog)
         # self.test_RTU_button.clicked.connect(self.conect_modbus_RTU)
@@ -288,28 +318,9 @@ class MyWindow(QMainWindow):
 
         #endregion
 
-
-        #圖片來源
-        #region 圖片來源
-        # 設定圖片路徑，picture資料夾和程式碼同一個資料夾中
-
-        # lock_icon_path = os.path.join('picture', 'lock_icon.png')
-        # print("Absolute path of image:", os.path.abspath(lock_icon_path))
-
-        # lock_icon_path = "picture/lock_icon.png"
-        self.lock_icon_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "picture", "lock_icon.png")
-        self.lock_icon_base64 = image_to_base64(self.lock_icon_path) # 使用 lock_icon_base64
-        self.lock_icon_bytes = QByteArray.fromBase64(self.lock_icon_base64.encode())
-        # self.lock_label.setPixmap(QPixmap.fromImage(QImage.fromData(self.lock_icon_bytes)))
-        # lock_pixmap = QPixmap(lock_icon_path)
-        # lock_label.setPixmap(lock_pixmap.scaled(button_width, button_height, Qt.KeepAspectRatio))
-
-        #endregion
-
-
         #region 更新日期時間並持續讓modbus讀取資料進圖表    
         self.timer = QTimer(self) # 更新日期時間的 QTimer
-        self.timer.timeout.connect(self.update_modbus_data)
+        # self.timer.timeout.connect(self.update_modbus_data)
         self.timer.timeout.connect(self.update_datetime)
         self.timer.start(1000)  # 每秒更新一次
 
@@ -348,7 +359,10 @@ class MyWindow(QMainWindow):
                     temp_unit = PPV.instrument_4x.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
 
                     
-                    self.main_label.setText(f"O<sub>2</sub>: {oxygen_concentration:.2f} {PPV.o2_GasUnitDist[setGasUnit]}<br>T: {temperature:.2f} {PPV.tempUnitDist[temp_unit]}")
+                    self.o2Data.setText(f"{oxygen_concentration:.2f}")
+                    self.o2Unite.setText(f" {PPV.o2_GasUnitDist[setGasUnit]}")
+                    self.tempData.setText(f"T {temperature:.2f}")
+                    self.tempUnit.setText(f" {PPV.tempUnitDist[temp_unit]}")
                     # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
                     self.state_label.setText('已連線')
@@ -447,12 +461,6 @@ class MyWindow(QMainWindow):
         # 登入成功時觸發，將 logout_button 由不可見改為可見
         print('收到 login_successful 信號:', checkLogin)
         self.logout_button.setVisible(True)
-        # print('logout_button:',self.logout_button.isVisible())
-        self.lock_icon_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "picture", "unlock_icon.png")
-        self.lock_icon_base64 = image_to_base64(self.lock_icon_path) # 使用 lock_icon_base64
-        self.lock_icon_bytes = QByteArray.fromBase64(self.lock_icon_base64.encode())
-        # self.lock_label.setPixmap(QPixmap.fromImage(QImage.fromData(self.lock_icon_bytes)))
-
     #endregion
     
     #region 登出行為
@@ -469,11 +477,6 @@ class MyWindow(QMainWindow):
             QMessageBox.information(self, '登出成功', '返回主頁面')
             self.logout_button.setVisible(self.isLogin) 
             print('logout_button_click:',self.logout_button.isVisible())
-
-            self.lock_icon_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "picture", "lock_icon.png")
-            self.lock_icon_base64 = image_to_base64(self.lock_icon_path) # 使用 lock_icon_base64
-            self.lock_icon_bytes = QByteArray.fromBase64(self.lock_icon_base64.encode())
-            # self.lock_label.setPixmap(QPixmap.fromImage(QImage.fromData(self.lock_icon_bytes)))
 
             # 將畫面切換回主畫面（清空堆疊）
             # 判斷是否只剩下一頁，如果是，則不執行刪除
@@ -518,7 +521,7 @@ class MyWindow(QMainWindow):
 
     # @pyqtSlot(float)
     # def update_main_label(self, temperature):
-    #     self.main_label.setText(f'O₂: {oxygen_concentration:.2f} ppb, T: {temperature:.2f} °C')
+    #     self.oxygen_label.setText(f'O₂: {oxygen_concentration:.2f} ppb, T: {temperature:.2f} °C')
 
     # def set_main_values(self, temperature):
     #     # 設定 oxygen_concentration 和 temperature 的值
@@ -577,10 +580,10 @@ class MyWindow(QMainWindow):
         # menu_page_layout.addWidget(menu_label)
 
         # 顯示四個按鈕
-        self.set_button = QPushButton('設定', menu_page)
-        self.calibrate_button = QPushButton('校正', menu_page)
-        self.record_button = QPushButton('記錄', menu_page)
-        self.identify_button = QPushButton('識別', menu_page)
+        self.set_button = QPushButton(menu_page) # 設定
+        self.calibrate_button = QPushButton( menu_page) # 校正
+        self.record_button = QPushButton(menu_page) # 記錄
+        self.identify_button = QPushButton(menu_page) # 識別
 
             # 設定按鈕大小
         button_width, button_height = 150, 150
@@ -595,6 +598,16 @@ class MyWindow(QMainWindow):
         self.calibrate_button.setStyleSheet("background-color: lightgreen;")
         self.record_button.setStyleSheet("background-color: lightblue;")
         self.identify_button.setStyleSheet("background-color: yellow;")
+
+        setButtonIcon(self.set_button,'settings icon.png', text='設定') # text='設定'
+        setButtonIcon(self.calibrate_button,'calibration icon.png', text='校正') # text='校正'
+        setButtonIcon(self.record_button,'Data log icon.jpg', text='記錄') # text='記錄'
+        setButtonIcon(self.identify_button,'Identification icon.png', text='識別') # text='識別'
+
+        # paintEvent(self.set_button, None)
+        # paintEvent(self.calibrate_button, None)
+        # paintEvent(self.record_button, None)
+        # paintEvent(self.identify_button, None)
 
         self.set_button.setFont(font)
         self.calibrate_button.setFont(font)

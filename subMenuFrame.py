@@ -42,6 +42,8 @@ try:
     from id_Frame import id_LogIn_Frame # 登入訊息
     from id_deviceInfo import deviceInfoFrame # 儀器資訊
 
+    
+
     from img_to_base64 import image_to_base64
 
 except Exception as e:
@@ -132,8 +134,8 @@ class subMenuFrame(QWidget):
         list_icon = QLabel('圖示')
         list_icon.setStyleSheet("border: 5px solid black;border-right: 0px;")
         
-        pixmap = QPixmap('picture/test_icon.png')  # 請替換為您的實際圖示路徑
-        list_icon_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "picture", "test_icon.png")
+        pixmap = QPixmap('picture/icon/test_icon.png')  # 請替換為您的實際圖示路徑
+        list_icon_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "picture/icon", "test_icon.png")
         icon_base64 = image_to_base64(list_icon_path)
         icon_bytes = QByteArray.fromBase64(icon_base64.encode())
         list_icon.setPixmap(QPixmap.fromImage(QImage.fromData(icon_bytes)).scaled(72, 72))
