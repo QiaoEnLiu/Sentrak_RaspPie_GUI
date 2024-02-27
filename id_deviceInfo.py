@@ -36,7 +36,7 @@ class deviceInfoFrame(QWidget):
         # title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(18)
         self.title_label.setFont(font)
-        self.title_label.setStyleSheet(_style)
+        # self.title_label.setStyleSheet(_style)
         title_layout.addWidget(self.title_label)
         # font.setPointSize(36)
 

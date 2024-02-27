@@ -40,7 +40,7 @@ class setUnitFrame(QWidget):
         title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(36)
         title_label.setFont(font)
-        title_label.setStyleSheet(_style)
+        # title_label.setStyleSheet(_style)
 
         temperture_label = QLabel('溫度', self)
         temperture_label.setAlignment(Qt.AlignLeft)  

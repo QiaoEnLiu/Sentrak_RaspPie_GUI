@@ -1,4 +1,4 @@
-#zh-tw 下列程式碼找出上述問題
+#zh-tw
 
 # menuSubFrame.py
 # 此程式碼為子選單畫面（第三層）：當main.py的功能選單的四個按鈕（設定、校正、記錄、識別）偵測到點擊事件時，所執行的程式碼並將子畫面刷新為清單畫面
@@ -43,7 +43,7 @@ try:
     from id_deviceInfo import deviceInfoFrame # 儀器資訊
 
     
-
+    from imgResource import setSubMenuLabelIcon
     from img_to_base64 import image_to_base64
 
 except Exception as e:
@@ -71,7 +71,7 @@ class subMenuFrame(QWidget):
         # title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(18)
         self.title_label.setFont(font)
-        self.title_label.setStyleSheet(_style)
+        # self.title_label.setStyleSheet(_style)
         title_layout.addWidget(self.title_label)
         #endregion
 
@@ -133,12 +133,14 @@ class subMenuFrame(QWidget):
         #region 清單圖示
         list_icon = QLabel('圖示')
         list_icon.setStyleSheet("border: 5px solid black;border-right: 0px;")
+
+        setSubMenuLabelIcon(list_icon,'test_icon.png')
         
-        pixmap = QPixmap('picture/icon/test_icon.png')  # 請替換為您的實際圖示路徑
-        list_icon_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "picture/icon", "test_icon.png")
-        icon_base64 = image_to_base64(list_icon_path)
-        icon_bytes = QByteArray.fromBase64(icon_base64.encode())
-        list_icon.setPixmap(QPixmap.fromImage(QImage.fromData(icon_bytes)).scaled(72, 72))
+        # pixmap = QPixmap('picture/icon/test_icon.png')  # 請替換為您的實際圖示路徑
+        # list_icon_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "picture/icon", "test_icon.png")
+        # icon_base64 = image_to_base64(list_icon_path)
+        # icon_bytes = QByteArray.fromBase64(icon_base64.encode())
+        # list_icon.setPixmap(QPixmap.fromImage(QImage.fromData(icon_bytes)).scaled(72, 72))
         # print('icon Hright1:', list_icon.pixmap().height())
         # print('icon Hright2:', pixmap.scaledToHeight(72).height())
 
@@ -150,7 +152,7 @@ class subMenuFrame(QWidget):
         item_label = QLabel(option)# 設置文字
         self.describe_label = QLabel()
 
-        font.setPointSize(pixmap.scaledToHeight(72).height()*30//80)
+        # font.setPointSize(pixmap.scaledToHeight(72).height()*30//80)
         # font.setPointSize(20)
         item_label.setFont(font)
         item_label.setStyleSheet("border: 5px solid black;border-bottom: 0px;")
@@ -163,7 +165,7 @@ class subMenuFrame(QWidget):
         #region 清單描述及其配制
 
         self.describe_label.setText('描述')
-        font.setPointSize(pixmap.scaledToHeight(72).height()*15//80)
+        # font.setPointSize(pixmap.scaledToHeight(72).height()*15//80)
         # font.setPointSize(6)
         self.describe_label.setFont(font)
         self.describe_label.setStyleSheet("border: 5px solid black;border-top: 0px; color: gray")

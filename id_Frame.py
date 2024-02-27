@@ -37,7 +37,7 @@ class id_LogIn_Frame(QWidget):
         title_label.setAlignment(Qt.AlignTop)  
         font.setPointSize(18)
         title_label.setFont(font)
-        title_label.setStyleSheet(_style)
+        # title_label.setStyleSheet(_style)
         title_layout.addWidget(title_label)
         # title_layout.addStretch(1)
 

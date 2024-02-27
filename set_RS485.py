@@ -32,7 +32,7 @@ class rs485_Frame(QWidget):
         title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(36)
         title_label.setFont(font)
-        title_label.setStyleSheet(_style)
+        # title_label.setStyleSheet(_style)
         title_layout.addWidget(title_label)
 
         font.setPointSize(18)

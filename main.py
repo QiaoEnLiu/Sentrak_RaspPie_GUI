@@ -28,7 +28,7 @@ try:
     from unit_transfer import unit_transfer
     from plotCanvas import plotCanvas #圖表內部配制
     from subMenuFrame import subMenuFrame #子選單內部配制
-    from img_to_base64 import image_to_base64
+    # from img_to_base64 import image_to_base64
     from login import LoginDialog
 
 
@@ -93,30 +93,37 @@ class MyWindow(QMainWindow):
         status_bar = QStatusBar(self)
         self.setStatusBar(status_bar)
         status_bar.setGeometry(0, 0, 800, 40)  # 設置狀態列的尺寸
-        status_bar.setStyleSheet("background-color: lightgray;")  # 設置背景顏色
+        status_bar.setStyleSheet("QStatusBar {background-color: white; padding: 0; margin: 0;}")  # 設置背景顏色
+        status_bar.setStyleSheet(status_bar.styleSheet() + "QStatusBar::item{border: 0px}")
         status_bar.setSizeGripEnabled(False)  # 隱藏右下角的調整大小的三角形
+        status_bar.setContentsMargins(0, 0, 0, 0)
 
         self.alarm_label = QLabel('警告', self)
+        # self.alarm_label.setFrameShape(QLabel.StyledPanel)
+        self.alarm_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
         self.alarm_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.alarm_label.setFont(font)
 
         # 在狀態列中央加入日期時間
         self.datetime = QLabel(self)
+        # self.datetime.setFrameShape(QLabel.StyledPanel)
         self.datetime.setAlignment(Qt.AlignCenter)  # 文字置中
         # self.datetime=QPushButton(self)
         # self.datetime.setFlat(True)
-        # self.datetime.setStyleSheet("border: none;")
+        self.datetime.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
         # self.datetime.setStyleSheet("padding: 0; margin: 0;")
         self.datetime.setFont(font)
         # self.datetime.clicked.connect(self.datetimeFormatChange)
         
         self.state_label = QLabel('未連線', self)
+        # self.state_label.setFrameShape(QLabel.StyledPanel)
+        self.state_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
         self.state_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.state_label.setFont(font)
 
-        status_bar.addWidget(self.alarm_label,1) # 將 QLabel 加入狀態列，並指定伸縮因子為1
-        status_bar.addWidget(self.datetime,1)
-        status_bar.addWidget(self.state_label,1)
+        status_bar.addWidget(self.alarm_label, 1) # 將 QLabel 加入狀態列，並指定伸縮因子為1
+        status_bar.addWidget(self.datetime, 1)
+        status_bar.addWidget(self.state_label, 1)
         #endregion
 
 
@@ -124,8 +131,8 @@ class MyWindow(QMainWindow):
         #region 主畫面
         main_frame = QFrame(self)
         main_frame.setGeometry(0, 40, 400, 360)
-        main_frame.setStyleSheet("background-color: lightblue;")
-        # main_frame.setStyleSheet("background-color: white;")  # 主畫面背景顏色
+        # main_frame.setStyleSheet("background-color: lightblue;")
+        main_frame.setStyleSheet("background-color: white;")  # 主畫面背景顏色
 
         # temperature_unit_default=unit_transfer.set_temperature_unit(unit=temperature_unit_text)
         # temperature=unit_transfer.convert_temperature(temperature=temperature,unit=temperature_unit_text)
@@ -164,7 +171,7 @@ class MyWindow(QMainWindow):
         self.sub_frame.setGeometry(400, 40, 400, 360)
 
         self.plot_canvas = plotCanvas(self, width=5, height=4)
-        # self.sub_frame.setStyleSheet("background-color: lightblue;")  # 子畫面背景顏色
+        self.sub_frame.setStyleSheet("background-color: white;")  # 子畫面背景顏色
         # sub_label = QLabel('子畫面')
         # sub_label.setAlignment(Qt.AlignCenter)  # 文字置中
         # font.setPointSize(36)
@@ -182,10 +189,10 @@ class MyWindow(QMainWindow):
         #region 功能列
         function_bar = QFrame(self)
         function_bar.setGeometry(0, 400, 800, 80)  # 設置功能列的尺寸
-        function_bar.setStyleSheet("background-color: lightgray;")  # 設置背景顏色
+        function_bar.setStyleSheet("background-color: white;")  # 設置背景顏色
 
         # 在功能列中添加按鈕
-        save_button = QPushButton(function_bar) # 資料儲存
+        self.save_button = QPushButton(function_bar) # 資料儲存
         # test_button = QPushButton('測試', function_bar)
         # self.test_RTU_button = QPushButton('測試RTU', function_bar)
         self.quit_button=QPushButton('離開', function_bar) # 離開
@@ -200,7 +207,7 @@ class MyWindow(QMainWindow):
         # 設定按鈕大小
         button_width, button_height = 80, 80
 
-        save_button.setFixedSize(button_width, button_height)
+        self.save_button.setFixedSize(button_width, button_height)
         # test_button.setFixedSize(button_width, button_height)
         # self.test_RTU_button.setFixedSize(button_width, button_height)
         self.quit_button.setFixedSize(button_width,button_height)
@@ -211,7 +218,7 @@ class MyWindow(QMainWindow):
         self.return_button.setFixedSize(button_width, button_height)
         
         font.setPointSize(14)
-        save_button.setFont(font)
+        self.save_button.setFont(font)
         # test_button.setFont(font)
         # self.test_RTU_button.setFont(font)
         self.quit_button.setFont(font)
@@ -222,11 +229,18 @@ class MyWindow(QMainWindow):
         self.return_button.setFont(font)
 
         # 按鈕圖示
-        setButtonIcon(save_button, 'Save-icon.png')
+        setButtonIcon(self.save_button, 'Save-icon.png')
         setButtonIcon(self.lock_button, 'Lock icon.jpg')
         setButtonIcon(self.logout_button, 'Unlock icon.jpg')
         setButtonIcon(self.menu_button, 'Menu button.png')
         setButtonIcon(self.return_button, 'return icon.png')
+
+        self.save_button.setStyleSheet('QPushButton { border: none; }')
+        self.quit_button.setStyleSheet('QPushButton { border: none; }')
+        self.lock_button.setStyleSheet('QPushButton { border: none; }')
+        self.logout_button.setStyleSheet('QPushButton { border: none; }')
+        self.menu_button.setStyleSheet('QPushButton { border: none; }')
+        self.return_button.setStyleSheet('QPushButton { border: none; }')
 
         self.quit_button.clicked.connect(self.show_confirmation_dialog)
         # self.test_RTU_button.clicked.connect(self.conect_modbus_RTU)
@@ -253,7 +267,7 @@ class MyWindow(QMainWindow):
         function_bar_layout2 = QHBoxLayout()
         function_bar_layout3 = QHBoxLayout()
 
-        function_bar_layout1.addWidget(save_button)
+        function_bar_layout1.addWidget(self.save_button)
         # function_bar_layout1.addWidget(test_button)
         # function_bar_layout1.addWidget(self.test_RTU_button)
         function_bar_layout1.addWidget(self.quit_button)
@@ -320,7 +334,7 @@ class MyWindow(QMainWindow):
 
         #region 更新日期時間並持續讓modbus讀取資料進圖表    
         self.timer = QTimer(self) # 更新日期時間的 QTimer
-        # self.timer.timeout.connect(self.update_modbus_data)
+        self.timer.timeout.connect(self.update_modbus_data)
         self.timer.timeout.connect(self.update_datetime)
         self.timer.start(1000)  # 每秒更新一次
 
@@ -377,7 +391,6 @@ class MyWindow(QMainWindow):
                     traceback.print_exc()
                     print(f'Exception: {e}')
                 finally:
-                    
                     formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
                     # print(current_datetime.toString(f"({PPV.dateFormat[dateFormateIndex[0]]}){PPV.dateFormat[dateFormateIndex[1]]} hh:mm:ss"))
                     self.datetime.setText(formatted_datetime)
@@ -569,7 +582,7 @@ class MyWindow(QMainWindow):
     def create_menu_page(self):       
 
         menu_page = QFrame(self)
-        menu_page.setStyleSheet("background-color: green;")  # 選單畫面背景顏色
+        menu_page.setStyleSheet("background-color: white;")  # 選單畫面背景顏色
 
         font.setPointSize(16)
         # menu_label = QLabel('選單')
@@ -586,7 +599,7 @@ class MyWindow(QMainWindow):
         self.identify_button = QPushButton(menu_page) # 識別
 
             # 設定按鈕大小
-        button_width, button_height = 150, 150
+        button_width, button_height = 125, 125
 
         self.set_button.setFixedSize(button_width, button_height)
         self.calibrate_button.setFixedSize(button_width, button_height)
@@ -594,15 +607,24 @@ class MyWindow(QMainWindow):
         self.identify_button.setFixedSize(button_width, button_height)
 
         # 設定按鈕的背景顏色，方便檢查它們的可見性
-        self.set_button.setStyleSheet("background-color: pink;")
-        self.calibrate_button.setStyleSheet("background-color: lightgreen;")
-        self.record_button.setStyleSheet("background-color: lightblue;")
-        self.identify_button.setStyleSheet("background-color: yellow;")
+        # self.set_button.setStyleSheet("background-color: white;")
+        # self.calibrate_button.setStyleSheet("background-color: white;")
+        # self.record_button.setStyleSheet("background-color: white;")
+        # self.identify_button.setStyleSheet("background-color: white;")
 
-        setButtonIcon(self.set_button,'settings icon.png', text='設定') # text='設定'
-        setButtonIcon(self.calibrate_button,'calibration icon.png', text='校正') # text='校正'
-        setButtonIcon(self.record_button,'Data log icon.jpg', text='記錄') # text='記錄'
-        setButtonIcon(self.identify_button,'Identification icon.png', text='識別') # text='識別'
+
+        setButtonIcon(self.set_button,'settings icon.png', text = "設\n定") # text='設定'
+        setButtonIcon(self.calibrate_button,'calibration icon.png', text = "校\n正") # text='校正'
+        setButtonIcon(self.record_button,'Data log icon.jpg', text = "記\n錄") # text='記錄'
+        setButtonIcon(self.identify_button,'Identification icon.png', text = "識\n別") # text='識別'
+
+        self.set_button.setStyleSheet('QPushButton { border: none;}')
+        self.calibrate_button.setStyleSheet('QPushButton { border: none;}')
+        self.record_button.setStyleSheet('QPushButton { border: none;}')
+        self.identify_button.setStyleSheet('QPushButton { border: none;}')
+
+
+        
 
         # paintEvent(self.set_button, None)
         # paintEvent(self.calibrate_button, None)
@@ -615,10 +637,10 @@ class MyWindow(QMainWindow):
         self.identify_button.setFont(font)
 
         # 連接按鈕點擊事件（前往各個子選單）
-        self.set_button.clicked.connect(lambda: self.sub_menu_page(self.set_button.text(),self.set_button.styleSheet()))
-        self.calibrate_button.clicked.connect(lambda: self.sub_menu_page(self.calibrate_button.text(),self.calibrate_button.styleSheet()))
-        self.record_button.clicked.connect(lambda: self.sub_menu_page(self.record_button.text(),self.record_button.styleSheet()))
-        self.identify_button.clicked.connect(lambda: self.sub_menu_page(self.identify_button.text(),self.identify_button.styleSheet()))
+        self.set_button.clicked.connect(lambda: self.sub_menu_page("設定",self.set_button.styleSheet()))
+        self.calibrate_button.clicked.connect(lambda: self.sub_menu_page("校正",self.calibrate_button.styleSheet()))
+        self.record_button.clicked.connect(lambda: self.sub_menu_page("記錄",self.record_button.styleSheet()))
+        self.identify_button.clicked.connect(lambda: self.sub_menu_page("識別",self.identify_button.styleSheet()))
 
         # 將按鈕添加到GridLayout中
         menu_page_layout.addWidget(self.set_button, 0, 0, 1, 1)
@@ -632,7 +654,7 @@ class MyWindow(QMainWindow):
     #endregion
 
     # 主選單前往子選單畫面
-    #region 在主選單中前往下一個子選單頁面（第三頁）
+    #region 在主選單中前往下一個子選單清單頁面（第三頁）
     def sub_menu_page(self, page_name, _style):
         print('登入：',self.logout_button.isVisible())
         print('進入：', page_name)

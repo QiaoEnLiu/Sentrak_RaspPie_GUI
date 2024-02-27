@@ -1,8 +1,19 @@
+#zh-tw 
+# imgResource.py
+# 此程式碼為按鈕及標籤取得圖示用的程式碼
+
 
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtGui import QPixmap, QIcon, QPainter, QFontMetrics
 from PyQt5.QtCore import Qt
 from pkg_resources import resource_filename
+
+
+def setSubMenuLabelIcon(label, image_path):
+    image_path = resource_filename(__name__, 'picture/icon/'+image_path)
+    pixmap = QPixmap(image_path)
+    pixmap = pixmap.scaled(65, 65, aspectRatioMode=Qt.KeepAspectRatio, transformMode=Qt.SmoothTransformation)
+    label.setPixmap(pixmap)
 
 def setButtonIcon(button, image_path, text=""):
     # 使用 resource_filename 獲取圖片的路徑
@@ -16,19 +27,23 @@ def setButtonIcon(button, image_path, text=""):
 
     # 使用 scaled 方法調整圖片大小以符合按鈕，同時保持原始的寬高比# 如果圖片尺寸超過 100x100，則進行調整
     if button.width() > 100 or button.height() > 100:
-        print('Image Set 1')
-        pixmap = pixmap.scaled(100, 100, aspectRatioMode=Qt.KeepAspectRatio, transformMode=Qt.SmoothTransformation)
+        # print('Image Set 1')
+        pixmap = pixmap.scaled(button.width()//1.25, button.height()//1.25, aspectRatioMode=Qt.KeepAspectRatio, transformMode=Qt.SmoothTransformation)
+
 
     else:
-        print('Image Set 2')
+        # print('Image Set 2')
         pixmap = pixmap.scaled(button_size, aspectRatioMode=Qt.KeepAspectRatio, transformMode=Qt.SmoothTransformation)
 
+    # pixmap = pixmap.scaled(button_size, aspectRatioMode=Qt.KeepAspectRatio, transformMode=Qt.SmoothTransformation)
     # 設置按鈕的圖標
     icon = QIcon(pixmap)
     button.setIcon(icon)
 
     # 設置按鈕的圖標大小
     button.setIconSize(button_size)
+
+    # button.setStyleSheet(button.styleSheet() + "QPushButton { text-align: bottom; }")
 
     # 將文字保存到按鈕的屬性中
     button.setProperty("text", text)

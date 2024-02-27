@@ -49,7 +49,7 @@ class displayOptionFrame(QWidget):
         self.title_label.setContentsMargins(0, 0, 0, 0)
         font.setPointSize(36)
         self.title_label.setFont(font)
-        self.title_label.setStyleSheet(_style)
+        # self.title_label.setStyleSheet(_style)
 
 
         font.setPointSize(24)

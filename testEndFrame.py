@@ -27,11 +27,11 @@ class testEndFrame(QWidget):
         title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(32)
         title_label.setFont(font)
-        title_label.setStyleSheet(_style)
+        # title_label.setStyleSheet(_style)
 
         user_label = QLabel(PPV.presentUser.userInfo())
         user_label.setFont(font)
-        user_label.setStyleSheet(_style)
+        # user_label.setStyleSheet(_style)
 
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
