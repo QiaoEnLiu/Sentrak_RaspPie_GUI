@@ -43,7 +43,7 @@ try:
     from id_deviceInfo import deviceInfoFrame # 儀器資訊
 
     
-    from imgResource import setSubMenuLabelIcon
+    from imgResource import setLabelIcon
     from img_to_base64 import image_to_base64
 
 except Exception as e:
@@ -134,7 +134,7 @@ class subMenuFrame(QWidget):
         list_icon = QLabel('圖示')
         list_icon.setStyleSheet("border: 5px solid black;border-right: 0px;")
 
-        setSubMenuLabelIcon(list_icon,'test_icon.png')
+        setLabelIcon(list_icon,'test_icon.png')
         
         # pixmap = QPixmap('picture/icon/test_icon.png')  # 請替換為您的實際圖示路徑
         # list_icon_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "picture/icon", "test_icon.png")

@@ -21,7 +21,9 @@ try:
     from PyQt5.QtCore import Qt, QTimer, QDateTime, QByteArray, pyqtSlot, pyqtSignal
     from PyQt5.QtGui import QFont, QPixmap, QImage, QIcon
     from pkg_resources import resource_filename
-    from imgResource import setButtonIcon
+    from imgResource import setButtonIcon, setLabelIcon, \
+        stateAlarm_icons, stateWire_icons, stateRecord_icons\
+        ,stateBatteryCharge_icons ,stateBattery_icons ,stateInbMenu_icons, lock_icons
 
     # from modbus_RTU_Connect_GUI import ModbusRTUConfigurator
 
@@ -41,6 +43,11 @@ except Exception as e:
 
 #region 其他全域變數
 font = QFont()
+
+
+spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+spacer_right = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+spacer_left = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
 
 
@@ -89,7 +96,7 @@ class MyWindow(QMainWindow):
 
         # 創建狀態列
         #region 狀態列
-        font.setPointSize(18)
+        font.setPointSize(14)
         status_bar = QStatusBar(self)
         self.setStatusBar(status_bar)
         status_bar.setGeometry(0, 0, 800, 40)  # 設置狀態列的尺寸
@@ -98,32 +105,91 @@ class MyWindow(QMainWindow):
         status_bar.setSizeGripEnabled(False)  # 隱藏右下角的調整大小的三角形
         status_bar.setContentsMargins(0, 0, 0, 0)
 
-        self.alarm_label = QLabel('警告', self)
-        # self.alarm_label.setFrameShape(QLabel.StyledPanel)
-        self.alarm_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
-        self.alarm_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        self.alarm_label.setFont(font)
+        self.alarmNull_label = QLabel('無警告', self)
+        self.alarmNull_label.setAlignment(Qt.AlignLeft)
+        self.alarmNull_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
+        self.alarmNull_label.setFont(font)
+        setLabelIcon(self.alarmNull_label, stateAlarm_icons[0])
+        
+        self.alarm1_label = QLabel('警告1', self)
+        self.alarm1_label.setAlignment(Qt.AlignLeft)
+        self.alarm1_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
+        self.alarm1_label.setFont(font)
+        setLabelIcon(self.alarm1_label, stateAlarm_icons[1])
+
+        self.alarm2_label = QLabel('警告2', self)
+        self.alarm2_label.setAlignment(Qt.AlignLeft)
+        self.alarm2_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
+        self.alarm2_label.setFont(font)
+        setLabelIcon(self.alarm2_label, stateAlarm_icons[2])
+
 
         # 在狀態列中央加入日期時間
         self.datetime = QLabel(self)
-        # self.datetime.setFrameShape(QLabel.StyledPanel)
-        self.datetime.setAlignment(Qt.AlignCenter)  # 文字置中
+        self.datetime.setAlignment(Qt.AlignCenter| Qt.AlignCenter)  # 文字置中
         # self.datetime=QPushButton(self)
         # self.datetime.setFlat(True)
         self.datetime.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
         # self.datetime.setStyleSheet("padding: 0; margin: 0;")
         self.datetime.setFont(font)
         # self.datetime.clicked.connect(self.datetimeFormatChange)
-        
-        self.state_label = QLabel('未連線', self)
-        # self.state_label.setFrameShape(QLabel.StyledPanel)
-        self.state_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
-        self.state_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.state_label.setFont(font)
 
-        status_bar.addWidget(self.alarm_label, 1) # 將 QLabel 加入狀態列，並指定伸縮因子為1
-        status_bar.addWidget(self.datetime, 1)
-        status_bar.addWidget(self.state_label, 1)
+        self.stateUSB_label = QLabel('USB', self)
+        self.stateUSB_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
+        self.stateUSB_label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
+        self.stateUSB_label.setFont(font)
+        setLabelIcon(self.stateUSB_label, stateWire_icons[2])
+
+
+        self.stateBattery_label = QLabel('電池', self)
+        self.stateBattery_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
+        self.stateBattery_label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
+        self.stateBattery_label.setFont(font)
+        setLabelIcon(self.stateBattery_label, stateBattery_icons[0])
+
+        self.stateConnect_label = QLabel('未連線', self)
+        self.stateConnect_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
+        self.stateConnect_label.setAlignment(Qt.AlignRight| Qt.AlignCenter)
+        self.stateConnect_label.setFont(font)
+        # setLabelIcon(self.stateConnect_label, )
+
+        # 建立容器 widget 用來放置元件
+        container_widget = QWidget(self)
+        container_layout = QHBoxLayout(container_widget)
+        container_layout.setContentsMargins(0, 0, 0, 0)
+
+        container_layout1 = QHBoxLayout()
+        container_layout2 = QHBoxLayout()
+        container_layout3 = QHBoxLayout()
+
+        # 將 QLabel 加入狀態列，並指定伸縮因子為1
+        # 添加元件到容器
+        container_layout1.addWidget(self.alarmNull_label)
+        container_layout1.addWidget(self.alarm1_label)
+        container_layout1.addWidget(self.alarm2_label)
+        container_layout1.addItem(spacer)
+
+        container_layout2.addItem(spacer_left)
+        container_layout2.addWidget(self.datetime)
+        container_layout2.addItem(spacer_right)
+
+        container_layout3.addItem(spacer)
+        container_layout3.addWidget(self.stateUSB_label)
+        container_layout3.addWidget(self.stateBattery_label)
+        container_layout3.addWidget(self.stateConnect_label)
+
+        container_layout.addLayout(container_layout1)
+        container_layout.addLayout(container_layout2)
+        container_layout.addLayout(container_layout3)
+
+
+        # status_bar.addWidget(self.alarmNull_label)
+        # status_bar.addWidget(self.alarm1_label)
+        # status_bar.addWidget(self.alarm2_label, 1)
+        # status_bar.addWidget(self.datetime, 1)
+        # status_bar.addWidget(self.state_label, 1)
+
+        status_bar.addWidget(container_widget,1)
         #endregion
 
 
@@ -230,8 +296,8 @@ class MyWindow(QMainWindow):
 
         # 按鈕圖示
         setButtonIcon(self.save_button, 'Save-icon.png')
-        setButtonIcon(self.lock_button, 'Lock icon.jpg')
-        setButtonIcon(self.logout_button, 'Unlock icon.jpg')
+        setButtonIcon(self.lock_button, lock_icons[0])
+        setButtonIcon(self.logout_button, lock_icons[1])
         setButtonIcon(self.menu_button, 'Menu button.png')
         setButtonIcon(self.return_button, 'return icon.png')
 
@@ -256,10 +322,6 @@ class MyWindow(QMainWindow):
         print('登入：',self.logout_button.isVisible())
 
 
-        # 將 SpacerItem 插入按鈕之間，靠左、置中、靠右
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        spacer_right = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        spacer_left = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         function_bar_layout = QHBoxLayout(function_bar)
 
@@ -379,13 +441,13 @@ class MyWindow(QMainWindow):
                     self.tempUnit.setText(f" {PPV.tempUnitDist[temp_unit]}")
                     # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
-                    self.state_label.setText('已連線')
+                    self.stateConnect_label.setText('已連線')
                     # print(f'O2:{oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}, T:{temperature:.2f} {tempUnitDist[temp_unit]}')
 
 
                 except minimalmodbus.NoResponseError as e:
                     dateFormateIndex=2
-                    self.state_label.setText('未連線')
+                    self.stateConnect_label.setText('未連線')
                     # print(f'No response from the instrument: {e}')
                 except Exception as e:
                     traceback.print_exc()
@@ -613,10 +675,10 @@ class MyWindow(QMainWindow):
         # self.identify_button.setStyleSheet("background-color: white;")
 
 
-        setButtonIcon(self.set_button,'settings icon.png', text = "設\n定") # text='設定'
-        setButtonIcon(self.calibrate_button,'calibration icon.png', text = "校\n正") # text='校正'
-        setButtonIcon(self.record_button,'Data log icon.jpg', text = "記\n錄") # text='記錄'
-        setButtonIcon(self.identify_button,'Identification icon.png', text = "識\n別") # text='識別'
+        setButtonIcon(self.set_button, stateInbMenu_icons[1], text = "設\n定") # text='設定'
+        setButtonIcon(self.calibrate_button, stateInbMenu_icons[2], text = "校\n正") # text='校正'
+        setButtonIcon(self.record_button, stateInbMenu_icons[3], text = "記\n錄") # text='記錄'
+        setButtonIcon(self.identify_button, stateInbMenu_icons[4], text = "識\n別") # text='識別'
 
         self.set_button.setStyleSheet('QPushButton { border: none;}')
         self.calibrate_button.setStyleSheet('QPushButton { border: none;}')

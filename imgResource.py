@@ -8,8 +8,41 @@ from PyQt5.QtGui import QPixmap, QIcon, QPainter, QFontMetrics
 from PyQt5.QtCore import Qt
 from pkg_resources import resource_filename
 
+stateAlarm_icons = {0:'Alarm icon null.jpg',
+                    1:'Alarm 1 icon.jpg',
+                    2:'Alarm 2 icon.jpg'}
 
-def setSubMenuLabelIcon(label, image_path):
+stateWire_icons = {0:'RS485.png',
+                   1:'Ethernet.png',
+                   2:'usb icon.png'}
+
+stateRecord_icons={0:'一次性紀錄.png',
+                   1:'自動記錄.png',
+                   2:'紀錄中.png',
+                   3:'紀錄停止.png'}
+
+
+stateInbMenu_icons = {0:'進入選單.png',
+                      1:'settings icon.png',
+                      2:'calibration icon.png',
+                      3:'Identification icon.png',
+                      4:'Data log icon.jpg'}
+
+stateBattery_icons = {0:'Battery icon.png'}
+
+stateBatteryCharge_icons = {0:'電量10以下.png',
+                            1:'電量11-25.png',
+                            2:'電量26-50.png',
+                            3:'電量51-75.png',
+                            4:'電量76-100.png',
+                            5:'電量充電中.png'}
+
+lock_icons = {0:'Lock icon.jpg',
+              1:'Unlock icon.jpg'}
+
+
+
+def setLabelIcon(label, image_path):
     image_path = resource_filename(__name__, 'picture/icon/'+image_path)
     pixmap = QPixmap(image_path)
     pixmap = pixmap.scaled(65, 65, aspectRatioMode=Qt.KeepAspectRatio, transformMode=Qt.SmoothTransformation)
