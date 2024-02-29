@@ -7,8 +7,10 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
 from PyQt5.QtGui import QFont
 from userPermissions import Permissions
+import sqlite3
 
 font = QFont()
+
 
 global_loginUser = None
 class LoginDialog(QDialog):
@@ -17,39 +19,12 @@ class LoginDialog(QDialog):
 
         # 定義使用者字典
         self.users = {
-            'GUI_Developer': {
-                'username': 'asdf',
-                'password': 'asdf',
-                'control': True,
-                'write': True,
-                'read': True,
-                'download': True
-            },
-            'user_P001': {
-                'username': 'Ayt001',
-                'password': 'Priorty001',
-                'control': True,
-                'write': True,
-                'read': True,
-                'download': True
-            },
-            'user_P0A1': {
-                'username': 'Ayt0A1',
-                'password': 'Priorty002',
-                'control': True,
-                'write': False,
-                'read': True,
-                'download': False
-            },
-            'user_P0B1': {
-                'username': 'Ayt0B1',
-                'password': 'Priorty003',
-                'control': False,
-                'write': False,
-                'read': True,
-                'download': False
-            }
+            'GUI_Developer':self.selectSQL_user('asdf'),
+            'user_P001':self.selectSQL_user('Ayt001'),
+            'user_P0A1':self.selectSQL_user('Ayt0A1'),
+            'user_P0B1':self.selectSQL_user('Ayt0B1')
         }
+        
 
 
         self.initUI()
@@ -147,6 +122,29 @@ class LoginDialog(QDialog):
         # 設置對話框大小
         self.setFixedSize(480, 280)
 
+
+    def selectSQL_user(self, username):
+        # 連接到SQLite數據庫（如果不存在，將創建一個新的）
+        conn = sqlite3.connect('SentrakSQL/SentrakSQL.db')
+
+        # 設置 row_factory 為 sqlite3.Row，以便查詢結果以字典形式返回
+        conn.row_factory = sqlite3.Row
+
+        # 創建一個游標對象來執行SQL語句
+        cursor = conn.cursor()
+
+        # 查詢整個表格的數據
+        cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
+        user_data = cursor.fetchall()
+
+        # 關閉游標和連接
+        cursor.close()
+        conn.close()
+
+        return dict(user_data[0]) if user_data else {}
+
+
+
     def handle_login(self): #讀取字典
         # 獲取輸入的帳號和密碼
         username = self.username_input.text()
@@ -159,7 +157,7 @@ class LoginDialog(QDialog):
             # print('輸入的帳號：', username)
             # print('輸入的密碼：', password)
             user_info = next(user_info for user_info in self.users.values() if user_info['username'] == username)
-            user_permissions = {k: v for k, v in user_info.items() if k in ['username', 'password', 'control', 'write', 'read', 'download']}
+            user_permissions = {k: v for k, v in user_info.items() if k in ['id', 'username', 'password', 'control', 'write', 'read', 'download']}
             self.presentUser = Permissions(**user_permissions)
             # print('self.presentUser:',self.presentUser.userInfo())
             global_loginUser = self.presentUser
@@ -177,3 +175,41 @@ class LoginDialog(QDialog):
 
     def get_global_loginUser(self):
         return global_loginUser
+    
+
+
+
+    # self.users = {
+        #     'GUI_Developer': {
+        #         'username': 'asdf',
+        #         'password': 'asdf',
+        #         'control': True,
+        #         'write': True,
+        #         'read': True,
+        #         'download': True
+        #     },
+        #     'user_P001': {
+        #         'username': 'Ayt001',
+        #         'password': 'Priorty001',
+        #         'control': True,
+        #         'write': True,
+        #         'read': True,
+        #         'download': True
+        #     },
+        #     'user_P0A1': {
+        #         'username': 'Ayt0A1',
+        #         'password': 'Priorty002',
+        #         'control': True,
+        #         'write': False,
+        #         'read': True,
+        #         'download': False
+        #     },
+        #     'user_P0B1': {
+        #         'username': 'Ayt0B1',
+        #         'password': 'Priorty003',
+        #         'control': False,
+        #         'write': False,
+        #         'read': True,
+        #         'download': False
+        #     }
+        # }

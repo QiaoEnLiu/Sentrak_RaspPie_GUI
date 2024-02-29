@@ -4,8 +4,9 @@
 # 權限類別
 
 class Permissions:
-    def __init__(self, username, password, 
+    def __init__(self, id, username, password, 
                  control=False, write=False, read=False, download=False):
+        self._id = id
         self._username = username
         self._password = password
         self._control = control
@@ -14,6 +15,7 @@ class Permissions:
         self._download = download
 
     # def __init__(self, user_dict):
+    #     self._id = user_dict['id']
     #     self._username = user_dict['username']
     #     self._password = user_dict['password']
     #     self._control = user_dict.get('control', False)
@@ -21,7 +23,9 @@ class Permissions:
     #     self._read = user_dict.get('read', False)
     #     self._download = user_dict.get('download', False)
 
-    
+    @property
+    def id(self):
+        return self._id
 
     @property
     def username(self):
@@ -33,7 +37,7 @@ class Permissions:
 
     @property
     def control(self):
-        return self._control
+        return self.permissionEncode(self._control)
 
     @control.setter
     def control(self, value):
@@ -41,7 +45,7 @@ class Permissions:
 
     @property
     def read(self):
-        return self._read
+        return self.permissionEncode(self._read)
 
     @read.setter
     def read(self, value):
@@ -49,7 +53,7 @@ class Permissions:
 
     @property
     def write(self):
-        return self._write
+        return self.permissionEncode(self._write)
 
     @write.setter
     def write(self, value):
@@ -57,13 +61,22 @@ class Permissions:
 
     @property
     def download(self):
-        return self._download
+        return self.permissionEncode(self._download)
 
     @download.setter
     def download(self, value):
         self._download = value
 
+    def permissionEncode(self, value):
+        code = {0 : False,
+                1 : True}   
+        return code[value]
+
     def userInfo(self):
-        text = '編號：'+ self.username + '\n　控制：' + str(self.control) + '\n　寫入：' + str(self.write) + '\n　讀取：' + str(self.read) + '\n　下載：' + str(self.download) + '\n'
+        text = f'''編號：{self.username} ({self.id})
+            控制：{str(self.control)}
+            寫入：{str(self.write)}
+            讀取：{str(self.read)}
+            下載：{str(self.download)}\n'''
         # print(text)
         return text

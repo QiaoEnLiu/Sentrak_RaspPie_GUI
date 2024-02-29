@@ -28,6 +28,7 @@ class analogyConcentrationFrame(QWidget):
         title_label.setFont(font)
         # title_label.setStyleSheet(_style)
 
+        font.setPointSize(24)
         user_label = QLabel(PPV.presentUser.userInfo())
         user_label.setFont(font)
         # user_label.setStyleSheet(_style)
