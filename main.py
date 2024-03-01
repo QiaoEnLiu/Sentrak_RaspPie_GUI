@@ -423,7 +423,7 @@ class MyWindow(QMainWindow):
         try:
             # 定義一個函數，用於在執行緒中執行Modbus讀取
             def modbus_read_thread():
-                global oxygen_concentration, temperature
+                global oxygen_concentration, temperature, dateFormateIndex
                 try:
                     
                     # 讀取浮點數值，地址為1
@@ -451,8 +451,9 @@ class MyWindow(QMainWindow):
                     # print(f'No response from the instrument: {e}')
                 except Exception as e:
                     traceback.print_exc()
-                    print(f'Exception: {e}')
+                    print(f'Thread Inside Exception: {e}')
                 finally:
+                    print(dateFormateIndex)
                     formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
                     # print(current_datetime.toString(f"({PPV.dateFormat[dateFormateIndex[0]]}){PPV.dateFormat[dateFormateIndex[1]]} hh:mm:ss"))
                     self.datetime.setText(formatted_datetime)
@@ -464,7 +465,7 @@ class MyWindow(QMainWindow):
 
         except Exception as e:
             traceback.print_exc()
-            print(f'Exception: {e}')
+            print(f'Thread Outside Exception: {e}')
 
     #endregion
             
