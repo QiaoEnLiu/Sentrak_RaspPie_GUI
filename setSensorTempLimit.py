@@ -1,8 +1,9 @@
 #zh-tw
-# testEndFrame.py
+# setSensorTempLimit.py
+# 「感測器溫度保護」
 
-# 此程式碼為子畫面最終刷新測試碼
-    # 尚未實作的功能介面都會先以此介面顯示
+# 啟用或停用感測器溫度保護
+    # 啟用則可設定溫度上限
 try:
     import traceback
     from PyQt5.QtCore import Qt
