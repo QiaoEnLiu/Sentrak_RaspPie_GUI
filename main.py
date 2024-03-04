@@ -68,6 +68,9 @@ class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        # 設定視窗標題
+        self.setWindowTitle("Sentrak_RaspPie_GUI")
+
         self.isLogin=False
 
         #region 視窗大小

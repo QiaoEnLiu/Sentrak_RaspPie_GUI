@@ -17,6 +17,8 @@ except Exception as e:
     traceback.print_exc()
     input("Press Enter to exit")
 temp_default='16.80'
+unit_default='°C'
+
 font = QFont()
 class tsetSensorTempLimitFrame(QWidget):
     def __init__(self, title, _style, stacked_widget, sub_pages):
@@ -60,7 +62,7 @@ class tsetSensorTempLimitFrame(QWidget):
         self.inputTemp = QLineEdit(temp_default)
         self.inputTemp.setFont(font)
         self.inputTemp.setEnabled(self.checkbox.isChecked())
-        self.tempUnit = QLabel('°C')
+        self.tempUnit = QLabel(unit_default)
         self.tempUnit.setFont(font)
         setTemp_layout.addWidget(self.setTemp_label)
         setTemp_layout.addWidget(self.inputTemp)
