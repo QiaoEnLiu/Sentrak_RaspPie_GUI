@@ -453,7 +453,7 @@ class MyWindow(QMainWindow):
                     traceback.print_exc()
                     print(f'Thread Inside Exception: {e}')
                 finally:
-                    print(dateFormateIndex)
+                    # print(dateFormateIndex)
                     formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
                     # print(current_datetime.toString(f"({PPV.dateFormat[dateFormateIndex[0]]}){PPV.dateFormat[dateFormateIndex[1]]} hh:mm:ss"))
                     self.datetime.setText(formatted_datetime)

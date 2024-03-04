@@ -41,9 +41,9 @@ def R1X_address(searchName):
 #endregion
 
 #region R3X 地址名稱
-R3X_Mapping={0:'Gas',
-             
-             2:'Temperature',
+R3X_Mapping={0:'Gas', # 已實作
+
+             2:'Temperature', # 已實作
 
              4:'Calibration Gas %',
 
@@ -76,11 +76,11 @@ def R3X_address(searchName):
 #endregion
 
 #region R4X 地址名稱
-R4X_Mapping={0:'Temp unit',
-             1:'Date Formate',
+R4X_Mapping={0:'Temp unit', # 已實作
+             1:'Date Formate', # 已實作
              2:'Thermal Limit',
              3:'Thermal cut off',
-             4:'Set Gas Unit',
+             4:'Set Gas Unit', # 已實作
              5:'Set Alarm flg0',
              6:'Set Alarm flg1',
              7:'Set Alarm flg NoSens',

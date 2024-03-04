@@ -34,9 +34,13 @@ try:
     # 設定 >>
     from setDisplayOption import displayOptionFrame # 「顯示」
     from setAnalogyOutputOption import analogyOutputOptionFrame # 「類比輸出」選項介面
+    from setSensorTempLimit import tsetSensorTempLimitFrame # 「感測器溫度保護」介面
+
     from setCommunicationOption import comOptionFrame # 「通訊」選項介面
 
+
     from setTime import setTimeFrame # 「時間」選項介面
+
 
     # 識別 >>
     from id_Frame import id_LogIn_Frame # 登入訊息
@@ -300,6 +304,10 @@ class subMenuFrame(QWidget):
             elif item_text == '類比輸出':
                 # 由「設定」進入「類比輸出」介面
                 next_frame = analogyOutputOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+
+            elif item_text == '感測器溫度保護':
+                # 由「設定」進入「感測器溫度保護」介面
+                next_frame = tsetSensorTempLimitFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
 
             elif item_text == '通訊':
                 # 由「設定」進入「通訊」介面
