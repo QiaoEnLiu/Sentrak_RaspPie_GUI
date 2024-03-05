@@ -1,0 +1,2 @@
+名稱,裝置,介面,橋接
+Sentrak,RaspPie,PyQt5,modbusRTU

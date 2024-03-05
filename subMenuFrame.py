@@ -28,9 +28,6 @@ try:
     from PyQt5.QtGui import QFont, QPixmap, QImage
     import ProjectPublicVariable as PPV
 
-    # 未實作功能測試介面
-    from testEndFrame import testEndFrame
-
     # 設定 >>
     from setDisplayOption import displayOptionFrame # 「顯示」
     from setAnalogyOutputOption import analogyOutputOptionFrame # 「類比輸出」選項介面
@@ -41,10 +38,18 @@ try:
 
     from setTime import setTimeFrame # 「時間」選項介面
 
+    # 校正 >>
+
+    # 記錄 >>
+    from recordDownloadFile import recordDownloadFileFrame # 「下載記錄至隨身碟」介面
+
 
     # 識別 >>
     from id_Frame import id_LogIn_Frame # 登入訊息
-    from id_deviceInfo import deviceInfoFrame # 儀器資訊
+    from id_deviceInfo import deviceInfoFrame # 「儀器資訊」介面
+
+    # 未實作功能測試介面
+    from testEndFrame import testEndFrame
 
     
     from imgResource import setLabelIcon
@@ -56,6 +61,10 @@ except Exception as e:
     input("Press Enter to exit")
 
 font = QFont()
+itemTitleSize = QFont()
+itemTitleSize.setPointSize(20)
+itemdescribeSize = QFont()
+itemdescribeSize.setPointSize(14)
 class subMenuFrame(QWidget):
 
     #region 清單畫面
@@ -73,7 +82,7 @@ class subMenuFrame(QWidget):
         title_layout = QVBoxLayout()        
         self.title_label = QLabel(self.title, self)
         # title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(18)
+        font.setPointSize(20)
         self.title_label.setFont(font)
         # self.title_label.setStyleSheet(_style)
         title_layout.addWidget(self.title_label)
@@ -158,7 +167,7 @@ class subMenuFrame(QWidget):
 
         # font.setPointSize(pixmap.scaledToHeight(72).height()*30//80)
         # font.setPointSize(20)
-        item_label.setFont(font)
+        item_label.setFont(itemTitleSize)
         item_label.setStyleSheet("border: 5px solid black;border-bottom: 0px;")
         item_label.setContentsMargins(0, 0, 0, 0)
         # print('item_label:', item_label.font().pointSize())
@@ -171,7 +180,7 @@ class subMenuFrame(QWidget):
         self.describe_label.setText('描述')
         # font.setPointSize(pixmap.scaledToHeight(72).height()*15//80)
         # font.setPointSize(6)
-        self.describe_label.setFont(font)
+        self.describe_label.setFont(itemdescribeSize)
         self.describe_label.setStyleSheet("border: 5px solid black;border-top: 0px; color: gray")
         self.describe_label.setContentsMargins(0, 0, 0, 0)
         # print('self.describe_label:', self.describe_label.font().pointSize())
@@ -218,7 +227,7 @@ class subMenuFrame(QWidget):
         # 將項目添加到 QListWidget
         item.setData(Qt.UserRole, option)  # 使用setData將選項存儲為UserRole
         self.list_widget.addItem(item)
-        self.list_widget.setFont(font)
+        # self.list_widget.setFont(font)
         self.list_widget.setItemWidget(item, widget)  # 將 widget 與 item 關聯起來
 
 
@@ -231,7 +240,7 @@ class subMenuFrame(QWidget):
     #region 清單描述
     def itemDeescribe(self, option):
         item_title = option
-        #region 設定清單
+        #region 「設定」清單
         if item_title == '顯示':
             self.describe_label.setText('波形圖週期、單位')
         elif item_title == '警報輸出':
@@ -250,7 +259,7 @@ class subMenuFrame(QWidget):
             self.describe_label.setText('多國語言')
         #endregion
             
-        #region 校正清單
+        #region 「校正」清單
         elif item_title =='感測器校正':
             self.describe_label.setText('空氣校正、直接校正')
         elif item_title =='大氣壓力校正':
@@ -259,7 +268,7 @@ class subMenuFrame(QWidget):
             self.describe_label.setText('0 - 20 mA、4 - 20 mA')
         #endregion
         
-        #region 記錄清單
+        #region 「記錄」清單
         elif item_title == '觀看記錄':
             self.describe_label.setText('時間、數值')
         elif item_title == '統計表':
@@ -270,7 +279,7 @@ class subMenuFrame(QWidget):
             self.describe_label.setText('自動、手動')
         #endregion
             
-        #region 識別
+        #region 「識別」清單
         elif item_title == '登入身份':
             self.describe_label.setText('輸入密碼')
         elif item_title == '儀器資訊':
@@ -297,6 +306,8 @@ class subMenuFrame(QWidget):
         # 判斷是否已經創建了 testEndFrame
         if item_text not in self.sub_pages: #"testEndFrame"
             print('進入選項：', item_text)
+
+            #region 「設定」
             if item_text == '顯示':
                 # 由「設定」進入「顯示」介面
                 next_frame = displayOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
@@ -316,7 +327,19 @@ class subMenuFrame(QWidget):
             elif item_text == '時間':
                 # 由「設定」進入「時間」介面
                 next_frame = setTimeFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-
+            #endregion
+                
+            #region 「校正」
+                
+            #endregion
+                
+            #region 「記錄」
+            elif item_text == '下載記錄至隨身碟':
+                # 由「設定」進入「時間」介面
+                next_frame = recordDownloadFileFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+            #endregion
+                
+            #region 「識別」
             elif item_text == '登入身份':
                 # 由「識別」進入「登入身份」介面，此功能須再與解鎖功能區分
                 # next_frame = id_LogIn_Frame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
@@ -325,6 +348,7 @@ class subMenuFrame(QWidget):
             elif item_text == '儀器資訊': 
                 # 由「識別」進入「儀器資訊」介面，暫以本機開發硬體測試
                 next_frame = deviceInfoFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+            #endregion
 
             else:
                 # 如果還沒有，則創建一個新的 testEndFrame 為終節點畫面測試
