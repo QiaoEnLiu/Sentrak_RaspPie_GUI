@@ -1,0 +1,72 @@
+Reg,Name,Value
+0,Temp unit,0
+1,Date Formate,2
+2,Thermal Limit,0
+3,Thermal cut off,0
+4,Set Gas Unit,0
+5,Set Alarm flg0,0
+6,Set Alarm flg1,0
+7,Set Alarm flg NoSens,0
+8,Set Alarm flg Thermal,0
+9,set baudrate,0
+10,set ct range,0
+11,set CT1,0
+12,Set CT2,0
+13,Calibratile set,0
+14,configure set,0
+15,Member,0
+16,Set Pressur,0.0
+17,,
+18,set CT1_1,0
+19,Set CT2_1,0
+20,AD-CT1-Low,0
+21,AD-CT1-High,0
+22,AD-CT2-Low,0
+23,AD-CT2-High,0
+24,RTC_YearMonth,0
+25,RTC_DateHour,0
+26,RTC_Minute,0
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,22 @@
+Reg,Name,Value
+0,Gas,13
+1,,
+2,Temperature,17.5
+3,,
+4,Calibration Gas %,0.0
+5,,
+6,Calibration T,0.0
+7,,
+8,Calibration CT1,0.0
+9,,
+10,Calibration CT2,0.0
+11,,
+12,Read V3 voltage,0.0
+13,,
+14,Read V2 voltage,0.0
+15,,
+16,Read BAT,0
+17,Read BAT %,0
+18,Read Valid Form Calibration,0
+19,Read Pooling cnt,0
+20,Read Current %,0
