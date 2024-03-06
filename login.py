@@ -7,7 +7,8 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
 from PyQt5.QtGui import QFont
 from userPermissions import Permissions
-import sqlite3
+import flask_app
+
 
 font = QFont()
 
@@ -19,13 +20,12 @@ class LoginDialog(QDialog):
 
         # 定義使用者字典
         self.users = {
-            'GUI_Developer':self.selectSQL_user('asdf'),
-            'user_P001':self.selectSQL_user('Ayt001'),
-            'user_P0A1':self.selectSQL_user('Ayt0A1'),
-            'user_P0B1':self.selectSQL_user('Ayt0B1')
+            'GUI_Developer':flask_app.api_get_users('asdf'),
+            'user_P001':flask_app.api_get_users('Ayt001'),
+            'user_P0A1':flask_app.api_get_users('Ayt0A1'),
+            'user_P0B1':flask_app.api_get_users('Ayt0B1')
         }
-        
-
+        # print(self.users)
 
         self.initUI()
 
@@ -123,25 +123,25 @@ class LoginDialog(QDialog):
         self.setFixedSize(480, 280)
 
 
-    def selectSQL_user(self, username):
-        # 連接到SQLite數據庫（如果不存在，將創建一個新的）
-        conn = sqlite3.connect('SentrakSQL/SentrakSQL.db')
+    # def selectSQL_user(self, username):
+    #     # 連接到SQLite數據庫（如果不存在，將創建一個新的）
+    #     conn = sqlite3.connect('SentrakSQL/SentrakSQL.db')
 
-        # 設置 row_factory 為 sqlite3.Row，以便查詢結果以字典形式返回
-        conn.row_factory = sqlite3.Row
+    #     # 設置 row_factory 為 sqlite3.Row，以便查詢結果以字典形式返回
+    #     conn.row_factory = sqlite3.Row
 
-        # 創建一個游標對象來執行SQL語句
-        cursor = conn.cursor()
+    #     # 創建一個游標對象來執行SQL語句
+    #     cursor = conn.cursor()
 
-        # 查詢整個表格的數據
-        cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
-        user_data = cursor.fetchall()
+    #     # 查詢整個表格的數據
+    #     cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
+    #     user_data = cursor.fetchall()
 
-        # 關閉游標和連接
-        cursor.close()
-        conn.close()
+    #     # 關閉游標和連接
+    #     cursor.close()
+    #     conn.close()
 
-        return dict(user_data[0]) if user_data else {}
+    #     return dict(user_data[0]) if user_data else {}
 
 
 

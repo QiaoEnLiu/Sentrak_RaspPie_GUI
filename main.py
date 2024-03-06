@@ -8,12 +8,9 @@
 
 try:
     
-    import sys, os, traceback, minimalmodbus, threading
+    import sys, os, traceback, minimalmodbus, threading, requests
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
-
-    from flask import Flask
-    
 
     import ProjectPublicVariable as PPV
 
@@ -44,16 +41,17 @@ except Exception as e:
     input("Press Enter to exit")
 
 
-
-
+response = requests.get('http://localhost:5000')
+if response.status_code == 200:
+    print('Flask API啟用')
+else:
+    print('Flask API未啟用')
 #region 其他全域變數
 font = QFont()
-
 
 spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 spacer_right = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 spacer_left = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
 
 
 dateFormateIndex=2
@@ -510,6 +508,7 @@ class MyWindow(QMainWindow):
 
         if reply == QMessageBox.Yes:
             # 如果用戶選擇 "Yes"，則關閉應用程式
+            response.close()
             QApplication.quit()
 
     #endregion
@@ -535,6 +534,7 @@ class MyWindow(QMainWindow):
 
         else:
             print('登入取消')
+
 
     #endregion
 
@@ -810,16 +810,12 @@ class MyWindow(QMainWindow):
     #endregion 
 
 #endregion
-flask_app = Flask(__name__)
 if __name__ == '__main__':
 
 
     print("Current working directory:", os.getcwd())
 
     try:
-
-        flask_thread = threading.Thread(target=flask_app.run, kwargs={'port': 5000})
-        flask_thread.start()
 
         app = QApplication(sys.argv)
         window = MyWindow()
