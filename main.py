@@ -5,6 +5,7 @@
 # 由於介面往上堆疊，排除初始化介面，折線圖為第一層，進入主選單為第二層，主選單後進入各個子選單為第三層
     # 介面順序由下而上疊：self.plot_canvas/self.menu_page/self.menuSub_page
 
+
 try:
     
     import sys, os, traceback, minimalmodbus, threading
