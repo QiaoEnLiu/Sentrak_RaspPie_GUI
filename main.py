@@ -11,6 +11,9 @@ try:
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
 
+    from flask import Flask
+    
+
     import ProjectPublicVariable as PPV
 
     from PyQt5.QtWidgets import \
@@ -38,6 +41,7 @@ except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
     input("Press Enter to exit")
+
 
 
 
@@ -805,12 +809,17 @@ class MyWindow(QMainWindow):
     #endregion 
 
 #endregion
-        
+flask_app = Flask(__name__)
 if __name__ == '__main__':
+
 
     print("Current working directory:", os.getcwd())
 
     try:
+
+        flask_thread = threading.Thread(target=flask_app.run, kwargs={'port': 5000})
+        flask_thread.start()
+
         app = QApplication(sys.argv)
         window = MyWindow()
         sys.exit(app.exec_())
