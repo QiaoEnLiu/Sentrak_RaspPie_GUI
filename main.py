@@ -8,7 +8,7 @@
 
 try:
     
-    import sys, os, traceback, minimalmodbus, threading, requests
+    import sys, os, traceback, minimalmodbus, threading
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
 
@@ -41,11 +41,12 @@ except Exception as e:
     input("Press Enter to exit")
 
 
-response = requests.get('http://localhost:5000')
-if response.status_code == 200:
-    print('Flask API啟用')
-else:
-    print('Flask API未啟用')
+# response = requests.get('http://localhost:5000')
+# if response.status_code == 200:
+#     print('Flask API啟用')
+# else:
+#     print('Flask API未啟用')
+    
 #region 其他全域變數
 font = QFont()
 
@@ -508,7 +509,7 @@ class MyWindow(QMainWindow):
 
         if reply == QMessageBox.Yes:
             # 如果用戶選擇 "Yes"，則關閉應用程式
-            response.close()
+            # response.close()
             QApplication.quit()
 
     #endregion
