@@ -443,9 +443,9 @@ class MyWindow(QMainWindow):
 
                     
                     self.o2Data.setText(f"{oxygen_concentration:.2f}")
-                    self.o2Unite.setText(f" {PPV.o2_GasUnitDist[setGasUnit]}")
-                    self.tempData.setText(f"T {temperature:.2f}")
-                    self.tempUnit.setText(f" {PPV.tempUnitDist[temp_unit]}")
+                    self.o2Unite.setText(f"{PPV.o2_GasUnitDist[setGasUnit]}")
+                    self.tempData.setText(f"{temperature:.2f}")
+                    self.tempUnit.setText(f"{PPV.tempUnitDist[temp_unit]}")
                     # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
                     self.stateConnect_label.setText('已連線')
