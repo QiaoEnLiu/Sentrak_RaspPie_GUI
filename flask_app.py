@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask ,render_template , request
+from flask import Flask ,render_template , request, jsonify
 app = Flask(__name__)
 SQLITE_DB_PATH = 'SentrakSQL/SentrakSQL.db'
 
@@ -22,7 +22,15 @@ def get_user():
     conn.close()
 
     # return dict(user_data[0]) if user_data else {}
-    return user_data
+    user_list = [{'id': data[0],
+                  'username': data[1],
+                  'password': data[2],
+                  'control': data[3],
+                  'write': data[4],
+                  'read': data[5],
+                  'download': data[6]}
+                   for data in user_data]
+    return user_list
 
 
 def get_R1X_Datas():
@@ -32,8 +40,11 @@ def get_R1X_Datas():
     datas = cursor.fetchall()
     conn.close()
 
-    # data_list = [{'Reg': data[0], 'Name': data[1], 'Value': data[2]} for data in datas]
-    return datas
+    data_list = [{'Reg': data[0],
+                  'Name': data[1],
+                  'Value': data[2]}
+                  for data in datas]
+    return data_list
 
 
 def get_R3X_Datas():
@@ -43,9 +54,11 @@ def get_R3X_Datas():
     datas = cursor.fetchall()
     conn.close()
 
-    # data_list = [{'Reg': data[0], 'Name': data[1], 'Value': data[2]} for data in datas]
-    return datas
-
+    data_list = [{'Reg': data[0],
+                  'Name': data[1],
+                  'Value': data[2]}
+                  for data in datas]
+    return data_list
 
 def get_R4X_Datas():
     conn = sqlite3.connect(SQLITE_DB_PATH)
@@ -54,17 +67,21 @@ def get_R4X_Datas():
     datas = cursor.fetchall()
     conn.close()
 
-    # data_list = [{'Reg': data[0], 'Name': data[1], 'Value': data[2]} for data in datas]
-    return datas
+    data_list = [{'Reg': data[0],
+                  'Name': data[1],
+                  'Value': data[2]}
+                  for data in datas]
+    return data_list
 
 @app.route('/', methods=['GET'])
-def index():
-    return render_template('index.html',
-                           user_data = get_user(),
-                           data_R1X = get_R1X_Datas(),
-                           data_R3X = get_R3X_Datas(),
-                           data_R4X = get_R4X_Datas())
-    # return "<p>Sentrak Flask API Activate!</p>"
+def get():
+    return jsonify(get_R1X_Datas())
+    # return render_template('index.html',
+    #                        user_data = get_user(),
+    #                        data_R1X = get_R1X_Datas(),
+    #                        data_R3X = get_R3X_Datas(),
+    #                        data_R4X = get_R4X_Datas())
+    # # return "<p>Sentrak Flask API Activate!</p>"
 
 
 if __name__ == '__main__':
