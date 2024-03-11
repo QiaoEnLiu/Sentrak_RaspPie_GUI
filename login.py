@@ -21,7 +21,6 @@ class LoginDialog(QDialog):
 
         # 定義使用者字典
         self.users = {
-            'GUI_Developer':self.selectSQL_user('asdf'),
             'user_P001':self.selectSQL_user('Ayt001'),
             'user_P0A1':self.selectSQL_user('Ayt0A1'),
             'user_P0B1':self.selectSQL_user('Ayt0B1')
@@ -181,14 +180,6 @@ class LoginDialog(QDialog):
 
 
     # self.users = {
-        #     'GUI_Developer': {
-        #         'username': 'asdf',
-        #         'password': 'asdf',
-        #         'control': True,
-        #         'write': True,
-        #         'read': True,
-        #         'download': True
-        #     },
         #     'user_P001': {
         #         'username': 'Ayt001',
         #         'password': 'Priorty001',
