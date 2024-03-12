@@ -2,8 +2,10 @@
 # PlotCanvas.py
 # 初始子畫面折線圖
 
+#!/usr/bin/python 在linux底下將此行置於第一行
+
 try:
-    import numpy, traceback
+    import numpy, traceback, platform
     import matplotlib.pyplot as plt
     from matplotlib.font_manager import FontProperties, FontManager
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -16,20 +18,24 @@ except Exception as e:
     input("Press Enter to exit")
 
 # matplotlib.use('Qt5Agg')
-    
-# 使用 FontManager 取得系統上所有可用的字型
-font_manager = FontManager()
-font_list = font_manager.ttflist
-    
+ 
+#region 針對Plot的中文字型
 # fontPath='word_font/Chinese/zh/'
 
 # 選擇一個字型
+# 使用 FontManager 取得系統上所有可用的字型
+font_manager = FontManager()
+font_list = font_manager.ttflist
 selected_font = None
 for font in font_list:
     # print(font)
-    if 'Microsoft JhengHei' in font.name:  # 這裡假設您想要使用名為 'SimHei' 的字型
-        selected_font = font
+    if 'Microsoft JhengHei' in font.name:  # 這裡假設您想要使用名為 'SimHei'或'Microsoft JhengHei'的字型
+        selected_font = font.fname
         break
+    elif 'WenQuanYi Zen Hei' in font.name:
+        selected_font = font.fname
+        break
+#end region
 
 plotTime_limit=0
 
@@ -54,7 +60,7 @@ class plotCanvas(FigureCanvas):
         # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
 
         # 使用選擇的字型進行圖表繪製
-        font = FontProperties(fname=selected_font.fname, size=10)
+        font = FontProperties(fname=selected_font, size=10)
         self.temperature_unit=unit_transfer.set_temperature_unit(unit=temperature_unit)
 
         # 生成溫度和氧氣濃度的數據

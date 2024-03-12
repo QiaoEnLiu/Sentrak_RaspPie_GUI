@@ -12,10 +12,15 @@ pip freeze
 pip list > requirements.txt
 pip freeze > requirements.txt
 
+pip install -r requirements.txt
+
 Start_Process "URL"
 
 
+
 Linux:
+
+pyinstaller --name Sentrak main.py
 
 xrandr
 xrandr --output HDMI-1 --mode 1920x1080
@@ -25,3 +30,5 @@ cd /media/joejoe/ESD-USB/
 cd /media/amin12-6/ESD-USB/
 sudo umount /media/joejoe/ESD-USB
 sudo umount /media/amin12-6/ESD-USB
+
+fc-list

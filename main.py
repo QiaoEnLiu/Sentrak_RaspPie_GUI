@@ -8,7 +8,7 @@
 
 try:
     
-    import sys, os, traceback, minimalmodbus, threading
+    import sys, os, traceback, minimalmodbus, threading, platform
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
 
@@ -39,6 +39,8 @@ except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
     input("Press Enter to exit")
+
+print(platform.system())
 
 
 # response = requests.get('http://localhost:5000')
