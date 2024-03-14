@@ -1,8 +1,13 @@
 import sqlite3
 
+db_path = 'SentrakSQL/SentrakSQL.db'
+regDFs={1: 'R1X',
+        3: 'R3X',
+        4: 'R4X'}
+
 def selectSQL_user(username):
         # 連接到SQLite數據庫（如果不存在，將創建一個新的）
-        conn = sqlite3.connect('SentrakSQL/SentrakSQL.db')
+        conn = sqlite3.connect(db_path)
 
         # 設置 row_factory 為 sqlite3.Row，以便查詢結果以字典形式返回
         conn.row_factory = sqlite3.Row
@@ -21,11 +26,9 @@ def selectSQL_user(username):
         return dict(user_data[0]) if user_data else {}
 
 def selectSQL_Reg(regDF, regKey):
-        regDFs={1: 'R1X',
-                3: 'R3X',
-                4: 'R4X'}
+
         # 連接到SQLite數據庫（如果不存在，將創建一個新的）
-        conn = sqlite3.connect('SentrakSQL/SentrakSQL.db')
+        conn = sqlite3.connect(db_path)
 
         # 設置 row_factory 為 sqlite3.Row，以便查詢結果以字典形式返回
         conn.row_factory = sqlite3.Row
@@ -42,4 +45,28 @@ def selectSQL_Reg(regDF, regKey):
         # 關閉游標和連接
         cursor.close()
         conn.close()
-        return int(data[0][0])
+        return data[0][0]
+
+def updateSQL_Reg(regDF, regKey, updateValue):
+        # 連接到SQLite數據庫（如果不存在，將創建一個新的）
+        conn = sqlite3.connect(db_path)
+
+        # 設置 row_factory 為 sqlite3.Row，以便查詢結果以字典形式返回
+        conn.row_factory = sqlite3.Row
+
+        # 創建一個游標對象來執行SQL語句
+        cursor = conn.cursor()
+
+        query = f"UPDATE {regDFs[regDF]} SET Value = {updateValue} Where Reg = {regKey}"
+
+        # 查詢整個表格的數據
+        cursor.execute(query)
+
+        # 提交變更
+        conn.commit()
+
+        # 關閉游標和連接
+        cursor.close()
+        conn.close()
+
+        print("Update SQL Success")

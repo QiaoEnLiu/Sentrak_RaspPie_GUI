@@ -5,7 +5,7 @@
 # 此程式碼為設定時間程式碼
     # 尚未實作調整時間
 try:
-    import traceback, minimalmodbus, threading
+    import traceback, minimalmodbus, threading, PySQL
     from PyQt5.QtCore import Qt, QTimer, QDateTime
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, \
                             QSizePolicy, QRadioButton, QComboBox
@@ -33,8 +33,8 @@ class setTimeFrame(QWidget):
 
         self.delayTime = QTimer(self)
         self.delayTime.start(1000)
-        modbusTimeFormat = PPV.instrument_4x.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
-        
+        # modbusTimeFormat = PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
+        modbusTimeFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 2))
         title_label = QLabel(title, self)
         title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(36)
@@ -124,20 +124,25 @@ class setTimeFrame(QWidget):
 
     def update_time(self):
         current_datetime = QDateTime.currentDateTime()
-        try:
-            # modbusTimeFormat = PPV.instrument_4x.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
-            for index,radio_button in enumerate(self.radio_buttons):
+        for index,radio_button in enumerate(self.radio_buttons):
                 format_key = index
                 label, date_format = date_formats[format_key]
                 formatted_datetime = current_datetime.toString(f"{date_format} hh:mm:ss")
                 radio_button.setText(f"{formatted_datetime} ({label})")
+        # try:
+        #     # modbusTimeFormat = PPV.instrument_4x.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
+        #     for index,radio_button in enumerate(self.radio_buttons):
+        #         format_key = index
+        #         label, date_format = date_formats[format_key]
+        #         formatted_datetime = current_datetime.toString(f"{date_format} hh:mm:ss")
+        #         radio_button.setText(f"{formatted_datetime} ({label})")
 
-                # print(f"{formatted_datetime} ({label})")
-        except minimalmodbus.NoResponseError as e:
-            print(f'Set Time ReadModbus: {e}')
-        except Exception as e:
-            traceback.print_exc()
-            print(f'Exception: {e}')
+        #         # print(f"{formatted_datetime} ({label})")
+        # except minimalmodbus.NoResponseError as e:
+        #     print(f'Set Time ReadModbus: {e}')
+        # except Exception as e:
+        #     traceback.print_exc()
+        #     print(f'Exception: {e}')
         # try:
         #     def modbus_read_thread():
         #         try:
@@ -165,13 +170,16 @@ class setTimeFrame(QWidget):
     
     def setTime(self):
         print('Set Time')
+        for index,radio_button in enumerate(self.radio_buttons):
+            if radio_button.isChecked():
+                select_Format=index
+                print(f'Set Time Format:{date_formats[select_Format]}')
         try:
-            for index,radio_button in enumerate(self.radio_buttons):
-                if radio_button.isChecked():
-                    select_Format=index
-                    print(f'Set Time Format:{date_formats[select_Format]}')
+            
             self.delayTime.start(1000)
-            PPV.instrument_4x.write_register(PPV.R4X_address('Date Formate'),select_Format,functioncode=6)
+            PySQL.updateSQL_Reg(regDF = 4, regKey = 1, updateValue = select_Format)
+            print(f"Time Formate SQL Update:{select_Format}")
+            PPV.instrument_ID1.write_register(PPV.R4X_address('Date Formate'), select_Format, functioncode=6)
             # self.delayTime.start(1000)
         except minimalmodbus.NoResponseError as e:
             print(f'Set Time Interface: {e}')

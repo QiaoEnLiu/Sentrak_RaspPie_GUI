@@ -6,7 +6,7 @@
     # 設定溫度及氧氣濃度單位，並回傳給Slaver（暫不處理切換單位之間的數據轉換）
 
 try:
-    import traceback, minimalmodbus, threading
+    import traceback, minimalmodbus, threading, PySQL
     from PyQt5.QtCore import Qt, QTimer
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, \
         QPushButton, QSizePolicy, QRadioButton, QComboBox
@@ -32,8 +32,11 @@ class setUnitFrame(QWidget):
         self.delayTime = QTimer(self)
         self.delayTime.start(1000)
 
-        self.temp_unit = PPV.instrument_4x.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
-        self.setGasUnit = PPV.instrument_4x.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
+        # self.temp_unit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
+        # self.setGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
+
+        self.temp_unit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
+        self.setGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
 
 
         title_label = QLabel(title, self)
@@ -150,21 +153,24 @@ class setUnitFrame(QWidget):
     #region
     def setUnit(self):
         print('Set Unit')
+        if self.celsius_radio.isChecked():
+            select_tempUnit = 0  # 攝氏
+        elif self.fahrenheit_radio.isChecked():
+            select_tempUnit = 1  # 華氏
+        else:
+            select_tempUnit = -1
+
         try:
-            
-            if self.celsius_radio.isChecked():
-                select_tempUnit = 0  # 攝氏
-            elif self.fahrenheit_radio.isChecked():
-                select_tempUnit = 1  # 華氏
-            else:
-                select_tempUnit = -1
-
             self.delayTime.start(1000)
-            PPV.instrument_4x.write_register(PPV.R4X_address('Temp unit'),select_tempUnit,functioncode=6)
-            PPV.instrument_4x.write_register(PPV.R4X_address('Set Gas Unit'),self.gas_unit_ComboBox.currentIndex(),functioncode=6)
-
+            PySQL.updateSQL_Reg(regDF = 4, regKey = 0, updateValue = select_tempUnit)
+            PySQL.updateSQL_Reg(regDF = 4, regKey = 4, updateValue = self.gas_unit_ComboBox.currentIndex())
+            PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'),select_tempUnit,functioncode=6)
+            PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'),self.gas_unit_ComboBox.currentIndex(),functioncode=6)
+            
             print(f'溫度單位{PPV.tempUnitDist[select_tempUnit]}（{select_tempUnit}），濃度單位{PPV.o2_GasUnitDist[self.gas_unit_ComboBox.currentIndex()]}（{self.gas_unit_ComboBox.currentIndex()}）')
         except minimalmodbus.NoResponseError as e:
+            # PySQL.updateSQL_Reg(regDF = 4, regKey = 0, updateValue = select_tempUnit)
+            # PySQL.updateSQL_Reg(regDF = 4, regKey = 4, updateValue = self.gas_unit_ComboBox.currentIndex())
             print(f'Set Unit Interface: {e}')
         except Exception as e:
             traceback.print_exc()

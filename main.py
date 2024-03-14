@@ -449,9 +449,9 @@ class MyWindow(QMainWindow):
 
 
                 except minimalmodbus.NoResponseError as e:
-                    setGasUnit = PySQL.selectSQL_Reg(regDF = 4, regKey = 0)
-                    dateFormateIndex = PySQL.selectSQL_Reg(regDF = 4, regKey = 1)
-                    temp_unit = PySQL.selectSQL_Reg(regDF = 4, regKey = 4)
+                    setGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
+                    dateFormateIndex = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
+                    temp_unit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
 
                     self.stateConnect_label.setText('未連線')
                     # print(f'No response from the instrument: {e}')
@@ -471,6 +471,7 @@ class MyWindow(QMainWindow):
                     formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
                     # print(current_datetime.toString(f"({PPV.dateFormat[dateFormateIndex[0]]}){PPV.dateFormat[dateFormateIndex[1]]} hh:mm:ss"))
                     self.datetime.setText(formatted_datetime)
+                    print(self.datetime.text( ))
 
                     # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
