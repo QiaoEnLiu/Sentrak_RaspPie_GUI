@@ -1,3 +1,5 @@
+# SQL
+
 import sqlite3
 
 db_path = 'SentrakSQL/SentrakSQL.db'
@@ -5,6 +7,7 @@ regDFs={1: 'R1X',
         3: 'R3X',
         4: 'R4X'}
 
+# 查詢使用者
 def selectSQL_user(username):
         # 連接到SQLite數據庫（如果不存在，將創建一個新的）
         conn = sqlite3.connect(db_path)
@@ -25,6 +28,8 @@ def selectSQL_user(username):
 
         return dict(user_data[0]) if user_data else {}
 
+
+# 由暫存資料表查詢值
 def selectSQL_Reg(regDF, regKey):
 
         # 連接到SQLite數據庫（如果不存在，將創建一個新的）
@@ -47,6 +52,7 @@ def selectSQL_Reg(regDF, regKey):
         conn.close()
         return data[0][0]
 
+# 修改值存入暫存資料表
 def updateSQL_Reg(regDF, regKey, updateValue):
         # 連接到SQLite數據庫（如果不存在，將創建一個新的）
         conn = sqlite3.connect(db_path)
