@@ -178,7 +178,7 @@ class setTimeFrame(QWidget):
             
             self.delayTime.start(1000)
             PySQL.updateSQL_Reg(regDF = 4, regKey = 1, updateValue = select_Format)
-            print(f"Time Formate SQL Update:{select_Format}")
+            # print(f"Time Formate SQL Update:{select_Format}")
             PPV.instrument_ID1.write_register(PPV.R4X_address('Date Formate'), select_Format, functioncode=6)
             # self.delayTime.start(1000)
         except minimalmodbus.NoResponseError as e:

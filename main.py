@@ -471,7 +471,7 @@ class MyWindow(QMainWindow):
                     formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
                     # print(current_datetime.toString(f"({PPV.dateFormat[dateFormateIndex[0]]}){PPV.dateFormat[dateFormateIndex[1]]} hh:mm:ss"))
                     self.datetime.setText(formatted_datetime)
-                    print(self.datetime.text( ))
+                    # print(self.datetime.text())
 
                     # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
