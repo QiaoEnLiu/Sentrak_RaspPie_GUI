@@ -11,20 +11,25 @@ port_names = {
     "Windows": "COM6",  # Windows環境的埠號
     "Linux": "/dev/ttyUSB0",  # Linux環境的埠號
 }
-it_Port=port_names[platform.system()] # /dev/tty* /dev/ttyUSB*
+it_Port=port_names[platform.system()]
 
 # 定義Modbus裝置的串口及地址
 # 第一個參數是串口，第二個參數是Modbus地址
-instrument_1x = minimalmodbus.Instrument(it_Port, 1) # Read Only :read f=1
-instrument_3x = minimalmodbus.Instrument(it_Port, 3) # Read Only :read f=3,4
-instrument_4x = minimalmodbus.Instrument(it_Port, 4) # Write Allow :read f=3,4; write f=6,16
+instrument_ID1 = minimalmodbus.Instrument(it_Port, 1) # Read Only :read f=1
+# instrument_3x = minimalmodbus.Instrument(it_Port, 3) # Read Only :read f=3,4
+# instrument_4x = minimalmodbus.Instrument(it_Port, 4) # Write Allow :read f=3,4; write f=6,16
 
 # 設定串口波特率，Parity和Stop bits（這些參數需與Modbus設備一致）
-for i in [instrument_1x, instrument_3x, instrument_4x]:
-    i.serial.baudrate = 9600
-    i.serial.parity = minimalmodbus.serial.PARITY_NONE
-    i.serial.stopbits = 1
-    i.serial.timeout = 1.0
+instrument_ID1.serial.baudrate = 9600
+instrument_ID1.serial.parity = minimalmodbus.serial.PARITY_NONE
+instrument_ID1.serial.stopbits = 1
+instrument_ID1.serial.timeout = 1.0
+
+# for i in [instrument_1x, instrument_3x, instrument_4x]:
+#     i.serial.baudrate = 9600
+#     i.serial.parity = minimalmodbus.serial.PARITY_NONE
+#     i.serial.stopbits = 1
+#     i.serial.timeout = 1.0
 
 #endregion
 

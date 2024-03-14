@@ -8,7 +8,7 @@
 
 try:
     
-    import sys, os, traceback, minimalmodbus, threading, platform
+    import sys, os, traceback, minimalmodbus, threading, platform, sqlite3, PySQL
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
 
@@ -59,10 +59,10 @@ spacer_left = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
 dateFormateIndex=2
 format_wedget = None
-oxygen_concentration = 12.56 # 12.56
+oxygen_concentration = 0.00 # 12.56
 temperature_unit_text='Celsius' # Celsius, Fahrenheit
 temperature_unit_default='°C'
-temperature = 16.8 # 攝氏 16.8
+temperature = 0.00 # 攝氏 16.8
 
 #endregion
 
@@ -436,36 +436,43 @@ class MyWindow(QMainWindow):
                 try:
                     
                     # 讀取浮點數值，地址為1
-                    oxygen_concentration = PPV.instrument_3x.read_float(PPV.R3X_address('Gas'), functioncode=4)
-                    temperature = PPV.instrument_3x.read_float(PPV.R3X_address('Temperature'), functioncode=4)
+                    oxygen_concentration = PPV.instrument_ID1.read_float(PPV.R3X_address('Gas'), functioncode=4)
+                    temperature = PPV.instrument_ID1.read_float(PPV.R3X_address('Temperature'), functioncode=4)
 
-                    setGasUnit = PPV.instrument_4x.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
-                    dateFormateIndex =PPV.instrument_4x.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
-                    temp_unit = PPV.instrument_4x.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
+                    setGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
+                    dateFormateIndex =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
+                    temp_unit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
 
-                    
-                    self.o2Data.setText(f"{oxygen_concentration:.2f}")
-                    self.o2Unite.setText(f"{PPV.o2_GasUnitDist[setGasUnit]}")
-                    self.tempData.setText(f"{temperature:.2f}")
-                    self.tempUnit.setText(f"{PPV.tempUnitDist[temp_unit]}")
-                    # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
                     self.stateConnect_label.setText('已連線')
                     # print(f'O2:{oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}, T:{temperature:.2f} {tempUnitDist[temp_unit]}')
 
 
                 except minimalmodbus.NoResponseError as e:
-                    dateFormateIndex=2
+                    setGasUnit = PySQL.selectSQL_Reg(regDF = 4, regKey = 0)
+                    dateFormateIndex = PySQL.selectSQL_Reg(regDF = 4, regKey = 1)
+                    temp_unit = PySQL.selectSQL_Reg(regDF = 4, regKey = 4)
+
                     self.stateConnect_label.setText('未連線')
                     # print(f'No response from the instrument: {e}')
                 except Exception as e:
                     traceback.print_exc()
                     print(f'Thread Inside Exception: {e}')
+
                 finally:
+                    
+                    self.o2Data.setText(f"{oxygen_concentration:.2f}")
+                    self.o2Unite.setText(f"{PPV.o2_GasUnitDist[setGasUnit]}")
+                    
+                    self.tempData.setText(f"{temperature:.2f}")
+                    self.tempUnit.setText(f"{PPV.tempUnitDist[temp_unit]}")
+            
                     # print(dateFormateIndex)
                     formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
                     # print(current_datetime.toString(f"({PPV.dateFormat[dateFormateIndex[0]]}){PPV.dateFormat[dateFormateIndex[1]]} hh:mm:ss"))
                     self.datetime.setText(formatted_datetime)
+
+                    # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
             # 建立一個新的執行緒並啟動
             modbus_thread = threading.Thread(target=modbus_read_thread)
