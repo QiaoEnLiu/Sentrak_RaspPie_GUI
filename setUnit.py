@@ -19,8 +19,8 @@ except Exception as e:
 
 font = QFont()
 
-
-select_tempUnit=None
+select_tempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
+select_gasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
 
 class setUnitFrame(QWidget):
 
@@ -29,14 +29,8 @@ class setUnitFrame(QWidget):
         print(title)
         self.sub_pages = sub_pages
 
-        # self.delayTime = QTimer(self)
-        # self.delayTime.start(1000)
 
-        # self.temp_unit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
-        # self.setGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
-
-        self.temp_unit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
-        self.setGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
+        PPV.timer.timeout.connect(self.update_time)
 
 
         title_label = QLabel(title, self)
@@ -53,9 +47,9 @@ class setUnitFrame(QWidget):
         self.celsius_radio = QRadioButton('攝氏')
         self.fahrenheit_radio = QRadioButton('華氏')
 
-        if self.temp_unit==0:
+        if select_tempUnit==0:
             self.celsius_radio.setChecked(True)
-        elif self.temp_unit==1:
+        elif select_tempUnit==1:
             self.fahrenheit_radio.setChecked(True)
         else:
             pass
@@ -77,7 +71,8 @@ class setUnitFrame(QWidget):
         self.gas_unit_ComboBox=QComboBox(self)
         self.gas_unit_ComboBox.addItems(PPV.o2_GasUnitDist.values())
         self.gas_unit_ComboBox.setFont(font)
-        self.gas_unit_ComboBox.setCurrentText(PPV.o2_GasUnitDist[self.setGasUnit])
+        self.gas_unit_ComboBox.setCurrentText(PPV.o2_GasUnitDist[select_gasUnit])
+
 
         dissolve_label = QLabel('溶解', self)
         dissolve_label.setAlignment(Qt.AlignLeft)  
@@ -148,9 +143,11 @@ class setUnitFrame(QWidget):
         # 設定當前顯示的子畫面索引
         print(f'{title} Index: {self.stacked_widget.count()}')
 
-
-    
     #region
+    def update_time(self):
+        self.sync
+    
+    
     def setUnit(self):
         print('Set Unit')
         if self.celsius_radio.isChecked():
@@ -170,9 +167,22 @@ class setUnitFrame(QWidget):
             
             print(f'溫度單位{PPV.tempUnitDist[select_tempUnit]}（{select_tempUnit}），濃度單位{PPV.o2_GasUnitDist[self.gas_unit_ComboBox.currentIndex()]}（{self.gas_unit_ComboBox.currentIndex()}）')
         except minimalmodbus.NoResponseError as e:
-            # PySQL.updateSQL_Reg(regDF = 4, regKey = 0, updateValue = select_tempUnit)
-            # PySQL.updateSQL_Reg(regDF = 4, regKey = 4, updateValue = self.gas_unit_ComboBox.currentIndex())
             print(f'Set Unit Interface: {e}')
+        except Exception as e:
+            traceback.print_exc()
+            print(f'Exception: {e}')
+
+    def sync(self):
+        
+        try:
+            modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
+            modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
+            if modbusTempUnit != select_tempUnit:
+                PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'), select_tempUnit, functioncode=6)
+            if modbusGasUnit != select_gasUnit:
+                PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'), select_gasUnit, functioncode=6)
+        except minimalmodbus.NoResponseError as e:
+            pass
         except Exception as e:
             traceback.print_exc()
             print(f'Exception: {e}')

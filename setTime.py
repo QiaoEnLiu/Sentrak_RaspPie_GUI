@@ -22,8 +22,9 @@ font = QFont()
 
 # 取得日期格式
 date_formats = PPV.dateFormat
-setTimeFormat=None
+setTimeFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
 select_Format=None
+
 class setTimeFrame(QWidget):
     def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
@@ -66,7 +67,7 @@ class setTimeFrame(QWidget):
             formatted_datetime = f"{date_format} hh:mm:ss"
             radio_button.setText(f"{formatted_datetime} ({label})") 
 
-            if setTimeFormat==format_key:
+            if setTimeFormat == format_key:
                 radio_button.setChecked(True)
             else:
                 radio_button.setChecked(False)
@@ -126,6 +127,7 @@ class setTimeFrame(QWidget):
         # 設定當前顯示的子畫面索引
         print(f'{title} Index: {self.stacked_widget.count()}')
 
+    #region
     def update_time(self):
         current_datetime = PPV.current_datetime
         for index,radio_button in enumerate(self.radio_buttons):
@@ -156,7 +158,7 @@ class setTimeFrame(QWidget):
             print(f'Exception: {e}')
 
     def sync(self):
-        setTimeFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
+        
         try:
             modbusTimeFormat = PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
             if modbusTimeFormat != setTimeFormat:
@@ -166,4 +168,4 @@ class setTimeFrame(QWidget):
         except Exception as e:
             traceback.print_exc()
             print(f'Exception: {e}')
-            
+    #endregion 
