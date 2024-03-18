@@ -61,7 +61,7 @@ def setButtonIcon(button, image_path, text=""):
     # 使用 scaled 方法調整圖片大小以符合按鈕，同時保持原始的寬高比# 如果圖片尺寸超過 100x100，則進行調整
     if button.width() > 100 or button.height() > 100:
         # print('Image Set 1')
-        pixmap = pixmap.scaled(button.width()//1.25, button.height()//1.25, aspectRatioMode=Qt.KeepAspectRatio, transformMode=Qt.SmoothTransformation)
+        pixmap = pixmap.scaled(button.width()//1.5, button.height()//1.5, aspectRatioMode=Qt.KeepAspectRatio, transformMode=Qt.SmoothTransformation)
 
 
     else:

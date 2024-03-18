@@ -3,11 +3,11 @@
 # 「單位」
 
 # 此程式碼為「顯示」底下的「單位」介面
-    # 設定溫度及氧氣濃度單位，並回傳給Slaver（暫不處理切換單位之間的數據轉換）
+    # 設定溫度及氧氣濃度單位，並回傳給Slaver
 
 try:
     import traceback, minimalmodbus, threading, PySQL
-    from PyQt5.QtCore import Qt, QTimer
+    from PyQt5.QtCore import Qt
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, \
         QPushButton, QSizePolicy, QRadioButton, QComboBox
     from PyQt5.QtGui import QFont
@@ -29,8 +29,8 @@ class setUnitFrame(QWidget):
         print(title)
         self.sub_pages = sub_pages
 
-        self.delayTime = QTimer(self)
-        self.delayTime.start(1000)
+        # self.delayTime = QTimer(self)
+        # self.delayTime.start(1000)
 
         # self.temp_unit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
         # self.setGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
@@ -161,7 +161,7 @@ class setUnitFrame(QWidget):
             select_tempUnit = -1
 
         try:
-            self.delayTime.start(1000)
+            PPV.timer.start(1000)
             PySQL.updateSQL_Reg(regDF = 4, regKey = 0, updateValue = select_tempUnit)
             PySQL.updateSQL_Reg(regDF = 4, regKey = 4, updateValue = self.gas_unit_ComboBox.currentIndex())
 

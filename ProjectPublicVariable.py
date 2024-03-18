@@ -4,6 +4,11 @@
 # 專案用全域變數、方法
 
 import minimalmodbus, platform
+from PyQt5.QtCore import QTimer, QDateTime
+
+
+timer = QTimer()
+current_datetime = QDateTime.currentDateTime()
 
 #region modbus RTU連線
 # 埠號名稱依作業系統環境不一樣

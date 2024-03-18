@@ -50,6 +50,7 @@ print(platform.system())
 #     print('Flask API未啟用')
     
 #region 其他全域變數
+
 font = QFont()
 
 spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -219,7 +220,7 @@ class MyWindow(QMainWindow):
         self.tempUnit = QLabel(" °C")
         # self.oxygen_label.setAlignment(Qt.AlignCenter)  # 文字置中
         # self.temperture_label.setAlignment(Qt.AlignCenter)
-        font.setPointSize(36)
+        font.setPointSize(28)
         font.setBold(True)
         self.oxygen_label.setFont(font)
         self.o2Data.setFont(font)
@@ -404,13 +405,13 @@ class MyWindow(QMainWindow):
         #endregion
 
         #region 更新日期時間並持續讓modbus讀取資料進圖表    
-        self.timer = QTimer(self) # 更新日期時間的 QTimer
-        self.timer.timeout.connect(self.update_modbus_data)
-        self.timer.timeout.connect(self.update_datetime)
-        self.timer.start(1000)  # 每秒更新一次
+        # self.timer = QTimer(self) # 更新日期時間的 QTimer
+        # PPV.timer.timeout.connect(self.update_modbus_data)
+        PPV.timer.timeout.connect(self.update_datetime)
+        PPV.timer.start(1000)  # 每秒更新一次
 
         # 更新一次日期時間，避免一開始顯示空白
-        self.update_datetime()
+        # self.update_datetime()
         #endregion
 
 
@@ -419,20 +420,85 @@ class MyWindow(QMainWindow):
 
     #endregion
         
-
     #region testClicked    
     def testClicked(self):
         print('測試按鈕')
     #endregion
 
     #region modbus RTU讀取（氧氣濃度、溫度）
-    def update_modbus_data(self):
+    # def update_modbus_data(self):
+    #     global oxygen_concentration, temperature
+        
+        
+    #     try:
+    #         # 定義一個函數，用於在執行緒中執行Modbus讀取
+    #         def modbus_read_thread():
+    #             global oxygen_concentration, temperature, dateFormateIndex
+    #             current_datetime = QDateTime.currentDateTime()
+    #             try:
+                    
+    #                 # 讀取浮點數值，地址為1
+    #                 oxygen_concentration = PPV.instrument_ID1.read_float(PPV.R3X_address('Gas'), functioncode=4)
+    #                 temperature = PPV.instrument_ID1.read_float(PPV.R3X_address('Temperature'), functioncode=4)
+
+    #                 setGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
+    #                 dateFormateIndex =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
+    #                 temp_unit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
+
+
+    #                 self.stateConnect_label.setText('已連線')
+    #                 # print(f'O2:{oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}, T:{temperature:.2f} {tempUnitDist[temp_unit]}')
+
+
+    #             except minimalmodbus.NoResponseError as e:
+    #                 setGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
+    #                 dateFormateIndex = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
+    #                 temp_unit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
+
+    #                 self.stateConnect_label.setText('未連線')
+    #                 # print(f'No response from the instrument: {e}')
+    #             except Exception as e:
+    #                 traceback.print_exc()
+    #                 print(f'Thread Inside Exception: {e}')
+
+                
+                    
+    #             self.o2Data.setText(f"{oxygen_concentration:.2f}")
+    #             self.o2Unite.setText(f"{PPV.o2_GasUnitDist[setGasUnit]}")
+                    
+    #             self.tempData.setText(f"{temperature:.2f}")
+    #             self.tempUnit.setText(f"{PPV.tempUnitDist[temp_unit]}")
+            
+    #             # print(dateFormateIndex)
+    #             formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
+    #             PPV.current_datetime = current_datetime
+    #             # print(formatted_datetime)
+    #             self.datetime.setText(formatted_datetime)
+    #             # print(self.datetime.text())
+
+    #             # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
+
+    #         # 建立一個新的執行緒並啟動
+    #         modbus_thread = threading.Thread(target=modbus_read_thread)
+    #         modbus_thread.start()
+
+
+    #     except Exception as e:
+    #         traceback.print_exc()
+    #         print(f'Thread Outside Exception: {e}')
+        
+
+    #endregion
+            
+    #region 時間更新
+    def update_datetime(self):
         global oxygen_concentration, temperature
-        current_datetime = QDateTime.currentDateTime()
         try:
+            #region modbus RTU讀取（氧氣濃度、溫度
             # 定義一個函數，用於在執行緒中執行Modbus讀取
             def modbus_read_thread():
                 global oxygen_concentration, temperature, dateFormateIndex
+                current_datetime = QDateTime.currentDateTime()
                 try:
                     
                     # 讀取浮點數值，地址為1
@@ -459,38 +525,27 @@ class MyWindow(QMainWindow):
                     traceback.print_exc()
                     print(f'Thread Inside Exception: {e}')
 
-                finally:
+                self.o2Data.setText(f"{oxygen_concentration:.2f}")
+                self.o2Unite.setText(f"{PPV.o2_GasUnitDist[setGasUnit]}")
                     
-                    self.o2Data.setText(f"{oxygen_concentration:.2f}")
-                    self.o2Unite.setText(f"{PPV.o2_GasUnitDist[setGasUnit]}")
-                    
-                    self.tempData.setText(f"{temperature:.2f}")
-                    self.tempUnit.setText(f"{PPV.tempUnitDist[temp_unit]}")
+                self.tempData.setText(f"{temperature:.2f}")
+                self.tempUnit.setText(f"{PPV.tempUnitDist[temp_unit]}")
             
-                    # print(dateFormateIndex)
-                    formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
-                    # print(current_datetime.toString(f"({PPV.dateFormat[dateFormateIndex[0]]}){PPV.dateFormat[dateFormateIndex[1]]} hh:mm:ss"))
-                    self.datetime.setText(formatted_datetime)
-                    # print(self.datetime.text())
+                # print(dateFormateIndex)
+                formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
+                PPV.current_datetime = current_datetime
+                # print(formatted_datetime)
+                self.datetime.setText(formatted_datetime)
+                # print(self.datetime.text())
 
-                    # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
+                # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
             # 建立一個新的執行緒並啟動
             modbus_thread = threading.Thread(target=modbus_read_thread)
             modbus_thread.start()
+            #endregion
 
-
-        except Exception as e:
-            traceback.print_exc()
-            print(f'Thread Outside Exception: {e}')
-
-    #endregion
-            
-    #region 時間更新
-    def update_datetime(self):
-        global oxygen_concentration, temperature
-        # current_datetime = QDateTime.currentDateTime()
-        try:
+            #region 更新圖表
             # formatted_datetime = current_datetime.toString("yyyy-MM-dd hh:mm:ss")
             # self.datetime_label.setText(formatted_datetime)
             # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit_default}')
@@ -505,6 +560,7 @@ class MyWindow(QMainWindow):
 
             # 在這裡更新畫布
             self.plot_canvas.draw()
+            #endregion
         except Exception as e:
             traceback.print_exc()
             print(f'Exception in update_datetime: {e}')
