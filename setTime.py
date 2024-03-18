@@ -135,7 +135,7 @@ class setTimeFrame(QWidget):
             label, date_format = date_formats[format_key]
             formatted_datetime = current_datetime.toString(f"{date_format} hh:mm:ss")
             radio_button.setText(f"{formatted_datetime} ({label})")
-        self.sync 
+        self.sync()
                
 
     
@@ -145,10 +145,11 @@ class setTimeFrame(QWidget):
             if radio_button.isChecked():
                 select_Format=index
                 print(f'Set Time Format:{date_formats[select_Format]}')
+                PySQL.updateSQL_Reg(regDF = 4, regKey = 1, updateValue = select_Format)
         try:
             
             PPV.timer.start(1000)
-            PySQL.updateSQL_Reg(regDF = 4, regKey = 1, updateValue = select_Format)
+            
             # print(f"Time Formate SQL Update:{select_Format}")
             PPV.instrument_ID1.write_register(PPV.R4X_address('Date Formate'), int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1)), functioncode=6)
         except minimalmodbus.NoResponseError as e:

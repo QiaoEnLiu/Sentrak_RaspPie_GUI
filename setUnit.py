@@ -145,7 +145,7 @@ class setUnitFrame(QWidget):
 
     #region
     def update_time(self):
-        self.sync
+        self.sync()
     
     
     def setUnit(self):
@@ -156,11 +156,12 @@ class setUnitFrame(QWidget):
             select_tempUnit = 1  # 華氏
         else:
             select_tempUnit = -1
+        PySQL.updateSQL_Reg(regDF = 4, regKey = 0, updateValue = select_tempUnit)
+        PySQL.updateSQL_Reg(regDF = 4, regKey = 4, updateValue = self.gas_unit_ComboBox.currentIndex())
 
         try:
             PPV.timer.start(1000)
-            PySQL.updateSQL_Reg(regDF = 4, regKey = 0, updateValue = select_tempUnit)
-            PySQL.updateSQL_Reg(regDF = 4, regKey = 4, updateValue = self.gas_unit_ComboBox.currentIndex())
+            
 
             PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'), int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0)), functioncode=6)
             PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'), int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4)),functioncode=6)
