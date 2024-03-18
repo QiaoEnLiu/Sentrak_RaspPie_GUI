@@ -6,7 +6,7 @@
     # 尚未實作調整時間
 try:
     import traceback, minimalmodbus, threading, PySQL
-    from PyQt5.QtCore import Qt
+    from PyQt5.QtCore import Qt, QTimer
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, \
                             QSizePolicy, QRadioButton, QComboBox
     from PyQt5.QtGui import QFont
@@ -50,10 +50,9 @@ class setTimeFrame(QWidget):
 
 
         # 定義一個 QTimer 用來定期更新時間
-        # self.timer = QTimer(self)
-        PPV.timer.timeout.connect(self.update_time)
-        # PPV.timer.timeout.connect(self.sync)
-        # self.timer.start(1000)  # 1秒更新一次
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_time)
+        self.timer.start(1000)  # 1秒更新一次
 
         # self.timer = QTimer(self)
 
