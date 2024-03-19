@@ -518,27 +518,33 @@ class MyWindow(QMainWindow):
             self.plot_canvas.draw()
             #endregion
 
-            #region modbus RTU讀取（氧氣濃度、溫度
+            #region modbus RTU讀取（氧氣濃度、溫度）
             # 定義一個函數，用於在執行緒中執行Modbus讀取
             def modbus_read_thread():
-                global oxygen_concentration, temperature, dateFormateIndex
+                global oxygen_concentration, temperature
                 current_datetime = QDateTime.currentDateTime()
 
+                # 讀取SQL的暫存資料表
                 sqlGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
                 sqlDateFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
                 sqlTempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
 
                 try:
-                    
-                    # 讀取浮點數值，地址為1
+                    # 成功連線下，以下讀取modbus可以執行
+                    # 讀取濃度、溫度變動值
                     oxygen_concentration = PPV.instrument_ID1.read_float(PPV.R3X_address('Gas'), functioncode=4)
                     temperature = PPV.instrument_ID1.read_float(PPV.R3X_address('Temperature'), functioncode=4)
 
+                    # 讀取modbus的Reg設定值
                     modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
                     modbusDateFormat =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
                     modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
 
+
+                    # modbus的設定值與暫存資料表比對（以R4X為主）
+                    
                     if modbusDateFormat != sqlDateFormat:
+                        # 由於離時有更動暫存資料表，恢復連線後與modbus比對數值不一致，則將暫存資料表的值寫進modbus
                         PPV.instrument_ID1.write_register(PPV.R4X_address('Date Formate'), sqlDateFormat, functioncode=6)
 
                     if modbusGasUnit != sqlGasUnit:
@@ -552,6 +558,7 @@ class MyWindow(QMainWindow):
 
 
                 except minimalmodbus.NoResponseError as e:
+                    # 出現離線狀態直接執行此區塊
 
                     self.stateConnect_label.setText('未連線')
                     # print(f'No response from the instrument: {e}')
@@ -574,7 +581,7 @@ class MyWindow(QMainWindow):
 
                 # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
-            # 建立一個新的執行緒並啟動
+            # 執行緒啟動modbus互動
             modbus_thread = threading.Thread(target=modbus_read_thread)
             modbus_thread.start()
             #endregion
