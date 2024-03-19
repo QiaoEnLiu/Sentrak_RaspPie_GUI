@@ -148,7 +148,9 @@ class setUnitFrame(QWidget):
 
     #region
     def update_time(self):
-        self.sync()
+        select_tempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
+        select_gasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
+        # self.sync()
     
     
     def setUnit(self):
@@ -176,10 +178,10 @@ class setUnitFrame(QWidget):
             traceback.print_exc()
             print(f'Exception: {e}')
 
-    def sync(self):
+    # def sync(self):
 
-        select_tempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
-        select_gasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
+    #     select_tempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
+    #     select_gasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
         
         # try:
         #     modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)

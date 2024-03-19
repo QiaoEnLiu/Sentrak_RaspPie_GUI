@@ -128,13 +128,14 @@ class setTimeFrame(QWidget):
 
     #region
     def update_time(self):
+        setTimeFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
         current_datetime = PPV.current_datetime
         for index,radio_button in enumerate(self.radio_buttons):
             format_key = index
             label, date_format = date_formats[format_key]
             formatted_datetime = current_datetime.toString(f"{date_format} hh:mm:ss")
             radio_button.setText(f"{formatted_datetime} ({label})")
-        self.sync()
+        # self.sync()
                
 
     
@@ -157,8 +158,8 @@ class setTimeFrame(QWidget):
             traceback.print_exc()
             print(f'Exception: {e}')
 
-    def sync(self):
-        setTimeFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
+    # def sync(self):
+    #     setTimeFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
         
         # try:
         #     modbusTimeFormat = PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
