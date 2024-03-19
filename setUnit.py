@@ -177,18 +177,21 @@ class setUnitFrame(QWidget):
             print(f'Exception: {e}')
 
     def sync(self):
+
+        select_tempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
+        select_gasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
         
-        try:
-            modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
-            modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
-            if modbusTempUnit != select_tempUnit:
-                PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'), select_tempUnit, functioncode=6)
-            if modbusGasUnit != select_gasUnit:
-                PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'), select_gasUnit, functioncode=6)
-        except minimalmodbus.NoResponseError as e:
-            pass
-        except Exception as e:
-            traceback.print_exc()
-            print(f'Exception: {e}')
+        # try:
+        #     modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
+        #     modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
+        #     if modbusTempUnit != select_tempUnit:
+        #         PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'), select_tempUnit, functioncode=6)
+        #     if modbusGasUnit != select_gasUnit:
+        #         PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'), select_gasUnit, functioncode=6)
+        # except minimalmodbus.NoResponseError as e:
+        #     pass
+        # except Exception as e:
+        #     traceback.print_exc()
+        #     print(f'Exception: {e}')
     #endregion
     

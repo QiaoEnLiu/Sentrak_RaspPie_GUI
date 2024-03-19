@@ -158,14 +158,15 @@ class setTimeFrame(QWidget):
             print(f'Exception: {e}')
 
     def sync(self):
+        setTimeFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
         
-        try:
-            modbusTimeFormat = PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
-            if modbusTimeFormat != setTimeFormat:
-                PPV.instrument_ID1.write_register(PPV.R4X_address('Date Formate'), setTimeFormat, functioncode=6)
-        except minimalmodbus.NoResponseError as e:
-            pass
-        except Exception as e:
-            traceback.print_exc()
-            print(f'Exception: {e}')
+        # try:
+        #     modbusTimeFormat = PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
+        #     if modbusTimeFormat != setTimeFormat:
+        #         PPV.instrument_ID1.write_register(PPV.R4X_address('Date Formate'), setTimeFormat, functioncode=6)
+        # except minimalmodbus.NoResponseError as e:
+        #     pass
+        # except Exception as e:
+        #     traceback.print_exc()
+        #     print(f'Exception: {e}')
     #endregion 

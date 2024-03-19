@@ -58,7 +58,14 @@ spacer_right = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 spacer_left = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
 
-dateFormateIndex=2
+
+modbusTempUnit, sqlTempUnit = 0, 0
+modbusDateFormat, sqlDateFormat = 0, 0
+
+modbusGasUnit, sqlGasUnit = 0, 0
+
+
+# dateFormateIndex=2
 format_wedget = None
 oxygen_concentration = 0.00 # 12.56
 temperature_unit_text='Celsius' # Celsius, Fahrenheit
@@ -494,57 +501,6 @@ class MyWindow(QMainWindow):
     def update_datetime(self):
         global oxygen_concentration, temperature
         try:
-            #region modbus RTU讀取（氧氣濃度、溫度
-            # 定義一個函數，用於在執行緒中執行Modbus讀取
-            def modbus_read_thread():
-                global oxygen_concentration, temperature, dateFormateIndex
-                current_datetime = QDateTime.currentDateTime()
-                try:
-                    
-                    # 讀取浮點數值，地址為1
-                    oxygen_concentration = PPV.instrument_ID1.read_float(PPV.R3X_address('Gas'), functioncode=4)
-                    temperature = PPV.instrument_ID1.read_float(PPV.R3X_address('Temperature'), functioncode=4)
-
-                    setGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
-                    dateFormateIndex =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
-                    temp_unit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
-
-
-                    self.stateConnect_label.setText('已連線')
-                    # print(f'O2:{oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}, T:{temperature:.2f} {tempUnitDist[temp_unit]}')
-
-
-                except minimalmodbus.NoResponseError as e:
-                    setGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
-                    dateFormateIndex = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
-                    temp_unit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
-
-                    self.stateConnect_label.setText('未連線')
-                    # print(f'No response from the instrument: {e}')
-                except Exception as e:
-                    traceback.print_exc()
-                    print(f'Thread Inside Exception: {e}')
-
-                self.o2Data.setText(f"{oxygen_concentration:.2f}")
-                self.o2Unite.setText(f"{PPV.o2_GasUnitDist[setGasUnit]}")
-                    
-                self.tempData.setText(f"{temperature:.2f}")
-                self.tempUnit.setText(f"{PPV.tempUnitDist[temp_unit]}")
-            
-                # print(dateFormateIndex)
-                formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
-                PPV.current_datetime = current_datetime
-                # print(formatted_datetime)
-                self.datetime.setText(formatted_datetime)
-                # print(self.datetime.text())
-
-                # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
-
-            # 建立一個新的執行緒並啟動
-            modbus_thread = threading.Thread(target=modbus_read_thread)
-            modbus_thread.start()
-            #endregion
-
             #region 更新圖表
             # formatted_datetime = current_datetime.toString("yyyy-MM-dd hh:mm:ss")
             # self.datetime_label.setText(formatted_datetime)
@@ -561,6 +517,69 @@ class MyWindow(QMainWindow):
             # 在這裡更新畫布
             self.plot_canvas.draw()
             #endregion
+
+            #region modbus RTU讀取（氧氣濃度、溫度
+            # 定義一個函數，用於在執行緒中執行Modbus讀取
+            def modbus_read_thread():
+                global oxygen_concentration, temperature, dateFormateIndex
+                current_datetime = QDateTime.currentDateTime()
+
+                sqlGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
+                sqlDateFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
+                sqlTempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
+
+                try:
+                    
+                    # 讀取浮點數值，地址為1
+                    oxygen_concentration = PPV.instrument_ID1.read_float(PPV.R3X_address('Gas'), functioncode=4)
+                    temperature = PPV.instrument_ID1.read_float(PPV.R3X_address('Temperature'), functioncode=4)
+
+                    modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
+                    modbusDateFormat =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
+                    modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
+
+                    if modbusDateFormat != sqlDateFormat:
+                        PPV.instrument_ID1.write_register(PPV.R4X_address('Date Formate'), sqlDateFormat, functioncode=6)
+
+                    if modbusGasUnit != sqlGasUnit:
+                        PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'), sqlGasUnit, functioncode=6)
+                    if modbusTempUnit != sqlTempUnit:
+                        PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'), sqlTempUnit, functioncode=6)
+
+
+                    self.stateConnect_label.setText('已連線')
+                    # print(f'O2:{oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}, T:{temperature:.2f} {tempUnitDist[temp_unit]}')
+
+
+                except minimalmodbus.NoResponseError as e:
+
+                    self.stateConnect_label.setText('未連線')
+                    # print(f'No response from the instrument: {e}')
+                except Exception as e:
+                    traceback.print_exc()
+                    print(f'Thread Inside Exception: {e}')
+
+                self.o2Data.setText(f"{oxygen_concentration:.2f}")
+                self.o2Unite.setText(f"{PPV.o2_GasUnitDist[sqlGasUnit]}")
+                    
+                self.tempData.setText(f"{temperature:.2f}")
+                self.tempUnit.setText(f"{PPV.tempUnitDist[sqlTempUnit]}")
+            
+                # print(dateFormateIndex)
+                formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[sqlDateFormat][1]} hh:mm:ss")
+                PPV.current_datetime = current_datetime
+                # print(formatted_datetime)
+                self.datetime.setText(formatted_datetime)
+                # print(self.datetime.text())
+
+                # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
+
+            # 建立一個新的執行緒並啟動
+            modbus_thread = threading.Thread(target=modbus_read_thread)
+            modbus_thread.start()
+            #endregion
+
+            
         except Exception as e:
             traceback.print_exc()
             print(f'Exception in update_datetime: {e}')
