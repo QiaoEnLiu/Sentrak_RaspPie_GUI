@@ -502,9 +502,7 @@ class MyWindow(QMainWindow):
         global oxygen_concentration, temperature
         try:
             #region 更新圖表
-            # formatted_datetime = current_datetime.toString("yyyy-MM-dd hh:mm:ss")
-            # self.datetime_label.setText(formatted_datetime)
-            # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit_default}')
+            
             # 清除之前的圖例
             self.plot_canvas.ax.clear()
 
@@ -560,7 +558,7 @@ class MyWindow(QMainWindow):
                 except minimalmodbus.NoResponseError as e:
                     # 出現離線狀態直接執行此區塊
 
-                    self.stateConnect_label.setText('未連線')
+                    self.stateConnect_label.setText('離線')
                     # print(f'No response from the instrument: {e}')
                 except Exception as e:
                     traceback.print_exc()
@@ -581,9 +579,13 @@ class MyWindow(QMainWindow):
 
                 # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
 
-            # 執行緒啟動modbus互動
+            # 執行緒啟動與modbus互動
             modbus_thread = threading.Thread(target=modbus_read_thread)
             modbus_thread.start()
+            # formatted_datetime = current_datetime.toString("yyyy-MM-dd hh:mm:ss")
+            # self.datetime_label.setText(formatted_datetime)
+            # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit_default}')
+
             #endregion
 
             
