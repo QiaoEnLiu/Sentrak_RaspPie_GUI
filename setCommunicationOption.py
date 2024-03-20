@@ -12,7 +12,7 @@ try:
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QHBoxLayout, QSizePolicy
     from PyQt5.QtGui import QFont
     from set_HTTP_TCPIP import internetFrame
-    # from set_RS485 import rs485_Frame
+    from set_RS485 import rs485_Frame
     from testEndFrame import testEndFrame
 except Exception as e:
     print(f"An error occurred: {e}")
@@ -93,8 +93,8 @@ class comOptionFrame(QWidget):
         if option not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[option]):
             print(f'進入：{option}')
             if option == 'RS485': # 設定RS485
-                # next_frame = rs485_Frame(option, _style, self.stacked_widget, self.sub_pages)
-                next_frame = testEndFrame(option, _style, self.stacked_widget, self.sub_pages)
+                next_frame = rs485_Frame(option, _style, self.stacked_widget, self.sub_pages)
+                # next_frame = testEndFrame(option, _style, self.stacked_widget, self.sub_pages)
             elif option == 'HTTP / TCPIP': # 設定HTTP / TCPIP
                 next_frame = internetFrame(option, _style, self.stacked_widget, self.sub_pages)
             else:

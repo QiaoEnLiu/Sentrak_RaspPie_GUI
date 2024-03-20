@@ -8,9 +8,9 @@
 try:
     import traceback
     from PyQt5.QtCore import Qt
-    from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton
+    from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QRadioButton
     from PyQt5.QtGui import QFont
-    from PyQt5.QtSerialPort import QSerialPort, QSerialPortInfo
+    # from PyQt5.QtSerialPort import QSerialPort
     import ProjectPublicVariable as PPV
 except Exception as e:
     print(f"An error occurred: {e}")
@@ -39,16 +39,31 @@ class rs485_Frame(QWidget):
 
         # COM Port
         #暫以本機端通訊埠顯示
-        com_layout = QHBoxLayout()
-        com_layout.setContentsMargins(0, 0, 0, 0)
-        com_layout.setSpacing(0) 
-        com_label = QLabel('COM Port:')
-        com_label.setFont(font)
-        self.com_combo = QComboBox()
-        self.com_combo.setFont(font)
-        self.populate_com_ports()
-        com_layout.addWidget(com_label)
-        com_layout.addWidget(self.com_combo)
+        # com_layout = QHBoxLayout()
+        # com_layout.setContentsMargins(0, 0, 0, 0)
+        # com_layout.setSpacing(0) 
+        # com_label = QLabel('COM Port:')
+        # com_label.setFont(font)
+        # self.com_combo = QComboBox()
+        # self.com_combo.setFont(font)
+        # self.populate_com_ports()
+        # com_layout.addWidget(com_label)
+        # com_layout.addWidget(self.com_combo)
+
+        state_layout = QHBoxLayout()
+        state_layout.setContentsMargins(0, 0, 0, 0)
+        state_layout.setSpacing(0) 
+        state_label = QLabel('狀態：')
+        state_label.setFont(font)
+        self.deactivate_radio = QRadioButton('停用')
+        self.deactivate_radio.setChecked(True)
+        self.activate_radio = QRadioButton('啟用')
+        self.deactivate_radio.setFont(font)
+        self.activate_radio.setFont(font)
+
+        state_layout.addWidget(state_label)
+        state_layout.addWidget(self.deactivate_radio)
+        state_layout.addWidget(self.activate_radio)
 
         # Baud Rate
         baud_layout = QHBoxLayout()
@@ -74,7 +89,7 @@ class rs485_Frame(QWidget):
         parity_label.setFont(font)
         self.parity_combo = QComboBox()
         self.parity_combo.setFont(font)
-        self.parity_combo.addItems(['None', 'Even', 'Odd', 'Mark', 'Space'])
+        self.parity_combo.addItems(['None', 'Odd', 'Even']) # 'Mark', 'Space'
         # 設定預設選項為 'None'
         default_parity = 'None'
         default_parity_index = self.parity_combo.findText(default_parity)
@@ -90,13 +105,15 @@ class rs485_Frame(QWidget):
         stop_bits_label.setFont(font)
         self.stop_bits_combo = QComboBox()
         self.stop_bits_combo.setFont(font)
-        stop_bits_mapping = {
-            '1': QSerialPort.OneStop,
-            '1.5': QSerialPort.OneAndHalfStop,
-            '2': QSerialPort.TwoStop,
-        }
-        for stop_bit, stop_bits_enum in stop_bits_mapping.items():
-            self.stop_bits_combo.addItem(stop_bit, stop_bits_enum)
+        # stop_bits_mapping = {
+        #     '1': QSerialPort.OneStop,
+        #     # '1.5': QSerialPort.OneAndHalfStop,
+        #     '2': QSerialPort.TwoStop,
+        # }
+        # for stop_bit, stop_bits_enum in stop_bits_mapping.items():
+        #     self.stop_bits_combo.addItem(stop_bit, stop_bits_enum)
+        self.stop_bits_combo.addItems(['1', '2'])
+        
         # 設定預設選項為 '1'
         default_stop_bit = '1'
         default_stop_bit_index = self.stop_bits_combo.findText(default_stop_bit)
@@ -112,7 +129,7 @@ class rs485_Frame(QWidget):
         data_bits_label.setFont(font)
         self.data_bits_combo = QComboBox()
         self.data_bits_combo.setFont(font)
-        self.data_bits_combo.addItems(['5', '6', '7', '8'])
+        self.data_bits_combo.addItems(['7', '8'])
         # 設定預設選項為 '8'
         default_data_bits = '8'
         default_data_bits_index = self.data_bits_combo.findText(default_data_bits)
@@ -131,7 +148,7 @@ class rs485_Frame(QWidget):
 
         # rs485_layout.addLayout(title_layout)
         # rs485_layout.addStretch()
-        rs485_layout.addLayout(com_layout)
+        rs485_layout.addLayout(state_layout)
         rs485_layout.addStretch()
         rs485_layout.addLayout(baud_layout)
         rs485_layout.addStretch()
@@ -159,20 +176,28 @@ class rs485_Frame(QWidget):
         print(f'{title} Index: {self.stacked_widget.count()}')
 
 
-    def populate_com_ports(self):
-        com_ports = [port.portName() for port in QSerialPortInfo.availablePorts()]
-        self.com_combo.addItems(com_ports)
-        print('COM Ports:',com_ports)
+    # def populate_com_ports(self):
+    #     com_ports = [port.portName() for port in QSerialPortInfo.availablePorts()]
+    #     self.com_combo.addItems(com_ports)
+    #     print('COM Ports:',com_ports)
 
     def slaverConnect(self):
-        com_port = self.com_combo.currentText()
+        # com_port = self.com_combo.currentText()
+
+        if self.deactivate_radio.isChecked():
+            state = 0  # 停用
+        elif self.activate_radio.isChecked():
+            state = 1  # 啟用
+        else:
+            state = 1
+
         baud_rate = int(self.baud_combo.currentText())
         parity_text = self.parity_combo.currentText()
-        stop_bits = int(self.stop_bits_combo.currentData())
+        stop_bits = int(self.stop_bits_combo.currentText())
         data_bits = int(self.data_bits_combo.currentText())
         
 
-        slaver_Connect_Info=f'COM Port: {com_port}\r\n' +  \
+        slaver_Connect_Info=f'Connect: {state}\r\n' +  \
         f'Baud Rate: {baud_rate}\r\n' + \
         f'Parity: {parity_text}\r\n' + \
         f'Stop Bits: {stop_bits}\r\n' + \

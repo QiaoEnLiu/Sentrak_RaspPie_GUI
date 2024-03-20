@@ -129,11 +129,50 @@ def R4X_address(searchName):
 
 #region R4X 地址數值狀態
 
-tempUnitDist={0:'°C',1:'°F'}
+tempUnitDist={0:'°C',
+              1:'°F'}
 
-dateFormat={0:["EU","dd-MM-yyyy"],1:["USA","MM-dd-yyyy"],2:["ISO","yyyy-MM-dd"]} #大寫M為月份，小寫m為分鐘
+dateFormat={0:["EU","dd-MM-yyyy"],
+            1:["USA","MM-dd-yyyy"],
+            2:["ISO","yyyy-MM-dd"]} #大寫M為月份，小寫m為分鐘
 
-o2_GasUnitDist={0:'ppb',1:'PPM',2:'mg/l',3:'PPMV',4:'%',5:'PPM',6:'mg/l',7:'ppb',8:'PPMV',9:'kPa'}
+o2_GasUnitDist={0:'ppb',
+                1:'PPM',
+                2:'mg/l',
+                3:'PPMV',
+                4:'%',
+                5:'PPM',
+                6:'mg/l',
+                7:'ppb',
+                8:'PPMV'
+                ,9:'kPa'}
+
+#region RS-485狀態
+stateRS485={'停用':'0',
+            '啟用':'1'}
+
+baudRate={'1200':'000',
+          '2400':'001',
+          '4800':'010',
+          '9600':'011',
+          '19200':'100',
+          '38400':'101',
+          '57600':'110',
+          '115200':'111'}
+
+parityBit={'None':'00', 
+           'Odd':'01',
+           'Even':'10'}
+
+stopBit={'1':'0',
+         '2':'1'}
+
+dataBit={'7':'0',
+         '8':'1'}
+#endregion
+
+
+
 
 #endregion
 
