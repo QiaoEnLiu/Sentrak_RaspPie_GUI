@@ -28,12 +28,12 @@ class rs485_Frame(QWidget):
         title_layout = QVBoxLayout()
         title_layout.setContentsMargins(0, 0, 0, 0)
         title_layout.setSpacing(0) 
-        title_label = QLabel(title, self)
-        title_label.setAlignment(Qt.AlignCenter)  
+        self.title_label = QLabel(title, self)
+        self.title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(36)
-        title_label.setFont(font)
+        self.title_label.setFont(font)
         # title_label.setStyleSheet(_style)
-        title_layout.addWidget(title_label)
+        title_layout.addWidget(self.title_label)
 
         font.setPointSize(18)
 
@@ -73,7 +73,9 @@ class rs485_Frame(QWidget):
         baud_label.setFont(font)
         self.baud_combo = QComboBox()
         self.baud_combo.setFont(font)
-        self.baud_combo.addItems(['1200', '2400', '4800', '9600', '19200', '38400', '57600', '115200'])
+        # self.baud_combo.addItems(['1200', '2400', '4800', '9600', '19200', '38400', '57600', '115200'])
+        self.baud_combo.addItems(PPV.baudRate.keys())
+        # print(PPV.baudRate.keys())
         # 設定預設選項為 '9600'
         default_baud_rate = '9600'
         default_baud_index = self.baud_combo.findText(default_baud_rate)
@@ -89,7 +91,8 @@ class rs485_Frame(QWidget):
         parity_label.setFont(font)
         self.parity_combo = QComboBox()
         self.parity_combo.setFont(font)
-        self.parity_combo.addItems(['None', 'Odd', 'Even']) # 'Mark', 'Space'
+        # self.parity_combo.addItems(['None', 'Odd', 'Even']) # 'Mark', 'Space'
+        self.parity_combo.addItems(PPV.parityBit.keys())
         # 設定預設選項為 'None'
         default_parity = 'None'
         default_parity_index = self.parity_combo.findText(default_parity)
@@ -112,7 +115,8 @@ class rs485_Frame(QWidget):
         # }
         # for stop_bit, stop_bits_enum in stop_bits_mapping.items():
         #     self.stop_bits_combo.addItem(stop_bit, stop_bits_enum)
-        self.stop_bits_combo.addItems(['1', '2'])
+        # self.stop_bits_combo.addItems(['1', '2'])
+        self.stop_bits_combo.addItems(PPV.stopBit.keys())
         
         # 設定預設選項為 '1'
         default_stop_bit = '1'
@@ -130,6 +134,7 @@ class rs485_Frame(QWidget):
         self.data_bits_combo = QComboBox()
         self.data_bits_combo.setFont(font)
         self.data_bits_combo.addItems(['7', '8'])
+        self.data_bits_combo.addItems(PPV.dataBit.keys())
         # 設定預設選項為 '8'
         default_data_bits = '8'
         default_data_bits_index = self.data_bits_combo.findText(default_data_bits)
@@ -185,22 +190,35 @@ class rs485_Frame(QWidget):
         # com_port = self.com_combo.currentText()
 
         if self.deactivate_radio.isChecked():
-            state = 0  # 停用
+            stateStr = self.deactivate_radio.text()
+            state = PPV.stateRS485[self.deactivate_radio.text()]  # 停用
         elif self.activate_radio.isChecked():
-            state = 1  # 啟用
+            stateStr = self.activate_radio.text()
+            state = PPV.stateRS485[self.activate_radio.text()]  # 啟用
         else:
-            state = 1
+            stateStr = self.activate_radio.text()
+            state = '1'
 
-        baud_rate = int(self.baud_combo.currentText())
+        baud_rate = self.baud_combo.currentText()
         parity_text = self.parity_combo.currentText()
-        stop_bits = int(self.stop_bits_combo.currentText())
-        data_bits = int(self.data_bits_combo.currentText())
+        stop_bits = self.stop_bits_combo.currentText()
+        data_bits = self.data_bits_combo.currentText()
+
+
+        regValue = PPV.dataBit[data_bits] + \
+            PPV.stopBit[stop_bits] + \
+            PPV.parityBit[parity_text] + \
+            PPV.baudRate[baud_rate] + \
+            state
         
 
-        slaver_Connect_Info=f'Connect: {state}\r\n' +  \
-        f'Baud Rate: {baud_rate}\r\n' + \
-        f'Parity: {parity_text}\r\n' + \
-        f'Stop Bits: {stop_bits}\r\n' + \
-        f'Data Bits: {data_bits}\r\n'
+        slaver_Connect_Info=f'\r\n' + \
+            f'{self.title_label.text()}\r\n'+ \
+            f'Connect: {stateStr}({state})\r\n' +  \
+            f'Baud Rate: {baud_rate}({PPV.baudRate[baud_rate]})\r\n' + \
+            f'Parity: {parity_text}({PPV.parityBit[parity_text]})\r\n' + \
+            f'Stop Bits: {stop_bits}({PPV.stopBit[stop_bits]})\r\n' + \
+            f'Data Bits: {data_bits}({PPV.dataBit[data_bits]})\r\n' + \
+            f'RegValue: {regValue}\r\n'
 
         print(slaver_Connect_Info)
