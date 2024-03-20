@@ -144,10 +144,10 @@ o2_GasUnitDist={0:'ppb',
                 5:'PPM',
                 6:'mg/l',
                 7:'ppb',
-                8:'PPMV'
-                ,9:'kPa'}
+                8:'PPMV',
+                9:'kPa'}
 
-#region RS-485狀態
+#region RS-485狀態 'set baudrate'
 stateRS485={'停用':'0',
             '啟用':'1'}
 
