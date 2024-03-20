@@ -88,6 +88,8 @@ def R3X_address(searchName):
 #endregion
 
 #region R4X 地址名稱
+
+
 R4X_Mapping={0:'Temp unit', # 已實作
              1:'Date Formate', # 已實作
              2:'Thermal Limit',

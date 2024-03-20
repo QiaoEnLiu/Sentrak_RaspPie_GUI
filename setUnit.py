@@ -19,8 +19,8 @@ except Exception as e:
 
 font = QFont()
 
-select_tempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
-select_gasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
+select_tempUnit = None
+select_gasUnit = None
 
 class setUnitFrame(QWidget):
 
@@ -28,6 +28,9 @@ class setUnitFrame(QWidget):
         super().__init__()
         print(title)
         self.sub_pages = sub_pages
+
+        select_tempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
+        select_gasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
 
 
         # 定義一個 QTimer 用來定期更新時間
@@ -164,19 +167,19 @@ class setUnitFrame(QWidget):
         PySQL.updateSQL_Reg(regDF = 4, regKey = 0, updateValue = select_tempUnit)
         PySQL.updateSQL_Reg(regDF = 4, regKey = 4, updateValue = self.gas_unit_ComboBox.currentIndex())
 
-        try:
-            PPV.timer.start(1000)
+        # try:
+        #     PPV.timer.start(1000)
             
 
-            PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'), int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0)), functioncode=6)
-            PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'), int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4)),functioncode=6)
+        #     PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'), int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0)), functioncode=6)
+        #     PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'), int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4)),functioncode=6)
             
-            print(f'溫度單位{PPV.tempUnitDist[select_tempUnit]}（{select_tempUnit}），濃度單位{PPV.o2_GasUnitDist[self.gas_unit_ComboBox.currentIndex()]}（{self.gas_unit_ComboBox.currentIndex()}）')
-        except minimalmodbus.NoResponseError as e:
-            print(f'Set Unit Interface: {e}')
-        except Exception as e:
-            traceback.print_exc()
-            print(f'Exception: {e}')
+        #     print(f'溫度單位{PPV.tempUnitDist[select_tempUnit]}（{select_tempUnit}），濃度單位{PPV.o2_GasUnitDist[self.gas_unit_ComboBox.currentIndex()]}（{self.gas_unit_ComboBox.currentIndex()}）')
+        # except minimalmodbus.NoResponseError as e:
+        #     print(f'Set Unit Interface: {e}')
+        # except Exception as e:
+        #     traceback.print_exc()
+        #     print(f'Exception: {e}')
 
     # def sync(self):
 

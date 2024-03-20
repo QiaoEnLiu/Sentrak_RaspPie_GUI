@@ -496,6 +496,7 @@ class MyWindow(QMainWindow):
         
 
     #endregion
+   
             
     #region 時間更新
     def update_datetime(self):
@@ -534,21 +535,73 @@ class MyWindow(QMainWindow):
                     temperature = PPV.instrument_ID1.read_float(PPV.R3X_address('Temperature'), functioncode=4)
 
                     # 讀取modbus的Reg設定值
-                    modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
-                    modbusDateFormat =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
-                    modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
+                    # modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
+                    # modbusDateFormat =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
+                    # modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
 
 
-                    # modbus的設定值與暫存資料表比對（以R4X為主）
-                    
-                    if modbusDateFormat != sqlDateFormat:
+                    # 讀取地址範圍為 0 到 15 的保持寄存器值
+                    values_0_to_15 = PPV.instrument_ID1.read_registers(0, 15, functioncode=3)
+
+                    # 讀取地址範圍為 16 的浮點數值
+                    value_16 = PPV.instrument_ID1.read_float(16, functioncode=3)
+
+                    # 讀取地址範圍為 18 到 26 的保持寄存器值
+                    values_18_to_26 = PPV.instrument_ID1.read_registers(18, 8, functioncode=3)
+
+                    # 將讀取的保持寄存器值合併為一個字典
+                    cache_R4X = {}
+                    for address, value in enumerate(values_0_to_15):
+                        cache_R4X[address] = value
+
+                    # 將地址 16 加入字典並視為浮點數
+                    cache_R4X[16] = value_16
+
+                    for address, value in enumerate(values_18_to_26, start=18):
+                        cache_R4X[address] = value
+
+                    # 將讀取的保持寄存器值與暫存資料表進行比對
+                    for key, value in cache_R4X.items():
                         # 由於離時有更動暫存資料表，恢復連線後與modbus比對數值不一致，則將暫存資料表的值寫進modbus
-                        PPV.instrument_ID1.write_register(PPV.R4X_address('Date Formate'), sqlDateFormat, functioncode=6)
+                        if key == 16:
+                            if PPV.instrument_ID1.read_float(key, functioncode=3) != float(PySQL.selectSQL_Reg(regDF=4, regKey=key)):
+                                PPV.instrument_ID1.write_float(key, float(PySQL.selectSQL_Reg(regDF=4, regKey=key)), functioncode=6)
+                        else:
+                            if value != int(PySQL.selectSQL_Reg(regDF=4, regKey=key)):
+                                PPV.instrument_ID1.write_register(key, int(PySQL.selectSQL_Reg(regDF=4, regKey=key)), functioncode=6)
 
-                    if modbusGasUnit != sqlGasUnit:
-                        PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'), sqlGasUnit, functioncode=6)
-                    if modbusTempUnit != sqlTempUnit:
-                        PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'), sqlTempUnit, functioncode=6)
+                    # def ValueCompare(key):
+                    #     if key == 16:
+                    #         return PPV.instrument_ID1.read_float(key, functioncode=3) != float(PySQL.selectSQL_Reg(regDF=4, regKey=key))
+                    #     else:
+                    #         return PPV.instrument_ID1.read_registers(key, 1, functioncode=3)[0] != int(PySQL.selectSQL_Reg(regDF=4, regKey=key))
+                    
+                    # for key in PPV.R4X_Mapping.keys():
+                    #     # 由於離時有更動暫存資料表，恢復連線後與modbus比對數值不一致，則將暫存資料表的值寫進modbus
+                    #     if key == 16:
+                    #         if ValueCompare(key):
+                    #             PPV.instrument_ID1.write_float(key, float(PySQL.selectSQL_Reg(regDF=4, regKey=key)), functioncode=3)
+                    #     # elif key == 0:
+                    #     #     if ValueCompare(key): 
+                    #     #         PPV.instrument_ID1.write_register(key, sqlTempUnit, functioncode=6)
+                    #     # elif key == 1:
+                    #     #     if ValueCompare(key): 
+                    #     #         PPV.instrument_ID1.write_register(key, sqlDateFormat, functioncode=6)
+                    #     # elif key == 4:
+                    #     #     if ValueCompare(key): 
+                    #     #         PPV.instrument_ID1.write_register(key, sqlGasUnit, functioncode=6)
+                    #     else:
+                    #         if ValueCompare(key):
+                    #             PPV.instrument_ID1.write_register(key, int(PySQL.selectSQL_Reg(regDF=4, regKey=key)), functioncode=6)
+                    
+                    # if modbusDateFormat != sqlDateFormat:
+                    #     # 由於離時有更動暫存資料表，恢復連線後與modbus比對數值不一致，則將暫存資料表的值寫進modbus
+                    #     PPV.instrument_ID1.write_register(PPV.R4X_address('Date Formate'), sqlDateFormat, functioncode=6)
+
+                    # if modbusGasUnit != sqlGasUnit:
+                    #     PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'), sqlGasUnit, functioncode=6)
+                    # if modbusTempUnit != sqlTempUnit:
+                    #     PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'), sqlTempUnit, functioncode=6)
 
 
                     self.stateConnect_label.setText('已連線')
