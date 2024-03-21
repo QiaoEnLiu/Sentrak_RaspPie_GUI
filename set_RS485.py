@@ -5,9 +5,13 @@
 # 此程式碼為「設定」底下進入「rs-485」並實作Slaver設定的介面
     # 尚未能直接設定Slaver通訊
 
+# |Byte                                          |
+# |7      |6      |5    |4    |3 |2 |1 |0        |
+# |DataBit|StopBit|ParityBits |BaudRate|act/deact|
+
 try:
-    import traceback
-    from PyQt5.QtCore import Qt
+    import traceback, PySQL
+    from PyQt5.QtCore import Qt, QTimer
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QRadioButton
     from PyQt5.QtGui import QFont
     # from PyQt5.QtSerialPort import QSerialPort
@@ -18,19 +22,29 @@ except Exception as e:
     input("Press Enter to exit")
 
 font = QFont()
+
+select_RS485_state = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 9))
+bin_RS485_state = PPV.d2b(select_RS485_state).zfill(8)
 class rs485_Frame(QWidget):
     def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
-        print(title)
+        self.title=title
+        print(self.title)
+        print(f"{self.title}:{select_RS485_state}({bin_RS485_state})")
+
+        # 定義一個 QTimer 用來定期更新時間
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_time)
+        self.timer.start(1000)  # 1秒更新一次
 
         rs485_layout = QVBoxLayout()
 
         title_layout = QVBoxLayout()
         title_layout.setContentsMargins(0, 0, 0, 0)
         title_layout.setSpacing(0) 
-        self.title_label = QLabel(title, self)
+        self.title_label = QLabel(self.title)
         self.title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(36)
+        font.setPointSize(28)
         self.title_label.setFont(font)
         # title_label.setStyleSheet(_style)
         title_layout.addWidget(self.title_label)
@@ -205,7 +219,7 @@ class rs485_Frame(QWidget):
         data_bits = self.data_bits_combo.currentText()
 
 
-        regValue = PPV.dataBit[data_bits] + \
+        stateValue = PPV.dataBit[data_bits] + \
             PPV.stopBit[stop_bits] + \
             PPV.parityBit[parity_text] + \
             PPV.baudRate[baud_rate] + \
@@ -213,12 +227,22 @@ class rs485_Frame(QWidget):
         
 
         slaver_Connect_Info=f'\r\n' + \
-            f'{self.title_label.text()}\r\n'+ \
+            f'{self.title}\r\n'+ \
             f'Connect: {stateStr}({state})\r\n' +  \
             f'Baud Rate: {baud_rate}({PPV.baudRate[baud_rate]})\r\n' + \
             f'Parity: {parity_text}({PPV.parityBit[parity_text]})\r\n' + \
             f'Stop Bits: {stop_bits}({PPV.stopBit[stop_bits]})\r\n' + \
             f'Data Bits: {data_bits}({PPV.dataBit[data_bits]})\r\n' + \
-            f'RegValue: {PPV.binary_to_decimal(regValue)}({regValue})\r\n'
+            f'RegValue: {PPV.b2d(stateValue)}({stateValue})\r\n'
+        
+        PySQL.updateSQL_Reg(regDF = 4, regKey = 9, updateValue = PPV.b2d(stateValue))
 
         print(slaver_Connect_Info)
+
+        print(f"{self.title}:{select_RS485_state}({bin_RS485_state})")
+
+    def update_time(self):
+        select_RS485_state = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 9))
+        bin_RS485_state = PPV.d2b(select_RS485_state).zfill(8)
+        self.title_label.setText(f"{self.title}:{str(select_RS485_state)}({bin_RS485_state})")
+        # print(self.title_label.text())

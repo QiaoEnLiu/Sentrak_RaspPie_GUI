@@ -147,10 +147,19 @@ o2_GasUnitDist={0:'ppb',
                 8:'PPMV',
                 9:'kPa'}
 
+
 #region RS-485狀態 'set baudrate'
+
+# |Byte                                          |
+# |7      |6      |5    |4    |3 |2 |1 |0        |
+# |DataBit|StopBit|ParityBits |BaudRate|act/deact|
+
 stateRS485={'停用':'0',
             '啟用':'1'}
 
+
+# |3 |2 |1 |
+# |BaudRate|
 baudRate={'1200':'000',
           '2400':'001',
           '4800':'010',
@@ -160,15 +169,22 @@ baudRate={'1200':'000',
           '57600':'110',
           '115200':'111'}
 
+
+# |5    |4    |
+# |ParityBits |
 parityBit={'None':'00', 
            'Odd':'01',
            'Even':'10'}
 
+
 stopBit={'1':'0',
          '2':'1'}
 
+
 dataBit={'7':'0',
          '8':'1'}
+
+
 #endregion
 
 
@@ -179,12 +195,12 @@ dataBit={'7':'0',
 
 
 # 將二進位轉換為十進位（可接受只由0及1組成的字串）
-def binary_to_decimal(binary):
+def b2d(binary): # binary to decimal
     decimal = int(binary, 2)
     return decimal
 
 # 將十進位轉換為二進位
-def decimal_to_binary(decimal):
+def d2b(decimal): # decimal to binary
     binary = bin(decimal)[2:]
     return binary
 
