@@ -431,71 +431,6 @@ class MyWindow(QMainWindow):
     def testClicked(self):
         print('測試按鈕')
     #endregion
-
-    #region modbus RTU讀取（氧氣濃度、溫度）
-    # def update_modbus_data(self):
-    #     global oxygen_concentration, temperature
-        
-        
-    #     try:
-    #         # 定義一個函數，用於在執行緒中執行Modbus讀取
-    #         def modbus_read_thread():
-    #             global oxygen_concentration, temperature, dateFormateIndex
-    #             current_datetime = QDateTime.currentDateTime()
-    #             try:
-                    
-    #                 # 讀取浮點數值，地址為1
-    #                 oxygen_concentration = PPV.instrument_ID1.read_float(PPV.R3X_address('Gas'), functioncode=4)
-    #                 temperature = PPV.instrument_ID1.read_float(PPV.R3X_address('Temperature'), functioncode=4)
-
-    #                 setGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
-    #                 dateFormateIndex =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
-    #                 temp_unit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
-
-
-    #                 self.stateConnect_label.setText('已連線')
-    #                 # print(f'O2:{oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}, T:{temperature:.2f} {tempUnitDist[temp_unit]}')
-
-
-    #             except minimalmodbus.NoResponseError as e:
-    #                 setGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
-    #                 dateFormateIndex = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
-    #                 temp_unit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
-
-    #                 self.stateConnect_label.setText('未連線')
-    #                 # print(f'No response from the instrument: {e}')
-    #             except Exception as e:
-    #                 traceback.print_exc()
-    #                 print(f'Thread Inside Exception: {e}')
-
-                
-                    
-    #             self.o2Data.setText(f"{oxygen_concentration:.2f}")
-    #             self.o2Unite.setText(f"{PPV.o2_GasUnitDist[setGasUnit]}")
-                    
-    #             self.tempData.setText(f"{temperature:.2f}")
-    #             self.tempUnit.setText(f"{PPV.tempUnitDist[temp_unit]}")
-            
-    #             # print(dateFormateIndex)
-    #             formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[dateFormateIndex][1]} hh:mm:ss")
-    #             PPV.current_datetime = current_datetime
-    #             # print(formatted_datetime)
-    #             self.datetime.setText(formatted_datetime)
-    #             # print(self.datetime.text())
-
-    #             # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
-
-    #         # 建立一個新的執行緒並啟動
-    #         modbus_thread = threading.Thread(target=modbus_read_thread)
-    #         modbus_thread.start()
-
-
-    #     except Exception as e:
-    #         traceback.print_exc()
-    #         print(f'Thread Outside Exception: {e}')
-        
-
-    #endregion
    
             
     #region 時間更新
@@ -569,40 +504,6 @@ class MyWindow(QMainWindow):
                         else:
                             if value != int(PySQL.selectSQL_Reg(regDF=4, regKey=key)):
                                 PPV.instrument_ID1.write_register(key, int(PySQL.selectSQL_Reg(regDF=4, regKey=key)), functioncode=6)
-
-                    # def ValueCompare(key):
-                    #     if key == 16:
-                    #         return PPV.instrument_ID1.read_float(key, functioncode=3) != float(PySQL.selectSQL_Reg(regDF=4, regKey=key))
-                    #     else:
-                    #         return PPV.instrument_ID1.read_registers(key, 1, functioncode=3)[0] != int(PySQL.selectSQL_Reg(regDF=4, regKey=key))
-                    
-                    # for key in PPV.R4X_Mapping.keys():
-                    #     # 由於離時有更動暫存資料表，恢復連線後與modbus比對數值不一致，則將暫存資料表的值寫進modbus
-                    #     if key == 16:
-                    #         if ValueCompare(key):
-                    #             PPV.instrument_ID1.write_float(key, float(PySQL.selectSQL_Reg(regDF=4, regKey=key)), functioncode=3)
-                    #     # elif key == 0:
-                    #     #     if ValueCompare(key): 
-                    #     #         PPV.instrument_ID1.write_register(key, sqlTempUnit, functioncode=6)
-                    #     # elif key == 1:
-                    #     #     if ValueCompare(key): 
-                    #     #         PPV.instrument_ID1.write_register(key, sqlDateFormat, functioncode=6)
-                    #     # elif key == 4:
-                    #     #     if ValueCompare(key): 
-                    #     #         PPV.instrument_ID1.write_register(key, sqlGasUnit, functioncode=6)
-                    #     else:
-                    #         if ValueCompare(key):
-                    #             PPV.instrument_ID1.write_register(key, int(PySQL.selectSQL_Reg(regDF=4, regKey=key)), functioncode=6)
-                    
-                    # if modbusDateFormat != sqlDateFormat:
-                    #     # 由於離時有更動暫存資料表，恢復連線後與modbus比對數值不一致，則將暫存資料表的值寫進modbus
-                    #     PPV.instrument_ID1.write_register(PPV.R4X_address('Date Formate'), sqlDateFormat, functioncode=6)
-
-                    # if modbusGasUnit != sqlGasUnit:
-                    #     PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'), sqlGasUnit, functioncode=6)
-                    # if modbusTempUnit != sqlTempUnit:
-                    #     PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'), sqlTempUnit, functioncode=6)
-
 
                     self.stateConnect_label.setText('已連線')
                     # print(f'O2:{oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}, T:{temperature:.2f} {tempUnitDist[temp_unit]}')
