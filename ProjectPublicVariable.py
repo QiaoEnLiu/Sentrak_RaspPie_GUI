@@ -178,6 +178,16 @@ dataBit={'7':'0',
 
 
 
+# 將二進位轉換為十進位（可接受只由0及1組成的字串）
+def binary_to_decimal(binary):
+    decimal = int(binary, 2)
+    return decimal
+
+# 將十進位轉換為二進位
+def decimal_to_binary(decimal):
+    binary = bin(decimal)[2:]
+    return binary
+
 #region 圖表區域
 plotTime='10秒' # 圖表週期
 #endregion

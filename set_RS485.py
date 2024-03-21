@@ -133,7 +133,7 @@ class rs485_Frame(QWidget):
         data_bits_label.setFont(font)
         self.data_bits_combo = QComboBox()
         self.data_bits_combo.setFont(font)
-        self.data_bits_combo.addItems(['7', '8'])
+        # self.data_bits_combo.addItems(['7', '8'])
         self.data_bits_combo.addItems(PPV.dataBit.keys())
         # 設定預設選項為 '8'
         default_data_bits = '8'
@@ -219,6 +219,6 @@ class rs485_Frame(QWidget):
             f'Parity: {parity_text}({PPV.parityBit[parity_text]})\r\n' + \
             f'Stop Bits: {stop_bits}({PPV.stopBit[stop_bits]})\r\n' + \
             f'Data Bits: {data_bits}({PPV.dataBit[data_bits]})\r\n' + \
-            f'RegValue: {regValue}\r\n'
+            f'RegValue: {PPV.binary_to_decimal(regValue)}({regValue})\r\n'
 
         print(slaver_Connect_Info)

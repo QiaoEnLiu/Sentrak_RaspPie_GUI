@@ -562,7 +562,7 @@ class MyWindow(QMainWindow):
 
                     # 將讀取的保持寄存器值與暫存資料表進行比對
                     for key, value in cache_R4X.items():
-                        # 由於離時有更動暫存資料表，恢復連線後與modbus比對數值不一致，則將暫存資料表的值寫進modbus
+                        # 由於離線時有更動暫存資料表，恢復連線後與modbus比對數值不一致，則將暫存資料表的值寫進modbus
                         if key == 16:
                             if PPV.instrument_ID1.read_float(key, functioncode=3) != float(PySQL.selectSQL_Reg(regDF=4, regKey=key)):
                                 PPV.instrument_ID1.write_float(key, float(PySQL.selectSQL_Reg(regDF=4, regKey=key)), functioncode=6)
@@ -675,7 +675,7 @@ class MyWindow(QMainWindow):
             self.logout_button.setVisible(self.isLogin)
             self.lock_button.setVisible(not self.isLogin)
             # print('logout_button:',self.logout_button.isVisible())
-            print('登入成功', login_dialog.get_global_loginUser())
+            print('登入成功')
             PPV.presentUser = login_dialog.get_global_loginUser()
 
             print('main.py:',PPV.presentUser.userInfo())
