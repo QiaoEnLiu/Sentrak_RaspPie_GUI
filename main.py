@@ -514,6 +514,8 @@ class MyWindow(QMainWindow):
 
                     self.stateConnect_label.setText('離線')
                     # print(f'No response from the instrument: {e}')
+                except AttributeError as e: # 略過無法取得裝置變數的錯誤（因沒有埠號）
+                    pass
                 except Exception as e:
                     traceback.print_exc()
                     print(f'Thread Inside Exception: {e}')

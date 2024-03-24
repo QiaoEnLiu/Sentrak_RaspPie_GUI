@@ -5,6 +5,7 @@
 # 此程式碼為「設定」底下進入「rs-485」並實作Slaver設定的介面
     # 尚未能直接設定Slaver通訊
 
+# |-8     |-7     |-6   |-5   |-4|-3|-2|-1       |
 # |Byte                                          |
 # |7      |6      |5    |4    |3 |2 |1 |0        |
 # |DataBit|StopBit|ParityBits |BaudRate|act/deact|
@@ -69,17 +70,27 @@ class rs485_Frame(QWidget):
         state_layout.setSpacing(0) 
         state_label = QLabel('狀態：')
         state_label.setFont(font)
+
+        
         self.deactivate_radio = QRadioButton('停用')
-        self.deactivate_radio.setChecked(True)
+        # self.deactivate_radio.setChecked(True)
         self.activate_radio = QRadioButton('啟用')
         self.deactivate_radio.setFont(font)
         self.activate_radio.setFont(font)
+
+        # |-1       |
+        # |0        |
+        # |act/deact|
+        if bin_RS485_state[-1:-2]==PPV.stateRS485['停用']:
+            self.deactivate_radio.setChecked(True)
+        else:
+            self.activate_radio.setChecked(True)
 
         state_layout.addWidget(state_label)
         state_layout.addWidget(self.deactivate_radio)
         state_layout.addWidget(self.activate_radio)
 
-        # Baud Rate
+        
         baud_layout = QHBoxLayout()
         baud_layout.setContentsMargins(0, 0, 0, 0)
         baud_layout.setSpacing(0) 
@@ -90,14 +101,18 @@ class rs485_Frame(QWidget):
         # self.baud_combo.addItems(['1200', '2400', '4800', '9600', '19200', '38400', '57600', '115200'])
         self.baud_combo.addItems(PPV.baudRate.keys())
         # print(PPV.baudRate.keys())
-        # 設定預設選項為 '9600'
-        default_baud_rate = '9600'
+
+        # Baud Rate
+        # |-4|-3|-2|-1
+        # |3 |2 |1 |
+        # |BaudRate|
+        default_baud_rate = PPV.get_keys_from_value(PPV.baudRate, bin_RS485_state[-4:-1])[0]
         default_baud_index = self.baud_combo.findText(default_baud_rate)
         self.baud_combo.setCurrentIndex(default_baud_index)
         baud_layout.addWidget(baud_label)
         baud_layout.addWidget(self.baud_combo)
 
-        # Parity
+        
         parity_layout = QHBoxLayout()
         parity_layout.setContentsMargins(0, 0, 0, 0)
         parity_layout.setSpacing(0) 
@@ -106,15 +121,22 @@ class rs485_Frame(QWidget):
         self.parity_combo = QComboBox()
         self.parity_combo.setFont(font)
         # self.parity_combo.addItems(['None', 'Odd', 'Even']) # 'Mark', 'Space'
+
+        # Parity
+        # |-6   |-5   |-4
+        # |5    |4    |
+        # |ParityBits |
         self.parity_combo.addItems(PPV.parityBit.keys())
-        # 設定預設選項為 'None'
-        default_parity = 'None'
+        default_parity = PPV.get_keys_from_value(PPV.parityBit, bin_RS485_state[-6:-4])[0]
         default_parity_index = self.parity_combo.findText(default_parity)
         self.parity_combo.setCurrentIndex(default_parity_index)
         parity_layout.addWidget(parity_label)
         parity_layout.addWidget(self.parity_combo)
 
         # Stop Bits
+        # |-7     |-6
+        # |6      |
+        # |StopBit|
         stop_bits_layout = QHBoxLayout()
         stop_bits_layout.setContentsMargins(0, 0, 0, 0)
         stop_bits_layout.setSpacing(0) 
@@ -132,14 +154,13 @@ class rs485_Frame(QWidget):
         # self.stop_bits_combo.addItems(['1', '2'])
         self.stop_bits_combo.addItems(PPV.stopBit.keys())
         
-        # 設定預設選項為 '1'
-        default_stop_bit = '1'
+        default_stop_bit = PPV.get_keys_from_value(PPV.stopBit, bin_RS485_state[-7:-6])[0]
         default_stop_bit_index = self.stop_bits_combo.findText(default_stop_bit)
         self.stop_bits_combo.setCurrentIndex(default_stop_bit_index)
         stop_bits_layout.addWidget(stop_bits_label)
         stop_bits_layout.addWidget(self.stop_bits_combo)
 
-        # Data Bits
+        
         data_bits_layout = QHBoxLayout()
         data_bits_layout.setContentsMargins(0, 0, 0, 0)
         data_bits_layout.setSpacing(0) 
@@ -149,8 +170,12 @@ class rs485_Frame(QWidget):
         self.data_bits_combo.setFont(font)
         # self.data_bits_combo.addItems(['7', '8'])
         self.data_bits_combo.addItems(PPV.dataBit.keys())
-        # 設定預設選項為 '8'
-        default_data_bits = '8'
+
+        # Data Bits
+        # |-8     |-7
+        # |7      |
+        # |DataBit|
+        default_data_bits = PPV.get_keys_from_value(PPV.dataBit, bin_RS485_state[-8:-7])[0]
         default_data_bits_index = self.data_bits_combo.findText(default_data_bits)
         self.data_bits_combo.setCurrentIndex(default_data_bits_index)
         data_bits_layout.addWidget(data_bits_label)
@@ -239,7 +264,7 @@ class rs485_Frame(QWidget):
 
         print(slaver_Connect_Info)
 
-        print(f"{self.title}:{select_RS485_state}({bin_RS485_state})")
+        # print(f"{self.title}:{select_RS485_state}({bin_RS485_state})")
 
     def update_time(self):
         select_RS485_state = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 9))

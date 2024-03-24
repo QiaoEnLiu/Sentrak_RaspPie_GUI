@@ -3,7 +3,7 @@
 
 # 專案用全域變數、方法
 
-import minimalmodbus, platform
+import minimalmodbus, platform, serial
 from PyQt5.QtCore import QTimer, QDateTime
 
 
@@ -17,24 +17,27 @@ port_names = {
     "Linux": "/dev/ttyUSB0",  # Linux環境的埠號
 }
 it_Port=port_names[platform.system()]
+try:
+    # 定義Modbus裝置的串口及地址
+    # 第一個參數是串口，第二個參數是Modbus地址
+    instrument_ID1 = minimalmodbus.Instrument(it_Port, 1) # Read Only :read f=1
+    # instrument_3x = minimalmodbus.Instrument(it_Port, 3) # Read Only :read f=3,4
+    # instrument_4x = minimalmodbus.Instrument(it_Port, 4) # Write Allow :read f=3,4; write f=6,16
 
-# 定義Modbus裝置的串口及地址
-# 第一個參數是串口，第二個參數是Modbus地址
-instrument_ID1 = minimalmodbus.Instrument(it_Port, 1) # Read Only :read f=1
-# instrument_3x = minimalmodbus.Instrument(it_Port, 3) # Read Only :read f=3,4
-# instrument_4x = minimalmodbus.Instrument(it_Port, 4) # Write Allow :read f=3,4; write f=6,16
+    # 設定串口波特率，Parity和Stop bits（這些參數需與Modbus設備一致）
+    instrument_ID1.serial.baudrate = 9600
+    instrument_ID1.serial.parity = minimalmodbus.serial.PARITY_NONE
+    instrument_ID1.serial.stopbits = 1
+    instrument_ID1.serial.timeout = 1.0
 
-# 設定串口波特率，Parity和Stop bits（這些參數需與Modbus設備一致）
-instrument_ID1.serial.baudrate = 9600
-instrument_ID1.serial.parity = minimalmodbus.serial.PARITY_NONE
-instrument_ID1.serial.stopbits = 1
-instrument_ID1.serial.timeout = 1.0
+    # for i in [instrument_1x, instrument_3x, instrument_4x]:
+    #     i.serial.baudrate = 9600
+    #     i.serial.parity = minimalmodbus.serial.PARITY_NONE
+    #     i.serial.stopbits = 1
+    #     i.serial.timeout = 1.0
+except serial.SerialException as e: # 略過未使用埠號、虛擬埠的錯誤
+    pass
 
-# for i in [instrument_1x, instrument_3x, instrument_4x]:
-#     i.serial.baudrate = 9600
-#     i.serial.parity = minimalmodbus.serial.PARITY_NONE
-#     i.serial.stopbits = 1
-#     i.serial.timeout = 1.0
 
 #endregion
 
@@ -150,14 +153,19 @@ o2_GasUnitDist={0:'ppb',
 
 #region RS-485狀態 'set baudrate'
 
+# |-8     |-7     |-6   |-5   |-4|-3|-2|-1       |
 # |Byte                                          |
 # |7      |6      |5    |4    |3 |2 |1 |0        |
 # |DataBit|StopBit|ParityBits |BaudRate|act/deact|
 
+# |-1       |
+# |0        |
+# |act/deact|
 stateRS485={'停用':'0',
             '啟用':'1'}
 
 
+# |-4|-3|-2|-1
 # |3 |2 |1 |
 # |BaudRate|
 baudRate={'1200':'000',
@@ -170,20 +178,27 @@ baudRate={'1200':'000',
           '115200':'111'}
 
 
+# |-6   |-5   |-4
 # |5    |4    |
 # |ParityBits |
 parityBit={'None':'00', 
            'Odd':'01',
            'Even':'10'}
 
-
+# |-7     |-6
+# |6      |
+# |StopBit|
 stopBit={'1':'0',
          '2':'1'}
 
-
+# |-8     |-7
+# |7      |
+# |DataBit|
 dataBit={'7':'0',
          '8':'1'}
 
+def get_keys_from_value(dictionary, target_value):
+    return [key for key, value in dictionary.items() if value == target_value]
 
 #endregion
 
