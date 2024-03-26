@@ -164,7 +164,7 @@ class MyWindow(QMainWindow):
         self.stateBattery_label.setFont(font)
         setLabelIcon(self.stateBattery_label, stateBattery_icons[0])
 
-        self.stateConnect_label = QLabel('未連線', self)
+        self.stateConnect_label = QLabel('離線', self)
         self.stateConnect_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
         self.stateConnect_label.setAlignment(Qt.AlignRight| Qt.AlignCenter)
         self.stateConnect_label.setFont(font)
