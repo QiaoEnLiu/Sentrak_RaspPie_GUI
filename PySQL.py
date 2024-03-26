@@ -76,7 +76,7 @@ def updateSQL_Reg(regDF, regKey, updateValue):
         cursor.close()
         conn.close()
 
-        print("Update SQL Success")
+        print(f"Update SQL Success, {regDFs[regDF]}:{regKey}")
 
 #endregion
 

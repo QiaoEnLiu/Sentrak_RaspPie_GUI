@@ -20,7 +20,6 @@ except Exception as e:
 
 unit_default = PPV.tempUnitDist[int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))] # 攝氏、華氏之間的轉換問題
 temp_default = PySQL.selectSQL_Reg(regDF = 4, regKey = 2) # 攝氏、華氏之間的轉換問題
-print(temp_default)
 act_default = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 3))
 
 actLimit = None
