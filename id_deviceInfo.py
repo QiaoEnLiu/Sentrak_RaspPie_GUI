@@ -12,6 +12,7 @@ try:
     from PyQt5.QtGui import QFont
 
     import platform, os, subprocess, re, traceback, psutil
+    import ProjectPublicVariable as PPV
     # import RPi.GPIO as GPIO
 
 except Exception as e:
@@ -22,13 +23,13 @@ except Exception as e:
 font = QFont()
 
 class deviceInfoFrame(QWidget):
-    def __init__(self, title, _style, user, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
         # print(title)
         print('測試畫面：', title)
         self.title = title
-        self.user=user
-        self.sub_pages=sub_pages
+        self.user = PPV.presentUser.userInfo()
+        self.sub_pages = sub_pages
 
         # 標題列
         title_layout = QVBoxLayout()        
