@@ -39,6 +39,7 @@ try:
     from setTime import setTimeFrame # 「時間」選項介面
 
     # 校正 >>
+    from calibrateAnalogyOutput import calibrateAnalogyOutputFrame # 「類比輸出校正」介面
 
     # 記錄 >>
     from recordDownloadFile import recordDownloadFileFrame # 「下載記錄至隨身碟」介面
@@ -330,7 +331,9 @@ class subMenuFrame(QWidget):
             #endregion
                 
             #region 「校正」
-                
+            elif item_text == '類比輸出校正':
+                # 由「校正」進入「類比輸出校正」介面
+                next_frame = calibrateAnalogyOutputFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             #endregion
                 
             #region 「記錄」
