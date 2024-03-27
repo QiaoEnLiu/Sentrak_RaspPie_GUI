@@ -52,7 +52,7 @@ class calibrateAnalogyOutputFrame(QWidget):
         self.lowLimitSpin = QDoubleSpinBox()
         self.lowLimitSpin.setFont(font)
         self.lowLimitSpin.setMinimum(PPV.current_Min)
-        self.lowLimitSpin.setMaximum(PPV.current_Man)
+        self.lowLimitSpin.setMaximum(PPV.current_Max)
         self.lowLimitSpin.setValue(int(PySQL.selectSQL_Reg(4, 20)))
         self.lowLimitSpin.setSingleStep(1)
         self.lowLimitSpin.setDecimals(0)
