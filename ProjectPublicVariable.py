@@ -209,27 +209,25 @@ current_Min = 0
 current_Max = 4095
 #endregion
 
-def get_keys_from_value(dictionary, target_value):
-    return [key for key, value in dictionary.items() if value == target_value]
-
-#endregion
-
-
-
-
-#endregion
-
-
-
-# 將二進位轉換為十進位（可接受只由0及1組成的字串）
+#region 進制轉換 'set baudrate', 'Calibratile set', 'configure set'
+# 將二進制轉換為十進制（可接受只由0及1組成的字串）
 def b2d(binary): # binary to decimal
     decimal = int(binary, 2)
     return decimal
 
-# 將十進位轉換為二進位
+# 將十進制轉換為二進制
 def d2b(decimal): # decimal to binary
     binary = bin(decimal)[2:]
     return binary
+
+#endregion
+
+#endregion
+
+#region 由值找索引（唯一值）
+def get_keys_from_value(dictionary, target_value):
+    return [key for key, value in dictionary.items() if value == target_value]
+#endregion
 
 #region 圖表區域
 plotTime='10秒' # 圖表週期
