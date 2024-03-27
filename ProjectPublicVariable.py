@@ -95,14 +95,14 @@ def R3X_address(searchName):
 
 R4X_Mapping={0:'Temp unit', # 已實作
              1:'Date Formate', # 已實作
-             2:'Thermal Limit',
-             3:'Thermal cut off',
+             2:'Thermal Limit', # 已實作
+             3:'Thermal cut off', # 已實作
              4:'Set Gas Unit', # 已實作
              5:'Set Alarm flg0',
              6:'Set Alarm flg1',
              7:'Set Alarm flg NoSens',
              8:'Set Alarm flg Thermal',
-             9:'set baudrate',
+             9:'set baudrate', # 已實作
              10:'set ct range',
              11:'set CT1',
              12:'Set CT2',
@@ -111,8 +111,8 @@ R4X_Mapping={0:'Temp unit', # 已實作
              15:'Member',
              16:'Set Pressur',
              
-             18:'set CT1_1',
-             19:'Set CT2_1',
+             18:'set CT1_1', # 已實作
+             19:'Set CT2_1', # 已實作
              20:'AD-CT1-Low',
              21:'AD-CT1-High',
              22:'AD-CT2-Low',
@@ -132,13 +132,18 @@ def R4X_address(searchName):
 
 #region R4X 地址數值狀態
 
+#region 'Temp unit'
 tempUnitDist={0:'°C',
               1:'°F'}
+#endregion
 
+#region 'Date Formate'
 dateFormat={0:["EU","dd-MM-yyyy"],
             1:["USA","MM-dd-yyyy"],
             2:["ISO","yyyy-MM-dd"]} #大寫M為月份，小寫m為分鐘
+#endregion
 
+#region 'Set Gas Unit'
 o2_GasUnitDist={0:'ppb',
                 1:'PPM',
                 2:'mg/l',
@@ -149,9 +154,9 @@ o2_GasUnitDist={0:'ppb',
                 7:'ppb',
                 8:'PPMV',
                 9:'kPa'}
+#endregion
 
-
-#region RS-485狀態 'set baudrate'
+#region 'set baudrate' (RS-485)
 
 # |-8     |-7     |-6   |-5   |-4|-3|-2|-1       |
 # |Byte                                          |
@@ -196,6 +201,13 @@ stopBit={'1':'0',
 # |DataBit|
 dataBit={'7':'0',
          '8':'1'}
+#endregion
+
+
+#region 'set CT1_1', 'Set CT2_1', 'AD-CT1-Low', 'AD-CT1-High', 'AD-CT2-Low', 'AD-CT2-High',
+current_Min = 0
+current_Max = 4095
+#endregion
 
 def get_keys_from_value(dictionary, target_value):
     return [key for key, value in dictionary.items() if value == target_value]

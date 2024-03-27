@@ -746,8 +746,6 @@ class MyWindow(QMainWindow):
         self.identify_button.setStyleSheet('QPushButton { border: none;}')
 
 
-        
-
         # paintEvent(self.set_button, None)
         # paintEvent(self.calibrate_button, None)
         # paintEvent(self.record_button, None)
