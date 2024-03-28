@@ -58,7 +58,6 @@ spacer_right = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 spacer_left = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
 
-
 modbusTempUnit, sqlTempUnit = 0, 0
 modbusDateFormat, sqlDateFormat = 0, 0
 

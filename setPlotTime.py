@@ -36,7 +36,6 @@ class setPlotTimeFrame(QWidget):
         # user_label.setFont(font)
         # user_label.setStyleSheet(_style)
 
-
         self.plot_time_combo = QComboBox()
         self.plot_time_combo.setFont(font)
         self.plot_time_combo.addItems(PPV.plotTimeDict.values()) # ['1分','5分','10分','30分','1小時']

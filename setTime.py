@@ -140,7 +140,6 @@ class setTimeFrame(QWidget):
         self.sync()
                
 
-    
     def setTime(self):
         print('Set Time')
         for index,radio_button in enumerate(self.radio_buttons):

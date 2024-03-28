@@ -40,7 +40,6 @@ for font in font_list:
 
 plotTime_limit=0
 
-
 #region plotCanvas
 class plotCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=75):

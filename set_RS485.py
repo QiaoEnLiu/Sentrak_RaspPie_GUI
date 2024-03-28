@@ -278,7 +278,6 @@ class rs485_Frame(QWidget):
         self.title_label.setText(f"{self.title}:{int(PySQL.selectSQL_Reg(4, 9))}({PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)})")
 
 
-
         print(slaver_Connect_Info)
 
         # print(f"{self.title}:{select_RS485_state}({bin_RS485_state})")

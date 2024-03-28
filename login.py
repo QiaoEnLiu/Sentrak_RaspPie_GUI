@@ -155,7 +155,6 @@ class LoginDialog(QDialog):
     
 
 
-
     # self.users = {
         #     'user_P001': {
         #         'username': 'Ayt001',

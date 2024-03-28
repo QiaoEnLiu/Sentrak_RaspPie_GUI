@@ -172,7 +172,6 @@ class setUnitFrame(QWidget):
         # try:
         #     PPV.timer.start(1000)
             
-
         #     PPV.instrument_ID1.write_register(PPV.R4X_address('Temp unit'), int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0)), functioncode=6)
         #     PPV.instrument_ID1.write_register(PPV.R4X_address('Set Gas Unit'), int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4)),functioncode=6)
             

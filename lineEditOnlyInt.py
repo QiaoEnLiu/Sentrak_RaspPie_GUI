@@ -8,3 +8,4 @@ class lineEditOnlyInt(QLineEdit):
         # 使用 QIntValidator 限制輸入只能是整數
         validator = QIntValidator()
         self.setValidator(validator)
+        

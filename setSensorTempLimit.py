@@ -121,7 +121,6 @@ class setSensorTempLimitFrame(QWidget):
         print(f'{self.title} Index: {self.stacked_widget.count()}')
 
 
-    
     def setTempLimit(self):
         # print(self.checkbox.text(), ":", self.checkbox.isChecked())
         # print(self.setTemp_label.text(), self.inputTemp.text(), self.tempUnit.text())
@@ -171,4 +170,3 @@ class setSensorTempLimitFrame(QWidget):
 
     #     self.tempUnit.setText(unit_default)
         
-
