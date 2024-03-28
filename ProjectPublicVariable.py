@@ -230,7 +230,11 @@ def get_keys_from_value(dictionary, target_value):
 #endregion
 
 #region 圖表區域
-plotTime='10秒' # 圖表週期
+plotTime = None # 圖表週期
+plotTimeDict = {1:'5秒',
+                2:'10秒',
+                3:'15秒'}
+# ['1分','5分','10分','30分','1小時']
 #endregion
 
 

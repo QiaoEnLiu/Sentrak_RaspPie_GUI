@@ -6,12 +6,14 @@
     # 設定溫度及氧氣濃度單位，並回傳給Slaver
 
 try:
-    import traceback, minimalmodbus, threading, PySQL
-    from PyQt5.QtCore import Qt, QTimer
+    import traceback
+    from PyQt5.QtCore import Qt
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, \
         QPushButton, QSizePolicy, QRadioButton, QComboBox
     from PyQt5.QtGui import QFont
+
     import ProjectPublicVariable as PPV
+    import PySQL
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -19,8 +21,8 @@ except Exception as e:
 
 font = QFont()
 
-select_tempUnit = None
-select_gasUnit = None
+# select_tempUnit = None
+# select_gasUnit = None
 
 class setUnitFrame(QWidget):
 
@@ -29,14 +31,14 @@ class setUnitFrame(QWidget):
         print(title)
         self.sub_pages = sub_pages
 
-        select_tempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
-        select_gasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
+        # select_tempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
+        # select_gasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
 
 
         # 定義一個 QTimer 用來定期更新時間
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_time)
-        self.timer.start(1000)  # 1秒更新一次
+        # self.timer = QTimer(self)
+        # self.timer.timeout.connect(self.update_time)
+        # self.timer.start(1000)  # 1秒更新一次
 
 
         title_label = QLabel(title, self)
@@ -53,9 +55,9 @@ class setUnitFrame(QWidget):
         self.celsius_radio = QRadioButton('攝氏')
         self.fahrenheit_radio = QRadioButton('華氏')
 
-        if select_tempUnit==0:
+        if int(PySQL.selectSQL_Reg(4, 0))==0:
             self.celsius_radio.setChecked(True)
-        elif select_tempUnit==1:
+        elif int(PySQL.selectSQL_Reg(4, 0))==1:
             self.fahrenheit_radio.setChecked(True)
         else:
             pass
@@ -77,7 +79,7 @@ class setUnitFrame(QWidget):
         self.gas_unit_ComboBox=QComboBox(self)
         self.gas_unit_ComboBox.addItems(PPV.o2_GasUnitDist.values())
         self.gas_unit_ComboBox.setFont(font)
-        self.gas_unit_ComboBox.setCurrentText(PPV.o2_GasUnitDist[select_gasUnit])
+        self.gas_unit_ComboBox.setCurrentText(PPV.o2_GasUnitDist[int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))])
 
 
         dissolve_label = QLabel('溶解', self)
@@ -150,9 +152,9 @@ class setUnitFrame(QWidget):
         print(f'{title} Index: {self.stacked_widget.count()}')
 
     #region
-    def update_time(self):
-        select_tempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
-        select_gasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
+    # def update_time(self):
+    #     select_tempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
+    #     select_gasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
         # self.sync()
     
     
@@ -164,8 +166,8 @@ class setUnitFrame(QWidget):
             select_tempUnit = 1  # 華氏
         else:
             select_tempUnit = -1
-        PySQL.updateSQL_Reg(regDF = 4, regKey = 0, updateValue = select_tempUnit)
-        PySQL.updateSQL_Reg(regDF = 4, regKey = 4, updateValue = self.gas_unit_ComboBox.currentIndex())
+        PySQL.updateSQL_Reg(4, 0, select_tempUnit)
+        PySQL.updateSQL_Reg(4, 4, self.gas_unit_ComboBox.currentIndex())
 
         # try:
         #     PPV.timer.start(1000)

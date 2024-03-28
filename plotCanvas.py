@@ -5,13 +5,14 @@
 #!/usr/bin/python 在linux底下將此行置於第一行
 
 try:
-    import numpy, traceback, platform
+    import traceback
     import matplotlib.pyplot as plt
     from matplotlib.font_manager import FontProperties, FontManager
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
     from unit_transfer import unit_transfer
 
     import ProjectPublicVariable as PPV
+    import PySQL
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -73,13 +74,16 @@ class plotCanvas(FigureCanvas):
         self.oxygen_concentration_data.append(oxygen_concentration)
 
         # print(f'{self.x_data[-1]} O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
-        if PPV.plotTime=='5秒':
+        # print(f"{type(PySQL.selectSQL_Var('plotTime'))}:{PySQL.selectSQL_Var('plotTime')}")
+        PPV.plotTime = PPV.plotTimeDict[int(PySQL.selectSQL_Var('plotTime'))]
+        if PPV.plotTime == '5秒':
             plotTime_limit=5
-        elif PPV.plotTime=='10秒':
+        elif PPV.plotTime == '10秒':
             plotTime_limit=10
-        elif PPV.plotTime=='15秒':
+        elif PPV.plotTime == '15秒':
             plotTime_limit=15
         else:
+            print('圖表週期未成功取得暫存值')
             plotTime_limit=10
 
         if len(self.x_data) > plotTime_limit:

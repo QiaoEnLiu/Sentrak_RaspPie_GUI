@@ -5,13 +5,14 @@
 # 此程式碼為設定時間程式碼
     # 尚未實作調整時間
 try:
-    import traceback, minimalmodbus, threading, PySQL
+    import traceback, PySQL
     from PyQt5.QtCore import Qt, QTimer
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, \
-                            QSizePolicy, QRadioButton, QComboBox
+                            QSizePolicy, QRadioButton
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
+    import PySQL
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -23,7 +24,7 @@ font = QFont()
 # 取得日期格式
 date_formats = PPV.dateFormat
 # setTimeFormat = None
-select_Format = None
+# select_Format = None
 
 class setTimeFrame(QWidget):
     def __init__(self, title, _style, stacked_widget, sub_pages):
@@ -32,7 +33,7 @@ class setTimeFrame(QWidget):
 
         self.sub_pages=sub_pages
 
-        select_Format = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
+        # select_Format = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
 
         title_label = QLabel(title, self)
         title_label.setAlignment(Qt.AlignCenter)  
@@ -67,7 +68,7 @@ class setTimeFrame(QWidget):
             formatted_datetime = f"{date_format} hh:mm:ss"
             radio_button.setText(f"{formatted_datetime} ({label})") 
 
-            if select_Format == format_key:
+            if int(PySQL.selectSQL_Reg(4, 1)) == format_key:
                 radio_button.setChecked(True)
             else:
                 radio_button.setChecked(False)
@@ -129,7 +130,7 @@ class setTimeFrame(QWidget):
 
     #region
     def update_time(self):
-        select_Format = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
+        # select_Format = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
         current_datetime = PPV.current_datetime
         for index,radio_button in enumerate(self.radio_buttons):
             format_key = index

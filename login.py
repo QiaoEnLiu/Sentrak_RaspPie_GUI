@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit
 from PyQt5.QtGui import QFont
 from userPermissions import Permissions
 # import flask_app
-import sqlite3, PySQL
+import PySQL
 
 
 font = QFont()

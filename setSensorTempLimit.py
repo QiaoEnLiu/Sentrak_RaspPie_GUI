@@ -5,22 +5,24 @@
 # 啟用或停用感測器溫度保護
     # 啟用則可設定溫度上限
 try:
-    import traceback, PySQL
-    from PyQt5.QtCore import Qt, QTimer
+    import traceback
+    from PyQt5.QtCore import Qt
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout,\
-                                 QCheckBox, QLineEdit, QPushButton, QMessageBox
+                                 QCheckBox, QPushButton, QMessageBox
     
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
+    import PySQL
+    from lineEditOnlyInt import lineEditOnlyInt
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
     input("Press Enter to exit")
 
-unit_default = PPV.tempUnitDist[int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))] # 攝氏、華氏之間的轉換問題
-temp_default = PySQL.selectSQL_Reg(regDF = 4, regKey = 2) # 攝氏、華氏之間的轉換問題
-act_default = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 3))
+# unit_default = PPV.tempUnitDist[int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))] # 攝氏、華氏之間的轉換問題
+# temp_default = PySQL.selectSQL_Reg(regDF = 4, regKey = 2) # 攝氏、華氏之間的轉換問題
+# act_default = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 3))
 
 actLimit = None
 
@@ -66,7 +68,7 @@ class setSensorTempLimitFrame(QWidget):
                                "height : 24px;"
                                "}")
         
-        self.checkbox.setChecked(act_default == 1)
+        self.checkbox.setChecked(int(PySQL.selectSQL_Reg(4, 3)) == 1)
 
         
         checkbox_layout.addWidget(self.checkbox)
@@ -74,22 +76,24 @@ class setSensorTempLimitFrame(QWidget):
         setTemp_layout = QHBoxLayout()
         self.setTemp_label = QLabel('溫度設定：')
         self.setTemp_label.setFont(font)
-        self.inputTemp = QLineEdit() # 限制輸入數字未修改
+        self.inputTemp = lineEditOnlyInt()
         self.inputTemp.setFont(font)
         self.inputTemp.setEnabled(self.checkbox.isChecked())
-        self.tempUnit = QLabel(unit_default)
+        self.tempUnit = QLabel(PPV.tempUnitDist[int(PySQL.selectSQL_Reg(4, 0))])
         self.tempUnit.setFont(font)
         setTemp_layout.addWidget(self.setTemp_label)
         setTemp_layout.addWidget(self.inputTemp)
         setTemp_layout.addWidget(self.tempUnit)
 
-        # 定義一個 QTimer 用來定期更新時間
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_time)
-        self.timer.start(1000)  # 1秒更新一次
+        # # 定義一個 QTimer 用來定期更新時間
+        # self.timer = QTimer(self)
+        # self.timer.timeout.connect(self.update_time)
+        # self.timer.start(1000)  # 1秒更新一次
 
         presentLimitLayout = QVBoxLayout()
         self.presentLimit = QLabel()
+        actLimit = '無限制' if int(PySQL.selectSQL_Reg(4, 3)) == 0 else f'{PySQL.selectSQL_Reg(4, 2)} {PPV.tempUnitDist[int(PySQL.selectSQL_Reg(4, 0))]}'
+        self.presentLimit.setText(f'目前限制最高溫度：{actLimit}')
         font.setPointSize(16)
         self.presentLimit.setFont(font)
         presentLimitLayout.addWidget(self.presentLimit)
@@ -125,38 +129,46 @@ class setSensorTempLimitFrame(QWidget):
         if self.checkbox.isChecked():
             # action = '啟用' if QMessageBox.question(self, self.title, f'設定最高溫度限制：{self.inputTemp.text() + self.tempUnit.text()}\n確定要啟用感測器溫度保護嗎？',
             #                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes else '取消'
-            if QMessageBox.question(self, '感測器溫度保護', f'設定限制最高溫度：{self.inputTemp.text()} {self.tempUnit.text()}\n確定要啟用感測器溫度保護嗎？', QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
+            if QMessageBox.question(self, '感測器溫度保護', f'設定限制最高溫度：{self.inputTemp.text()} {self.tempUnit.text()}\
+                                    \n確定要啟用感測器溫度保護嗎？', QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
                 action = '啟用'
                 # 在這裡添加您想要在使用者點擊"Yes"時執行的程式碼
                 
-                PySQL.updateSQL_Reg(regDF = 4, regKey = 2, updateValue = self.inputTemp.text()) # 攝氏、華氏之間的轉換問題
-                PySQL.updateSQL_Reg(regDF = 4, regKey = 3, updateValue = 1)
+                PySQL.updateSQL_Reg(4, 2, self.inputTemp.text()) # 攝氏、華氏之間的轉換問題
+                PySQL.updateSQL_Reg(4, 3, 1)
 
                 print("使用者啟用感測器溫度保護")
+
+                # self.presentLimit.setText(f'目前限制最高溫度：{PySQL.selectSQL_Reg(4, 2)} {PPV.tempUnitDist[int(PySQL.selectSQL_Reg(4, 0))]}')
             else:
                 action = '取消'
 
             
         else:
 
-            if QMessageBox.question(self, '感測器溫度保護', f'目前限制最高溫度：{temp_default} {self.tempUnit.text()}\n確定要停用感測器溫度保護嗎？', QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
+            if QMessageBox.question(self, '感測器溫度保護', f'目前限制最高溫度：{PySQL.selectSQL_Reg(4, 2)} {self.tempUnit.text()}\
+                                    \n確定要停用感測器溫度保護嗎？', QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
                 action = '停用'
                 # 在這裡添加您想要在使用者點擊"Yes"時執行的程式碼
-                PySQL.updateSQL_Reg(regDF = 4, regKey = 3, updateValue = 0)
+                PySQL.updateSQL_Reg(4, 3, 0)
 
                 print("使用者停用感測器溫度保護")
+                # self.presentLimit.setText(f'目前限制最高溫度：無限制')
             else:
                 action = '取消'
+                
+        actLimit = '無限制' if int(PySQL.selectSQL_Reg(4, 3)) == 0 else f'{PySQL.selectSQL_Reg(4, 2)} {PPV.tempUnitDist[int(PySQL.selectSQL_Reg(4, 0))]}'
+        self.presentLimit.setText(f'目前限制最高溫度：{actLimit}')
 
         QMessageBox.information(self, '感測器溫度保護', f'{action}設定')
 
-    def update_time(self):
-        temp_default = PySQL.selectSQL_Reg(regDF = 4, regKey = 2)
-        unit_default = PPV.tempUnitDist[int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))] # 攝氏、華氏之間的轉換問題
-        act_default = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 3))
-        actLimit = '無限制' if act_default == 0 else f'{temp_default} {unit_default}'
-        self.presentLimit.setText(f'目前限制最高溫度：{actLimit}')
+    # def update_time(self):
+    #     temp_default = PySQL.selectSQL_Reg(regDF = 4, regKey = 2)
+    #     unit_default = PPV.tempUnitDist[int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))] # 攝氏、華氏之間的轉換問題
+    #     act_default = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 3))
+    #     actLimit = '無限制' if act_default == 0 else f'{temp_default} {unit_default}'
+    #     self.presentLimit.setText(f'目前限制最高溫度：{actLimit}')
 
-        self.tempUnit.setText(unit_default)
+    #     self.tempUnit.setText(unit_default)
         
 

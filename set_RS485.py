@@ -11,12 +11,14 @@
 # |DataBit|StopBit|ParityBits |BaudRate|act/deact|
 
 try:
-    import traceback, PySQL
-    from PyQt5.QtCore import Qt, QTimer
-    from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QRadioButton
+    import traceback
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout,\
+          QComboBox, QPushButton, QRadioButton
     from PyQt5.QtGui import QFont
     # from PyQt5.QtSerialPort import QSerialPort
     import ProjectPublicVariable as PPV
+    import PySQL
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -24,26 +26,26 @@ except Exception as e:
 
 font = QFont()
 
-select_RS485_state = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 9))
-bin_RS485_state = PPV.d2b(select_RS485_state).zfill(8)
+# select_RS485_state = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 9))
+# bin_RS485_state = PPV.d2b(select_RS485_state).zfill(8)
 class rs485_Frame(QWidget):
     def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
         self.title=title
         print(self.title)
-        print(f"{self.title}:{select_RS485_state}({bin_RS485_state})")
+        print(f"{self.title}:{int(PySQL.selectSQL_Reg(4, 9))}({PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)})")
 
         # 定義一個 QTimer 用來定期更新時間
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_time)
-        self.timer.start(1000)  # 1秒更新一次
+        # self.timer = QTimer(self)
+        # self.timer.timeout.connect(self.update_time)
+        # self.timer.start(1000)  # 1秒更新一次
 
         rs485_layout = QVBoxLayout()
 
         title_layout = QVBoxLayout()
         title_layout.setContentsMargins(0, 0, 0, 0)
         title_layout.setSpacing(0) 
-        self.title_label = QLabel(self.title)
+        self.title_label = QLabel(f"{self.title}:{int(PySQL.selectSQL_Reg(4, 9))}({PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)})")
         self.title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(28)
         self.title_label.setFont(font)
@@ -54,6 +56,7 @@ class rs485_Frame(QWidget):
 
         # COM Port
         #暫以本機端通訊埠顯示
+        #region
         # com_layout = QHBoxLayout()
         # com_layout.setContentsMargins(0, 0, 0, 0)
         # com_layout.setSpacing(0) 
@@ -65,13 +68,16 @@ class rs485_Frame(QWidget):
         # com_layout.addWidget(com_label)
         # com_layout.addWidget(self.com_combo)
 
+        #endregion
+
+        # act/deact
+        #region
         state_layout = QHBoxLayout()
         state_layout.setContentsMargins(0, 0, 0, 0)
         state_layout.setSpacing(0) 
         state_label = QLabel('狀態：')
         state_label.setFont(font)
 
-        
         self.deactivate_radio = QRadioButton('停用')
         # self.deactivate_radio.setChecked(True)
         self.activate_radio = QRadioButton('啟用')
@@ -81,7 +87,7 @@ class rs485_Frame(QWidget):
         # |-1       |
         # |0        |
         # |act/deact|
-        if bin_RS485_state[-1:-2]==PPV.stateRS485['停用']:
+        if PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-1:-2] == PPV.stateRS485['停用']:
             self.deactivate_radio.setChecked(True)
         else:
             self.activate_radio.setChecked(True)
@@ -89,8 +95,10 @@ class rs485_Frame(QWidget):
         state_layout.addWidget(state_label)
         state_layout.addWidget(self.deactivate_radio)
         state_layout.addWidget(self.activate_radio)
+        #endregion
 
-        
+        # Baud Rate
+        #region
         baud_layout = QHBoxLayout()
         baud_layout.setContentsMargins(0, 0, 0, 0)
         baud_layout.setSpacing(0) 
@@ -102,17 +110,19 @@ class rs485_Frame(QWidget):
         self.baud_combo.addItems(PPV.baudRate.keys())
         # print(PPV.baudRate.keys())
 
-        # Baud Rate
         # |-4|-3|-2|-1
         # |3 |2 |1 |
         # |BaudRate|
-        default_baud_rate = PPV.get_keys_from_value(PPV.baudRate, bin_RS485_state[-4:-1])[0]
+        default_baud_rate = PPV.get_keys_from_value(PPV.baudRate, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-4:-1])[0]
         default_baud_index = self.baud_combo.findText(default_baud_rate)
         self.baud_combo.setCurrentIndex(default_baud_index)
         baud_layout.addWidget(baud_label)
         baud_layout.addWidget(self.baud_combo)
+        #endregion
 
         
+        # Parity
+        #region
         parity_layout = QHBoxLayout()
         parity_layout.setContentsMargins(0, 0, 0, 0)
         parity_layout.setSpacing(0) 
@@ -122,21 +132,19 @@ class rs485_Frame(QWidget):
         self.parity_combo.setFont(font)
         # self.parity_combo.addItems(['None', 'Odd', 'Even']) # 'Mark', 'Space'
 
-        # Parity
         # |-6   |-5   |-4
         # |5    |4    |
         # |ParityBits |
         self.parity_combo.addItems(PPV.parityBit.keys())
-        default_parity = PPV.get_keys_from_value(PPV.parityBit, bin_RS485_state[-6:-4])[0]
+        default_parity = PPV.get_keys_from_value(PPV.parityBit, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-6:-4])[0]
         default_parity_index = self.parity_combo.findText(default_parity)
         self.parity_combo.setCurrentIndex(default_parity_index)
         parity_layout.addWidget(parity_label)
         parity_layout.addWidget(self.parity_combo)
+        #endregion
 
         # Stop Bits
-        # |-7     |-6
-        # |6      |
-        # |StopBit|
+        #region
         stop_bits_layout = QHBoxLayout()
         stop_bits_layout.setContentsMargins(0, 0, 0, 0)
         stop_bits_layout.setSpacing(0) 
@@ -153,14 +161,19 @@ class rs485_Frame(QWidget):
         #     self.stop_bits_combo.addItem(stop_bit, stop_bits_enum)
         # self.stop_bits_combo.addItems(['1', '2'])
         self.stop_bits_combo.addItems(PPV.stopBit.keys())
-        
-        default_stop_bit = PPV.get_keys_from_value(PPV.stopBit, bin_RS485_state[-7:-6])[0]
+
+        # |-7     |-6
+        # |6      |
+        # |StopBit|        
+        default_stop_bit = PPV.get_keys_from_value(PPV.stopBit, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-7:-6])[0]
         default_stop_bit_index = self.stop_bits_combo.findText(default_stop_bit)
         self.stop_bits_combo.setCurrentIndex(default_stop_bit_index)
         stop_bits_layout.addWidget(stop_bits_label)
         stop_bits_layout.addWidget(self.stop_bits_combo)
+        #endregion
 
-        
+        # Data Bits
+        #region
         data_bits_layout = QHBoxLayout()
         data_bits_layout.setContentsMargins(0, 0, 0, 0)
         data_bits_layout.setSpacing(0) 
@@ -171,11 +184,10 @@ class rs485_Frame(QWidget):
         # self.data_bits_combo.addItems(['7', '8'])
         self.data_bits_combo.addItems(PPV.dataBit.keys())
 
-        # Data Bits
         # |-8     |-7
         # |7      |
         # |DataBit|
-        default_data_bits = PPV.get_keys_from_value(PPV.dataBit, bin_RS485_state[-8:-7])[0]
+        default_data_bits = PPV.get_keys_from_value(PPV.dataBit, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-8:-7])[0]
         default_data_bits_index = self.data_bits_combo.findText(default_data_bits)
         self.data_bits_combo.setCurrentIndex(default_data_bits_index)
         data_bits_layout.addWidget(data_bits_label)
@@ -188,6 +200,7 @@ class rs485_Frame(QWidget):
         set_button.setFont(font)
         set_button.clicked.connect(self.slaverConnect)
         setting_layout.addWidget(set_button)
+        #endregion
 
 
         # rs485_layout.addLayout(title_layout)
@@ -260,14 +273,18 @@ class rs485_Frame(QWidget):
             f'Data Bits: {data_bits}({PPV.dataBit[data_bits]})\r\n' + \
             f'RegValue: {PPV.b2d(stateValue)}({stateValue})\r\n'
         
-        PySQL.updateSQL_Reg(regDF = 4, regKey = 9, updateValue = PPV.b2d(stateValue))
+        PySQL.updateSQL_Reg(4, 9, updateValue = PPV.b2d(stateValue))
+
+        self.title_label.setText(f"{self.title}:{int(PySQL.selectSQL_Reg(4, 9))}({PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)})")
+
+
 
         print(slaver_Connect_Info)
 
         # print(f"{self.title}:{select_RS485_state}({bin_RS485_state})")
 
-    def update_time(self):
-        select_RS485_state = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 9))
-        bin_RS485_state = PPV.d2b(select_RS485_state).zfill(8)
-        self.title_label.setText(f"{self.title}:{str(select_RS485_state)}({bin_RS485_state})")
-        # print(self.title_label.text())
+    # def update_time(self):
+    #     select_RS485_state = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 9))
+    #     bin_RS485_state = PPV.d2b(select_RS485_state).zfill(8)
+    #     self.title_label.setText(f"{self.title}:{str(select_RS485_state)}({bin_RS485_state})")
+    #     # print(self.title_label.text())

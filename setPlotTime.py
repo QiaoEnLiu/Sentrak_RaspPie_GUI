@@ -12,6 +12,7 @@ try:
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
+    import PySQL
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -38,9 +39,9 @@ class setPlotTimeFrame(QWidget):
 
         self.plot_time_combo = QComboBox()
         self.plot_time_combo.setFont(font)
-        self.plot_time_combo.addItems(['5秒','10秒','15秒']) # ['1分','5分','10分','30分','1小時']
-        default_plotTime_Index = self.plot_time_combo.findText(PPV.plotTime)
-        self.plot_time_combo.setCurrentIndex(default_plotTime_Index)
+        self.plot_time_combo.addItems(PPV.plotTimeDict.values()) # ['1分','5分','10分','30分','1小時']
+        # default_plotTime_Index = self.plot_time_combo.findText(PPV.plotTimeDict[int(PySQL.selectSQL_Var('plotTime'))])
+        self.plot_time_combo.setCurrentIndex(self.plot_time_combo.findText(PPV.plotTime))
 
         set_button = QPushButton('設定', self)
         set_button.setFont(font)
@@ -72,4 +73,6 @@ class setPlotTimeFrame(QWidget):
 
     def setPlotTimes(self):
         PPV.plotTime = self.plot_time_combo.currentText()
-        print('更改圖表週期為：' + PPV.plotTime)
+        # self.plot_time_combo.setCurrentIndex(PPV.plotTime)
+        print(f'更改圖表週期為：{PPV.plotTime}({PPV.get_keys_from_value(PPV.plotTimeDict, PPV.plotTime)[0]})')
+        PySQL.updateSQL_Var('plotTime', PPV.get_keys_from_value(PPV.plotTimeDict, PPV.plotTime)[0])
