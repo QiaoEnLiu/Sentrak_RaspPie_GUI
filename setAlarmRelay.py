@@ -1,8 +1,11 @@
 #zh-tw
 # setAlarmRelay.py
 
-# 此程式碼為子畫面最終刷新測試碼
-    # 尚未實作的功能介面都會先以此介面顯示
+# 此程式碼為進入Relay設定的選單（暫時分三個程式，未來會以模組化修改）
+    # Relay1 >> setAlarmRelay1.py
+    # Relay2 >> setAlarmRelay2.py
+    # Relay3 >> setAlarmRelay3.py
+
 try:
     import traceback
     from PyQt5.QtCore import Qt
@@ -11,6 +14,10 @@ try:
 
     import ProjectPublicVariable as PPV
     from imgResource import setLabelIcon
+
+    from setAlarmRelay1 import setAlarmRelay1Frame
+    from setAlarmRelay2 import setAlarmRelay2Frame
+    from setAlarmRelay3 import setAlarmRelay3Frame
 
 
     # 未實作功能測試介面
@@ -173,15 +180,15 @@ class setAlarmRelayMenuFrame(QWidget):
             #region 「設定」
             if item_text == 'relay1':
                 # 由「設定」進入「顯示」介面
-                next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                next_frame = setAlarmRelay1Frame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
 
             elif item_text == 'relay2':
                 # 由「設定」進入「警報輸出」介面
-                next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                next_frame = setAlarmRelay2Frame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             
             elif item_text == 'relay3':
                 # 由「設定」進入「類比輸出」介面
-                next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                next_frame = setAlarmRelay3Frame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             else:
                 # 如果還沒有，則創建一個新的 testEndFrame 為終節點畫面測試
                 next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
