@@ -30,6 +30,7 @@ try:
 
     # 設定 >>
     from setDisplayOption import displayOptionFrame # 「顯示」
+    from setAlarmRelay import setAlarmRelayMenuFrame # 「警報輸出」選項介面
     from setAnalogyOutputOption import analogyOutputOptionFrame # 「類比輸出」選項介面
     from setSensorTempLimit import setSensorTempLimitFrame # 「感測器溫度保護」介面
 
@@ -146,7 +147,7 @@ class subMenuFrame(QWidget):
         # 設置清單圖示及其內部配制
         #region 清單圖示
         list_icon = QLabel('圖示')
-        list_icon.setStyleSheet("border: 5px solid black;border-right: 0px;")
+        list_icon.setStyleSheet("border: 2.5px solid black;border-right: 0px;")
 
         setLabelIcon(list_icon,'test_icon.png')
         
@@ -169,7 +170,7 @@ class subMenuFrame(QWidget):
         # font.setPointSize(pixmap.scaledToHeight(72).height()*30//80)
         # font.setPointSize(20)
         item_label.setFont(itemTitleSize)
-        item_label.setStyleSheet("border: 5px solid black;border-bottom: 0px;")
+        item_label.setStyleSheet("border: 2.5px solid black;border-bottom: 0px;")
         item_label.setContentsMargins(0, 0, 0, 0)
         # print('item_label:', item_label.font().pointSize())
 
@@ -182,7 +183,7 @@ class subMenuFrame(QWidget):
         # font.setPointSize(pixmap.scaledToHeight(72).height()*15//80)
         # font.setPointSize(6)
         self.describe_label.setFont(itemdescribeSize)
-        self.describe_label.setStyleSheet("border: 5px solid black;border-top: 0px; color: gray")
+        self.describe_label.setStyleSheet("border: 2.5px solid black;border-top: 0px; color: gray")
         self.describe_label.setContentsMargins(0, 0, 0, 0)
         # print('self.describe_label:', self.describe_label.font().pointSize())
         
@@ -312,6 +313,10 @@ class subMenuFrame(QWidget):
             if item_text == '顯示':
                 # 由「設定」進入「顯示」介面
                 next_frame = displayOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+
+            elif item_text == '警報輸出':
+                # 由「設定」進入「警報輸出」介面
+                next_frame = setAlarmRelayMenuFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             
             elif item_text == '類比輸出':
                 # 由「設定」進入「類比輸出」介面
