@@ -14,7 +14,7 @@ try:
     import traceback
     from PyQt5.QtCore import Qt
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout,\
-          QComboBox, QPushButton, QRadioButton
+          QComboBox, QPushButton, QRadioButton, QMessageBox
     from PyQt5.QtGui import QFont
     # from PyQt5.QtSerialPort import QSerialPort
     import ProjectPublicVariable as PPV
@@ -89,8 +89,10 @@ class rs485_Frame(QWidget):
         # |act/deact|
         if PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-1:-2] == PPV.stateRS485['停用']:
             self.deactivate_radio.setChecked(True)
+            self.selectAct = self.deactivate_radio.text()
         else:
             self.activate_radio.setChecked(True)
+            self.selectAct = self.activate_radio.text()
 
         state_layout.addWidget(state_label)
         state_layout.addWidget(self.deactivate_radio)
@@ -113,8 +115,8 @@ class rs485_Frame(QWidget):
         # |-4|-3|-2|-1
         # |3 |2 |1 |
         # |BaudRate|
-        default_baud_rate = PPV.get_keys_from_value(PPV.baudRate, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-4:-1])[0]
-        default_baud_index = self.baud_combo.findText(default_baud_rate)
+        self.default_baud_rate = PPV.get_keys_from_value(PPV.baudRate, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-4:-1])[0]
+        default_baud_index = self.baud_combo.findText(self.default_baud_rate)
         self.baud_combo.setCurrentIndex(default_baud_index)
         baud_layout.addWidget(baud_label)
         baud_layout.addWidget(self.baud_combo)
@@ -136,8 +138,8 @@ class rs485_Frame(QWidget):
         # |5    |4    |
         # |ParityBits |
         self.parity_combo.addItems(PPV.parityBit.keys())
-        default_parity = PPV.get_keys_from_value(PPV.parityBit, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-6:-4])[0]
-        default_parity_index = self.parity_combo.findText(default_parity)
+        self.default_parity = PPV.get_keys_from_value(PPV.parityBit, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-6:-4])[0]
+        default_parity_index = self.parity_combo.findText(self.default_parity)
         self.parity_combo.setCurrentIndex(default_parity_index)
         parity_layout.addWidget(parity_label)
         parity_layout.addWidget(self.parity_combo)
@@ -165,8 +167,8 @@ class rs485_Frame(QWidget):
         # |-7     |-6
         # |6      |
         # |StopBit|        
-        default_stop_bit = PPV.get_keys_from_value(PPV.stopBit, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-7:-6])[0]
-        default_stop_bit_index = self.stop_bits_combo.findText(default_stop_bit)
+        self.default_stop_bit = PPV.get_keys_from_value(PPV.stopBit, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-7:-6])[0]
+        default_stop_bit_index = self.stop_bits_combo.findText(self.default_stop_bit)
         self.stop_bits_combo.setCurrentIndex(default_stop_bit_index)
         stop_bits_layout.addWidget(stop_bits_label)
         stop_bits_layout.addWidget(self.stop_bits_combo)
@@ -187,8 +189,8 @@ class rs485_Frame(QWidget):
         # |-8     |-7
         # |7      |
         # |DataBit|
-        default_data_bits = PPV.get_keys_from_value(PPV.dataBit, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-8:-7])[0]
-        default_data_bits_index = self.data_bits_combo.findText(default_data_bits)
+        self.default_data_bits = PPV.get_keys_from_value(PPV.dataBit, PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)[-8:-7])[0]
+        default_data_bits_index = self.data_bits_combo.findText(self.default_data_bits)
         self.data_bits_combo.setCurrentIndex(default_data_bits_index)
         data_bits_layout.addWidget(data_bits_label)
         data_bits_layout.addWidget(self.data_bits_combo)
@@ -273,12 +275,31 @@ class rs485_Frame(QWidget):
             f'Data Bits: {data_bits}({PPV.dataBit[data_bits]})\r\n' + \
             f'RegValue: {PPV.b2d(stateValue)}({stateValue})\r\n'
         
-        PySQL.updateSQL_Reg(4, 9, updateValue = PPV.b2d(stateValue))
+        setSlaverConnectInfo=f'\r\n' + \
+            f'設定RS485：\r\n'+ \
+            f'Connect: {stateStr} 改成 {self.selectAct}\r\n' +  \
+            f'Baud Rate: {baud_rate} 改成 {self.default_baud_rate}\r\n' + \
+            f'Parity: {parity_text} 改成 {self.default_parity}\r\n' + \
+            f'Stop Bits: {stop_bits} 改成 {self.default_stop_bit}\r\n' + \
+            f'Data Bits: {data_bits} 改成 {self.default_data_bits}\r\n'
+        
+        if QMessageBox.question(self, '設定RS485', f'{setSlaverConnectInfo}\
+                                \n確定要設定RS485嗎？', QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
+            action = '設定'
+            # 在這裡添加您想要在使用者點擊"Yes"時執行的程式碼
+            PySQL.updateSQL_Reg(4, 9, updateValue = PPV.b2d(stateValue))
 
-        self.title_label.setText(f"{self.title}:{int(PySQL.selectSQL_Reg(4, 9))}({PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)})")
+            self.title_label.setText(f"{self.title}:{int(PySQL.selectSQL_Reg(4, 9))}({PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)})")
+            print(slaver_Connect_Info)
+
+            print("使用者設定RS485")
+
+        else:
+            action = '取消'
+        
+       
 
 
-        print(slaver_Connect_Info)
 
         # print(f"{self.title}:{select_RS485_state}({bin_RS485_state})")
 
