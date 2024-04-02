@@ -8,7 +8,7 @@
 try:
     import traceback
     from PyQt5.QtCore import Qt
-    from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QComboBox, QPushButton
+    from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QComboBox, QPushButton, QMessageBox
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
@@ -71,7 +71,20 @@ class setPlotTimeFrame(QWidget):
         print(f'{title} Index: {self.stacked_widget.count()}')
 
     def setPlotTimes(self):
-        PPV.plotTime = self.plot_time_combo.currentText()
-        # self.plot_time_combo.setCurrentIndex(PPV.plotTime)
-        print(f'更改圖表週期為：{PPV.plotTime}({PPV.get_keys_from_value(PPV.plotTimeDict, PPV.plotTime)[0]})')
-        PySQL.updateSQL_Var('plotTime', PPV.get_keys_from_value(PPV.plotTimeDict, PPV.plotTime)[0])
+
+
+        if QMessageBox.question(self, '顯示波形圖週期', f'設定波形圖週期：由 每{PPV.plotTime} 改成 每{self.plot_time_combo.currentText()}\
+                                \n確定要設定波形圖週期嗎？', QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
+            action = '設定'
+            # 在這裡添加您想要在使用者點擊"Yes"時執行的程式碼
+            PPV.plotTime = self.plot_time_combo.currentText()
+            # self.plot_time_combo.setCurrentIndex(PPV.plotTime)
+            print(f'更改波形圖週期為：{PPV.plotTime}({PPV.get_keys_from_value(PPV.plotTimeDict, PPV.plotTime)[0]})')
+            PySQL.updateSQL_Var('plotTime', PPV.get_keys_from_value(PPV.plotTimeDict, PPV.plotTime)[0])
+
+
+            print("使用者設定波形圖週期")
+
+        else:
+            action = '取消'
+        

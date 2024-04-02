@@ -8,7 +8,7 @@ try:
     import traceback, PySQL
     from PyQt5.QtCore import Qt, QTimer
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, \
-                            QSizePolicy, QRadioButton
+                            QSizePolicy, QRadioButton, QMessageBox
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
@@ -70,6 +70,7 @@ class setTimeFrame(QWidget):
 
             if int(PySQL.selectSQL_Reg(4, 1)) == format_key:
                 radio_button.setChecked(True)
+                self.defaultFormatName = label
             else:
                 radio_button.setChecked(False)
             radio_button.setFont(font)
@@ -146,7 +147,19 @@ class setTimeFrame(QWidget):
             if radio_button.isChecked():
                 select_Format=index
                 print(f'Set Time Format:{date_formats[select_Format]}')
-                PySQL.updateSQL_Reg(regDF = 4, regKey = 1, updateValue = select_Format)
+
+        if QMessageBox.question(self, '設定時間', f'設定格式：由 {self.defaultFormatName} 改成 {date_formats[select_Format][0]}\
+                                \n確定要設定時間嗎？', QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
+            action = '設定'
+            # 在這裡添加您想要在使用者點擊"Yes"時執行的程式碼
+            
+            PySQL.updateSQL_Reg(regDF = 4, regKey = 1, updateValue = select_Format)
+            self.defaultFormatName = date_formats[select_Format][0]
+
+            print("使用者設定波形圖週期")
+
+        else:
+            action = '取消'
         # self.sync()
         # try:
             

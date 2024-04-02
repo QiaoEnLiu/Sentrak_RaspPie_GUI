@@ -9,7 +9,7 @@ try:
     import traceback
     from PyQt5.QtCore import Qt
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, \
-        QPushButton, QSizePolicy, QRadioButton, QComboBox
+        QPushButton, QSizePolicy, QRadioButton, QComboBox, QMessageBox
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
@@ -54,11 +54,14 @@ class setUnitFrame(QWidget):
 
         self.celsius_radio = QRadioButton('攝氏')
         self.fahrenheit_radio = QRadioButton('華氏')
+        self.defaultTempUnit=''
 
         if int(PySQL.selectSQL_Reg(4, 0))==0:
             self.celsius_radio.setChecked(True)
+            self.defaultTempUnit = self.celsius_radio.text()
         elif int(PySQL.selectSQL_Reg(4, 0))==1:
             self.fahrenheit_radio.setChecked(True)
+            self.defaultTempUnit = self.fahrenheit_radio.text()
         else:
             pass
 
@@ -80,6 +83,7 @@ class setUnitFrame(QWidget):
         self.gas_unit_ComboBox.addItems(PPV.o2_GasUnitDist.values())
         self.gas_unit_ComboBox.setFont(font)
         self.gas_unit_ComboBox.setCurrentText(PPV.o2_GasUnitDist[int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))])
+        self.defaultGasUnit = self.gas_unit_ComboBox.currentText()
 
 
         dissolve_label = QLabel('溶解', self)
@@ -160,14 +164,31 @@ class setUnitFrame(QWidget):
     
     def setUnit(self):
         print('Set Unit')
+        tempUnitName = ""
         if self.celsius_radio.isChecked():
             select_tempUnit = 0  # 攝氏
+            tempUnitName = self.celsius_radio.text()
         elif self.fahrenheit_radio.isChecked():
             select_tempUnit = 1  # 華氏
+            tempUnitName = self.fahrenheit_radio.text()
         else:
             select_tempUnit = -1
-        PySQL.updateSQL_Reg(4, 0, select_tempUnit)
-        PySQL.updateSQL_Reg(4, 4, self.gas_unit_ComboBox.currentIndex())
+
+        if QMessageBox.question(self, '顯示單位', f'設定溫度單位：由 {self.defaultTempUnit} 改成 {tempUnitName}\
+                                \n設定濃度單位：由 {self.defaultGasUnit} 改成 {self.gas_unit_ComboBox.currentText()}\
+                                \n確定要設定單位嗎？', QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
+            action = '設定'
+            # 在這裡添加您想要在使用者點擊"Yes"時執行的程式碼
+
+            self.defaultTempUnit = tempUnitName
+            self.defaultGasUnit = self.gas_unit_ComboBox.currentText()
+            PySQL.updateSQL_Reg(4, 0, select_tempUnit)
+            PySQL.updateSQL_Reg(4, 4, self.gas_unit_ComboBox.currentIndex())
+            print("使用者設定單位")
+
+        else:
+            action = '取消'
+        
 
         # try:
         #     PPV.timer.start(1000)
