@@ -15,6 +15,7 @@
 
     # 識別
         # 登入身份、儀器資訊、感測器資訊
+# 可參考ProjectPublicVariable的subMenu字典
 
 try:
     import sys
@@ -26,6 +27,7 @@ try:
         QListWidgetItem, QHBoxLayout
     from PyQt5.QtCore import Qt, QByteArray
     from PyQt5.QtGui import QFont, QPixmap, QImage
+    
     import ProjectPublicVariable as PPV
 
     # 設定 >>
@@ -100,25 +102,32 @@ class subMenuFrame(QWidget):
         self.list_widget = QListWidget(self)
 
         # 依功能添加列各自表項
-        if self.title == '設定':
-            for option in ['顯示', '警報輸出', '類比輸出', '感測器溫度保護', '診斷', '通訊', '時間', '語言']:
+        if self.title in PPV.subMenu:
+            for option in PPV.subMenu[self.title].keys():
                 self.create_list_item(option)
-                self.itemDeescribe(option)
+                self.itemDescribe(PPV.subMenu.get(self.title, {}).get(option, None))
+        #region 非模組化寫法
+        # if self.title == '設定':
+        #     for option in ['顯示', '警報輸出', '類比輸出', '感測器溫度保護', '診斷', '通訊', '時間', '語言']:
+        #         self.create_list_item(option)
+        #         self.itemDescribe(option)
 
-        elif self.title == '校正':
-            for option in ['感測器校正', '大氣壓力校正', '類比輸出校正']:
-                self.create_list_item(option)
-                self.itemDeescribe(option)
+        # elif self.title == '校正':
+        #     for option in ['感測器校正', '大氣壓力校正', '類比輸出校正']:
+        #         self.create_list_item(option)
+        #         self.itemDescribe(option)
 
-        elif self.title == '記錄':
-            for option in ['觀看記錄', '統計表', '下載記錄至隨身碟', '記錄方式設定']:
-                self.create_list_item(option)
-                self.itemDeescribe(option)
+        # elif self.title == '記錄':
+        #     for option in ['觀看記錄', '統計表', '下載記錄至隨身碟', '記錄方式設定']:
+        #         self.create_list_item(option)
+        #         self.itemDescribe(option)
 
-        elif self.title == '識別':
-            for option in ['登入身份', '儀器資訊', '感測器資訊']:
-                self.create_list_item(option)
-                self.itemDeescribe(option)
+        # elif self.title == '識別':
+        #     for option in ['登入身份', '儀器資訊', '感測器資訊']:
+        #         self.create_list_item(option)
+        #         self.itemDescribe(option)
+                
+        #endregion
 
         # 將垂直滾動條設置為不可見
         # self.list_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -240,60 +249,63 @@ class subMenuFrame(QWidget):
     #endregion
 
     #region 清單描述
-    def itemDeescribe(self, option):
-        item_title = option
-        #region 「設定」清單
-        if item_title == '顯示':
-            self.describe_label.setText('波形圖週期、單位')
-        elif item_title == '警報輸出':
-            self.describe_label.setText('Relay 1、Relay 2、Relay 3…')
-        elif item_title == '類比輸出':
-            self.describe_label.setText('濃度、溫度、類型')
-        elif item_title == '感測器溫度保護':
-            self.describe_label.setText('狀態、溫度設定')
-        elif item_title == '診斷':
-            self.describe_label.setText('觀看詳細數值')
-        elif item_title == '通訊':
-            self.describe_label.setText('RS-485、HTTP/TCPIP')
-        elif item_title == '時間':
-            self.describe_label.setText('調整時間、日期格式')
-        elif item_title == '語言':
-            self.describe_label.setText('多國語言')
-        #endregion
+    def itemDescribe(self, describe):
+        self.describe_label.setText(describe)
+    #region 非模組化寫法
+    # def itemDescribe(self, option):    
+        # #region 「設定」清單
+        # if option == '顯示':
+        #     self.describe_label.setText('波形圖週期、單位')
+        # elif option == '警報輸出':
+        #     self.describe_label.setText('Relay 1、Relay 2、Relay 3…')
+        # elif option == '類比輸出':
+        #     self.describe_label.setText('濃度、溫度、類型')
+        # elif option == '感測器溫度保護':
+        #     self.describe_label.setText('狀態、溫度設定')
+        # elif option == '診斷':
+        #     self.describe_label.setText('觀看詳細數值')
+        # elif option == '通訊':
+        #     self.describe_label.setText('RS-485、HTTP/TCPIP')
+        # elif option == '時間':
+        #     self.describe_label.setText('調整時間、日期格式')
+        # elif option == '語言':
+        #     self.describe_label.setText('多國語言')
+        # #endregion
             
-        #region 「校正」清單
-        elif item_title =='感測器校正':
-            self.describe_label.setText('空氣校正、直接校正')
-        elif item_title =='大氣壓力校正':
-            self.describe_label.setText('大氣壓力校正')
-        elif item_title == '類比輸出校正':
-            self.describe_label.setText('0 - 20 mA、4 - 20 mA')
-        #endregion
+        # #region 「校正」清單
+        # elif option =='感測器校正':
+        #     self.describe_label.setText('空氣校正、直接校正')
+        # elif option =='大氣壓力校正':
+        #     self.describe_label.setText('大氣壓力校正')
+        # elif option == '類比輸出校正':
+        #     self.describe_label.setText('0 - 20 mA、4 - 20 mA')
+        # #endregion
         
-        #region 「記錄」清單
-        elif item_title == '觀看記錄':
-            self.describe_label.setText('時間、數值')
-        elif item_title == '統計表':
-            self.describe_label.setText('最高值、值均值、最底值')
-        elif item_title == '下載記錄至隨身碟':
-            self.describe_label.setText('儲存格式：Excel、txt、json、csv')
-        elif item_title == '記錄方式設定':
-            self.describe_label.setText('自動、手動')
-        #endregion
+        # #region 「記錄」清單
+        # elif option == '觀看記錄':
+        #     self.describe_label.setText('時間、數值')
+        # elif option == '統計表':
+        #     self.describe_label.setText('最高值、平均值、最底值')
+        # elif option == '下載記錄至隨身碟':
+        #     self.describe_label.setText('儲存格式：Excel、txt、json、csv')
+        # elif option == '記錄方式設定':
+        #     self.describe_label.setText('自動、手動')
+        # #endregion
             
-        #region 「識別」清單
-        elif item_title == '登入身份':
-            self.describe_label.setText('輸入密碼')
-        elif item_title == '儀器資訊':
-            self.describe_label.setText('型號、序號、生產日期……')
-        elif item_title == '感測器資訊':
-            self.describe_label.setText('型號、序號、生產日期……')
-        #endregion
+        # #region 「識別」清單
+        # elif option == '登入身份':
+        #     self.describe_label.setText('輸入密碼')
+        # elif option == '儀器資訊':
+        #     self.describe_label.setText('型號、序號、生產日期……')
+        # elif option == '感測器資訊':
+        #     self.describe_label.setText('型號、序號、生產日期……')
+        # #endregion
 
-        #region 其他
-        else :
-            self.describe_label.setText('描述')
-        #endregion
+        # #region 其他
+        # else :
+        #     self.describe_label.setText('描述')
+        # #endregion
+    #endregion
             
     #endregion
 
