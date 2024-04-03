@@ -89,11 +89,13 @@ class setAlarmRelayFrame(QWidget):
         self.valueLimitTypeDefault=self.valueLimitTypeCombox.currentText()
         #endregion
 
+        #region 數值設定
         valueLabel = QLabel("數值：")
         valueLabel.setFont(font)
         self.valueInput = lineEditOnlyInt(self.sqlAlarmValue)
         self.valueInput.setFont(font)
         self.valueDefault = self.valueInput.text()
+        #endregion
 
         set_button = QPushButton('設定', self)
         set_button.setFont(font)
