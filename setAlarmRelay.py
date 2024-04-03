@@ -48,7 +48,8 @@ class setAlarmRelayFrame(QWidget):
         # user_label = QLabel(PPV.presentUser.userInfo())
         # user_label.setFont(font)
         # user_label.setStyleSheet(_style)
-
+        
+        #region Relay狀態
         relayStatusLabel = QLabel(f"{title}狀態：")
         relayStatusLabel.setFont(font)
         self.relayStatusCombox = QComboBox()
@@ -56,7 +57,9 @@ class setAlarmRelayFrame(QWidget):
         self.relayStatusCombox.addItems(['啟用', '停用'])
         self.relayStatusCombox.setCurrentIndex(int(self.sqlAlarmStatus[0]))
         self.relayStatusDefault=self.relayStatusCombox.currentText()
+        #endregion
 
+        #region 測量類型
         meassureTypeLabel = QLabel("測量類型：")
         meassureTypeLabel.setFont(font)
         self.meassureTypeCombox = QComboBox()
@@ -64,7 +67,9 @@ class setAlarmRelayFrame(QWidget):
         self.meassureTypeCombox.addItems(['濃度', '溫度'])
         self.meassureTypeCombox.setCurrentIndex(int(self.sqlAlarmStatus[1]))
         self.meassureTypeDefault=self.meassureTypeCombox.currentText()
+        #endregion
 
+        #region 接觸點型式
         switchTypeLabel = QLabel("接觸點型式：")
         switchTypeLabel.setFont(font)
         self.switchTypeCombox = QComboBox()
@@ -72,7 +77,9 @@ class setAlarmRelayFrame(QWidget):
         self.switchTypeCombox.addItems(['常開', '常關'])
         self.switchTypeCombox.setCurrentIndex(int(self.sqlAlarmStatus[2]))
         self.switchTypeDefault=self.switchTypeCombox.currentText()
+        #endregion
 
+        #region 數值判別
         valueLimitTypeLabel = QLabel("數值判別：")
         valueLimitTypeLabel.setFont(font)
         self.valueLimitTypeCombox = QComboBox()
@@ -80,6 +87,7 @@ class setAlarmRelayFrame(QWidget):
         self.valueLimitTypeCombox.addItems(['高於', '低於'])
         self.valueLimitTypeCombox.setCurrentIndex(int(self.sqlAlarmStatus[3]))
         self.valueLimitTypeDefault=self.valueLimitTypeCombox.currentText()
+        #endregion
 
         valueLabel = QLabel("數值：")
         valueLabel.setFont(font)
@@ -98,7 +106,7 @@ class setAlarmRelayFrame(QWidget):
         main_layout.addWidget(title_label)
         # main_layout.addWidget(user_label)
 
-
+        #region 介面配制
         relayStatusLayout = QHBoxLayout()
         relayStatusLeft = QVBoxLayout()
         relayStatusRight = QVBoxLayout()
@@ -150,9 +158,10 @@ class setAlarmRelayFrame(QWidget):
         main_layout.addLayout(valueLimitTypeLayout)
         main_layout.addLayout(valueLayout)
         main_layout.addLayout(setLayout)
+        #endregion
 
 
-        print('警報Relay1測試畫面：', title)
+        print(f'警報{self.title}測試畫面')
 
         self.stacked_widget = stacked_widget
         end_frame_index = self.stacked_widget.addWidget(self)
