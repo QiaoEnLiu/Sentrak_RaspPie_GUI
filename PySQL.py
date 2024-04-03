@@ -56,20 +56,20 @@ def updateSQL_Reg(regDF, regKey, updateValue):
 
 
 #region 由reg名稱（假設所有名稱都是唯一名稱）
-# 由暫存資料表查詢值
-def selectSQL_RegName(regDF, regName):
-        dataFrame = regDFs[regDF]
-        query = "SELECT Value FROM {} WHERE Name = ?".format(dataFrame)
-        result = execute_query(query, (regName,))
-        return result[0][0] if result else None
+# # 由暫存資料表查詢值
+# def selectSQL_RegName(regDF, regName):
+#         dataFrame = regDFs[regDF]
+#         query = "SELECT Value FROM {} WHERE Name = ?".format(dataFrame)
+#         result = execute_query(query, (regName,))
+#         return result[0][0] if result else None
 
-# 修改值存入暫存資料表
-def updateSQL_RegName(regDF, regName, updateValue):
-        dataFrame = regDFs[regDF]
-        query = "UPDATE {} SET Value = ? WHERE Name = ?".format(dataFrame)
-        execute_query(query, (updateValue, regName,))
-        commit_SQL()
-        print("Update SQL Success")
+# # 修改值存入暫存資料表
+# def updateSQL_RegName(regDF, regName, updateValue):
+#         dataFrame = regDFs[regDF]
+#         query = "UPDATE {} SET Value = ? WHERE Name = ?".format(dataFrame)
+#         execute_query(query, (updateValue, regName,))
+#         commit_SQL()
+#         print("Update SQL Success")
 
 #endregion
         
@@ -86,3 +86,14 @@ def updateSQL_Var(var, updateValue):
         print(f"\nSQL Update Success:\n\r--otherCacheVariable Address: {var}\n\r--Update Value: {updateValue}")
 #endregion
         
+#region Alarm狀態暫存
+def selectAlarmRelay(alarmID):
+        query = "SELECT * FROM alarmRelay WHERE relayID = ?"
+        result = execute_query(query, (alarmID,))
+        return dict(result[0]) if result else None
+
+def updateAlarmRelay(alarmID, status, value):
+        query = "UPDATE alarmRelay SET status = ?, value = ? WHERE relayID = ?"
+        execute_query(query, (status, value, alarmID,))
+        print(f"\nSQL Update Success:\n\r--alarmRelay relayID: {alarmID}\n\r--Update:(status: {status}) ,(value: {value})")
+#endregion

@@ -290,17 +290,15 @@ class rs485_Frame(QWidget):
             PySQL.updateSQL_Reg(4, 9, updateValue = PPV.b2d(stateValue))
 
             self.title_label.setText(f"{self.title}:{int(PySQL.selectSQL_Reg(4, 9))}({PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)})")
-            print(slaver_Connect_Info)
+            # print(slaver_Connect_Info)
+            print(f"使用者設定{self.title}:{int(PySQL.selectSQL_Reg(4, 9))}({PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)})")
 
-            print("使用者設定RS485")
+            # print("使用者設定RS485")
 
         else:
             action = '取消'
         
-       
-
-
-
+    
         # print(f"{self.title}:{select_RS485_state}({bin_RS485_state})")
 
     # def update_time(self):

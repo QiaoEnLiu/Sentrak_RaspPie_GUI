@@ -71,7 +71,7 @@ def R1X_address(searchName):
 #endregion
 
 #region R1X 地址狀態
-
+relays=['Relay 1', 'Relay 2', 'Relay 3']
 #endregion
 
 #region R3X 地址名稱

@@ -32,7 +32,7 @@ try:
 
     # 設定 >>
     from setDisplayOption import displayOptionFrame # 「顯示」
-    from setAlarmRelay import setAlarmRelayMenuFrame # 「警報輸出」選項介面
+    from setAlarmRelayMenu import setAlarmRelayMenuFrame # 「警報輸出」選項介面
     from setAnalogyOutputOption import analogyOutputOptionFrame # 「類比輸出」選項介面
     from setSensorTempLimit import setSensorTempLimitFrame # 「感測器溫度保護」介面
 
