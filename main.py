@@ -465,8 +465,8 @@ class MyWindow(QMainWindow):
                 try:
                     # 成功連線下，以下讀取modbus可以執行
                     # 讀取濃度、溫度變動值
-                    oxygen_concentration = PPV.instrument_ID1.read_float(PPV.R3X_address('Gas'), functioncode=4)
-                    temperature = PPV.instrument_ID1.read_float(PPV.R3X_address('Temperature'), functioncode=4)
+                    oxygen_concentration = "{:.2f}".format(PPV.instrument_ID1.read_float(PPV.R3X_address('Gas'), functioncode=4))
+                    temperature = "{:.2f}".format(PPV.instrument_ID1.read_float(PPV.R3X_address('Temperature'), functioncode=4))
 
                     # 讀取modbus的Reg設定值
                     # modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
