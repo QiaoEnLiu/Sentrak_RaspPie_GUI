@@ -54,6 +54,14 @@ try:
     instrument_ID1.serial.stopbits = 1
     instrument_ID1.serial.timeout = 1.0
 
+    instrument_ID3 = minimalmodbus.Instrument(it_Port, 3)
+
+    # 設定串口波特率，Parity和Stop bits（這些參數需與Modbus設備一致）
+    instrument_ID3.serial.baudrate = 9600
+    instrument_ID3.serial.parity = minimalmodbus.serial.PARITY_NONE
+    instrument_ID3.serial.stopbits = 1
+    instrument_ID3.serial.timeout = 1.0
+
 except serial.SerialException as e: # 略過未使用埠號、虛擬埠的錯誤
     pass
 
@@ -71,7 +79,46 @@ def R1X_address(searchName):
 #endregion
 
 #region R1X 地址狀態
-relays=['Relay 1', 'Relay 2', 'Relay 3']
+relays=['Relay 1']
+# relays=['Relay 1', 'Relay 2', 'Relay 3']
+
+def alarm(relay, temp, o2):
+    if relay[1]['status'][0] == '0': # 停用
+        return False
+    else: # 啟用
+        if relay[1]['status'][1] == '0': # 濃度
+            # print(f"濃度：{o2:.2f}，濃度設定值：{relay[1]['value_o2']}")
+            if relay[1]['status'][3] == '1': # 高於
+                if o2 > float(relay[1]['value_o2']):
+                    # print(f"濃度：{o2:.2f}，高於 濃度設定值：{relay[1]['value_o2']}")
+                    return True
+                else:
+                    return False
+            else: # 低於
+                if o2 < float(relay[1]['value_o2']):
+                    # print(f"濃度：{o2:.2f}，低於 濃度設定值：{relay[1]['value_o2']}")
+                    return True
+                else:
+                    return False
+            
+
+        else: # 溫度
+            # print(f"溫度：{temp:.2f}，溫度設定值：{relay[1]['value_temp']}")
+            if relay[1]['status'][3] == '1': # 高於
+                if temp > float(relay[1]['value_temp']):
+                    # print(f"溫度：{temp:.2f}，高於 溫度設定值：{relay[1]['value_temp']}")
+                    return True
+                else:
+                    return False
+            else: # 低於
+                if temp < float(relay[1]['value_temp']):
+                    # print(f"溫度：{temp:.2f}，低於 溫度設定值：{relay[1]['value_temp']}")
+                    return True
+                else:
+                    return False
+        
+
+
 #endregion
 
 #region R3X 地址名稱

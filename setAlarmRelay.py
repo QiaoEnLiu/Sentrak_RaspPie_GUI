@@ -20,8 +20,8 @@ except Exception as e:
 
 # |0   |1       |2        |3       |
 # |狀態|測量類型|接觸點型式|數值判別|
-#0|啟用|濃度　　|常開　　　|高於　　|
-#1|停用|溫度　　|常關　　　|低於　　|
+#0|停用|濃度　　|常開　　　|高於　　|
+#1|啟用|溫度　　|常關　　　|低於　　|
 
 font = QFont()
 class setAlarmRelayFrame(QWidget):
@@ -31,9 +31,12 @@ class setAlarmRelayFrame(QWidget):
         # print(self.title.split())
         # print(PySQL.selectAlarmRelay(int(self.title.split()[1])))
         self.relayID = int(self.title.split()[1])
-        self.sqlAlarmStatus = PySQL.selectAlarmRelay(self.relayID)['status']
-        self.sqlAlarmValue = PySQL.selectAlarmRelay(self.relayID)['value']
-        print(f"暫存狀態碼：{self.sqlAlarmStatus}\r\n暫存數值：{self.sqlAlarmValue}")
+        self.sqlAlarmStatus = PySQL.selectAlarmRelay()[self.relayID]['status']
+        if self.sqlAlarmStatus[1] == '0':
+            self.sqlAlarmValue = PySQL.selectAlarmRelay()[self.relayID]['value_o2']
+        else:
+            self.sqlAlarmValue = PySQL.selectAlarmRelay()[self.relayID]['value_temp']
+        print(f"暫存狀態碼：{self.sqlAlarmStatus}\r\n暫存數值：{PySQL.selectAlarmRelay()[self.relayID]['value_o2']}（濃度）{PySQL.selectAlarmRelay()[self.relayID]['value_temp']}（溫度）")
         self.sub_pages=sub_pages
         
         title_label = QLabel(title, self)
@@ -54,7 +57,7 @@ class setAlarmRelayFrame(QWidget):
         relayStatusLabel.setFont(font)
         self.relayStatusCombox = QComboBox()
         self.relayStatusCombox.setFont(font)
-        self.relayStatusCombox.addItems(['啟用', '停用'])
+        self.relayStatusCombox.addItems(['停用', '啟用'])
         self.relayStatusCombox.setCurrentIndex(int(self.sqlAlarmStatus[0]))
         self.relayStatusDefault=self.relayStatusCombox.currentText()
         #endregion
@@ -190,7 +193,7 @@ class setAlarmRelayFrame(QWidget):
             action = '設定'
             # 在這裡添加您想要在使用者點擊"Yes"時執行的程式碼
 
-            
+            PySQL.updateSQL_Reg(1, self.relayID-1, self.relayStatusCombox.currentIndex())
             PySQL.updateAlarmRelay(self.relayID, status, self.valueInput.text())
             print(f"使用者設定{self.title}：{status}\r\n設定數值：{self.valueInput.text()}")
         else:

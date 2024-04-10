@@ -87,13 +87,27 @@ def updateSQL_Var(var, updateValue):
 #endregion
         
 #region Alarm狀態暫存
-def selectAlarmRelay(alarmID):
-        query = "SELECT * FROM alarmRelay WHERE relayID = ?"
-        result = execute_query(query, (alarmID,))
-        return dict(result[0]) if result else None
+def selectAlarmRelay():
+        # query = "SELECT * FROM alarmRelay WHERE relayID = ?"
+        # result = execute_query(query, (alarmID,))
+        # print(result)
+        # return dict(result[0]) if result else None
+        query = "SELECT * FROM alarmRelay"
+        result = execute_query(query)
+    
+        # 將結果轉換為以relayID作為鍵的字典
+        result_dict = {item['relayID']: dict(item) for item in result}
+    
+        return result_dict
+
 
 def updateAlarmRelay(alarmID, status, value):
-        query = "UPDATE alarmRelay SET status = ?, value = ? WHERE relayID = ?"
+        if status[1] == 0:
+                query = "UPDATE alarmRelay SET status = ?, value_o2 = ? WHERE relayID = ?"
+                print(f"\nSQL Update Success:\n\r--alarmRelay relayID: {alarmID}\n\r--Update:(status: {status}) ,(value_o2: {value})")
+        else:
+                query = "UPDATE alarmRelay SET status = ?, value_temp = ? WHERE relayID = ?"
+                print(f"\nSQL Update Success:\n\r--alarmRelay relayID: {alarmID}\n\r--Update:(status: {status}) ,(value_temp: {value})")
         execute_query(query, (status, value, alarmID,))
-        print(f"\nSQL Update Success:\n\r--alarmRelay relayID: {alarmID}\n\r--Update:(status: {status}) ,(value: {value})")
+        
 #endregion

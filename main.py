@@ -8,11 +8,11 @@
 
 try:
     
-    import sys, os, traceback, minimalmodbus, threading, platform, sqlite3, PySQL
+    import sys, os, traceback, minimalmodbus, threading, platform, sqlite3
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
 
-    import ProjectPublicVariable as PPV
+    
 
     from PyQt5.QtWidgets import \
         QApplication, QMainWindow, QWidget, QStatusBar, QVBoxLayout,\
@@ -27,6 +27,8 @@ try:
         ,stateBatteryCharge_icons ,stateBattery_icons ,stateInbMenu_icons, lock_icons
 
     # from modbus_RTU_Connect_GUI import ModbusRTUConfigurator
+    import ProjectPublicVariable as PPV
+    import PySQL
 
     from unit_transfer import unit_transfer
     from plotCanvas import plotCanvas #圖表內部配制
@@ -76,7 +78,13 @@ temperature = 0.00 # 攝氏 16.8
 #class MyWindow
 #region 主畫面
 class MyWindow(QMainWindow):
-
+    # for i in PySQL.selectAlarmRelay():
+    #     for j in i:
+    #         print(j)
+    # print(PySQL.selectAlarmRelay()[1])
+    # print(PySQL.selectAlarmRelay(1))
+    # print(PySQL.selectAlarmRelay(2))
+    # print(PySQL.selectAlarmRelay(3))
     #region 主畫面元件
     def __init__(self):
         super().__init__()
@@ -131,12 +139,14 @@ class MyWindow(QMainWindow):
         self.alarm1_label.setAlignment(Qt.AlignLeft)
         self.alarm1_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
         self.alarm1_label.setFont(font)
+        self.alarm1_label.setVisible(False)
         setLabelIcon(self.alarm1_label, stateAlarm_icons[1])
 
         self.alarm2_label = QLabel('警告2', self)
         self.alarm2_label.setAlignment(Qt.AlignLeft)
         self.alarm2_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
         self.alarm2_label.setFont(font)
+        self.alarm2_label.setVisible(False)
         setLabelIcon(self.alarm2_label, stateAlarm_icons[2])
 
 
@@ -464,14 +474,31 @@ class MyWindow(QMainWindow):
 
                 try:
                     # 成功連線下，以下讀取modbus可以執行
+                    #region 讀取R1X（只要讀bit就好）
+                    r1x = PPV.instrument_ID1.read_bits(0, 2, functioncode=1)
+
+                    cache_R1X={}
+                    for address, value in enumerate(r1x):
+                        cache_R1X[address] = value
+
+                    for address, value in cache_R1X.items():
+                        if value != int(PySQL.selectSQL_Reg(regDF=1, regKey=address)): # modbus值與暫存SQL不一致，將暫存SQL寫入modbus
+                            # PySQL.updateSQL_Reg(1, address, value)
+                            PPV.instrument_ID1.write_bit(address, int(PySQL.selectSQL_Reg(regDF=1, regKey=address)))
+
+
                     # 讀取濃度、溫度變動值
-                    oxygen_concentration = "{:.2f}".format(PPV.instrument_ID1.read_float(PPV.R3X_address('Gas'), functioncode=4))
-                    temperature = "{:.2f}".format(PPV.instrument_ID1.read_float(PPV.R3X_address('Temperature'), functioncode=4))
+                    oxygen_concentration = PPV.instrument_ID3.read_float(PPV.R3X_address('Gas'), functioncode=4)
+                    temperature = PPV.instrument_ID3.read_float(PPV.R3X_address('Temperature'), functioncode=4)
 
                     # 讀取modbus的Reg設定值
                     # modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
                     # modbusDateFormat =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
                     # modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
+                    self.alarm1_label.setVisible(PPV.alarm(PySQL.selectAlarmRelay(), temperature, oxygen_concentration))
+
+                    if self.alarm1_label.isVisible():
+                        self.alarmNull_label.setVisible(False)
 
 
                     # 讀取地址範圍為 0 到 15 的保持寄存器值
