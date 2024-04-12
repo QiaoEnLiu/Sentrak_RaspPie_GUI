@@ -16,8 +16,8 @@ try:
     from imgResource import setLabelIcon
 
     from setAlarmRelay import setAlarmRelayFrame
-    from setAlarmRelay2 import setAlarmRelay2Frame
-    from setAlarmRelay3 import setAlarmRelay3Frame
+    # from setAlarmRelay2 import setAlarmRelay2Frame
+    # from setAlarmRelay3 import setAlarmRelay3Frame
 
 
     # 未實作功能測試介面
