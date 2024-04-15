@@ -32,3 +32,5 @@ sudo umount /media/joejoe/ESD-USB
 sudo umount /media/amin12-6/ESD-USB
 
 fc-list
+
+dmesg | grep ttyUSB

@@ -306,3 +306,5 @@ plotTimeDict = {1:'5秒',
 #region 使用者
 presentUser = None
 #endregion
+
+IPS={"IPv4": [],"子網路遮罩":[],"預設閘道":[],"主機名稱":""}

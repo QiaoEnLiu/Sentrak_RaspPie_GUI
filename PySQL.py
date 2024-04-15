@@ -6,6 +6,12 @@ db_path = 'SentrakSQL/SentrakSQL.db'
 regDFs={1: 'R1X',
         3: 'R3X',
         4: 'R4X'}
+IPS={"User":"",
+     "Time":"",
+     "IPv4":"",
+     "Subnet Mask":"",
+     "Default Gateway":"",
+     "Hostname":""}
 
 #region 連接資料庫
 def execute_query(query, params=()):
@@ -110,4 +116,32 @@ def updateAlarmRelay(alarmID, status, value):
                 print(f"\nSQL Update Success:\n\r--alarmRelay relayID: {alarmID}\n\r--Update:(status: {status}) ,(value_temp: {value})")
         execute_query(query, (status, value, alarmID,))
         
+#endregion
+
+#region IPv4
+def selectDefaultNetSetting():
+        query = "Select * FROM setInternet where User = 'Default'"
+        result = execute_query(query)
+        return dict(result[0])
+
+def selectLastNetSetting():
+        query = "SELECT * FROM setInternet ORDER BY Time DESC LIMIT 1"
+        result = execute_query(query)
+        return dict(result[0])
+
+def updateNetSetting(ipInfo):
+        IPS["User"]=ipInfo["使用者"]
+        IPS["Time"]=ipInfo["時間"]
+        IPS["IPv4"]=ipInfo["IPv4"]
+        IPS["Subnet Mask"]=ipInfo["子網路遮罩"]
+        IPS["Default Gateway"]=ipInfo["預設閘道"]
+        IPS["Hostname"]=ipInfo["主機名稱"]
+
+        # query = "Insert Into setInternet Values (?,?,?,?,?,?)"
+        query = "Insert Into setInternet (User,Time,IPv4,SubnetMask,DefaultGateway,Hostname) Values (?,?,?,?,?,?)"
+        execute_query(query, (IPS["User"], IPS["Time"], IPS["IPv4"], IPS["Subnet Mask"], IPS["Default Gateway"], IPS["Hostname"],))
+        print(f"Insert SQL setInternet Table Success:\n\r{IPS}")
+
+
+
 #endregion

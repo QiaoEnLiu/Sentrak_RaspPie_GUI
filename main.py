@@ -8,7 +8,7 @@
 
 try:
     
-    import sys, os, traceback, minimalmodbus, threading, platform, sqlite3
+    import sys, os, traceback, minimalmodbus, threading, platform, serial
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
 
@@ -485,6 +485,7 @@ class MyWindow(QMainWindow):
                         if value != int(PySQL.selectSQL_Reg(regDF=1, regKey=address)): # modbus值與暫存SQL不一致，將暫存SQL寫入modbus
                             # PySQL.updateSQL_Reg(1, address, value)
                             PPV.instrument_ID1.write_bit(address, int(PySQL.selectSQL_Reg(regDF=1, regKey=address)))
+                    #endregion
 
 
                     # 讀取濃度、溫度變動值
@@ -495,6 +496,7 @@ class MyWindow(QMainWindow):
                     # modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
                     # modbusDateFormat =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
                     # modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
+
                     self.alarm1_label.setVisible(PPV.alarm(PySQL.selectAlarmRelay(), temperature, oxygen_concentration))
 
                     if self.alarm1_label.isVisible():
@@ -541,6 +543,8 @@ class MyWindow(QMainWindow):
                     self.stateConnect_label.setText('離線')
                     # print(f'No response from the instrument: {e}')
                 except AttributeError as e: # 略過無法取得裝置變數的錯誤（因沒有埠號）
+                    pass
+                except serial.SerialException as e: # 略過未使用埠號、虛擬埠的錯誤
                     pass
                 except Exception as e:
                     traceback.print_exc()

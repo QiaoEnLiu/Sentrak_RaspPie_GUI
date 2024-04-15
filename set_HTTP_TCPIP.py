@@ -7,15 +7,16 @@
 
 try:
     
-    from PyQt5.QtCore import Qt
+    from PyQt5.QtCore import Qt, QDateTime
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QScrollArea,\
           QHBoxLayout, QLineEdit, QPushButton, QMessageBox, QDialog
     from PyQt5.QtGui import QFont, QIntValidator
-    from datetime import datetime
+    # from datetime import datetime
 
     import os, traceback, json, psutil
 
     import ProjectPublicVariable as PPV
+    import PySQL
 
 except Exception as e:
     print(f"An error occurred: {e}")
@@ -36,6 +37,10 @@ except Exception as e:
     traceback.print_exc()
 
 font = QFont()
+
+default_ip_values=PPV.IPS
+last_ip_values=PPV.IPS
+set_ip_values={"使用者":"","時間":"",**PPV.IPS}
 
 
 class internetFrame(QWidget):
@@ -69,7 +74,7 @@ class internetFrame(QWidget):
             "IPv4": [QLineEdit() for _ in range(4)],
             "子網路遮罩": [QLineEdit() for _ in range(4)],
             "預設閘道": [QLineEdit() for _ in range(4)],
-            "DNS 伺服器": [QLineEdit() for _ in range(4)]
+            # "DNS 伺服器": [QLineEdit() for _ in range(4)]
         }
         self.input_boxes=None
 
@@ -77,13 +82,34 @@ class internetFrame(QWidget):
         ip_layout, ipv4_input_boxes = self.ip_input_layout("IPv4")
         subnet_layout, subnet_input_boxes = self.ip_input_layout("子網路遮罩")
         gateway_layout, gateway_input_boxes = self.ip_input_layout("預設閘道")
-        dns_layout, dns_input_boxes = self.ip_input_layout("DNS 伺服器")
+        # dns_layout, dns_input_boxes = self.ip_input_layout("DNS 伺服器")
+        hostname_layout = QVBoxLayout()
 
         # 將 input_boxes 賦值給對應的 ipconfig_texts 鍵
         self.ipconfig_texts["IPv4"] = ipv4_input_boxes
         self.ipconfig_texts["子網路遮罩"] = subnet_input_boxes
         self.ipconfig_texts["預設閘道"] = gateway_input_boxes
-        self.ipconfig_texts["DNS 伺服器"] = dns_input_boxes
+        # self.ipconfig_texts["DNS 伺服器"] = dns_input_boxes
+        self.hostname_label = QLabel("主機名稱：")
+        self.hostname_Input = QLineEdit()
+        self.hostname_label.setFont(font)
+        self.hostname_Input.setFont(font)
+
+        hostname_layout.addWidget(self.hostname_label)
+        hostname_layout.addWidget(self.hostname_Input)
+
+        # 獲取預設的 IP 值
+        last_ip_values["IPv4"] = str(PySQL.selectLastNetSetting()["IPv4"]).split('.')
+        last_ip_values["子網路遮罩"] = str(PySQL.selectLastNetSetting()["SubnetMask"]).split('.')
+        last_ip_values["預設閘道"] = str(PySQL.selectLastNetSetting()["DefaultGateway"]).split('.')
+        last_ip_values["主機名稱"] = PySQL.selectLastNetSetting()["Hostname"]
+
+        # 將預設值填入對應的 QLineEdit
+        for name, input_boxes in self.ipconfig_texts.items():
+            values = last_ip_values.get(name, [])  # 從 default_ip_values 取得對應名稱的值
+            for input_box, value in zip(input_boxes, values):
+                input_box.setText(value)
+        self.hostname_Input.setText(last_ip_values["主機名稱"])
 
 
         set_button=QPushButton('設定', self)
@@ -110,7 +136,9 @@ class internetFrame(QWidget):
         internetInfo_layout.addStretch()
         internetInfo_layout.addLayout(gateway_layout)
         internetInfo_layout.addStretch()
-        internetInfo_layout.addLayout(dns_layout)
+        # internetInfo_layout.addLayout(dns_layout)
+        # internetInfo_layout.addStretch()
+        internetInfo_layout.addLayout(hostname_layout)
         internetInfo_layout.addStretch()
         internetInfo_layout.addLayout(setting_layout)
 
@@ -199,6 +227,7 @@ class internetFrame(QWidget):
             print("IP Config 文字框:")
             for name, values in ip_values.items():
                 print(f"{name}: {values}")
+            print(f"{self.hostname_label.text()}: {self.hostname_Input.text()}")
 
 
             reply = QMessageBox.question(self, '網路設定', '確定要儲存嗎？',
@@ -213,72 +242,126 @@ class internetFrame(QWidget):
             print('您沒有權限設定網路:', PPV.presentUser.control)
 
     def ip_to_default(self):
+        # print(PySQL.selectDefaultNetSetting())
+        default_ip_values["IPv4"] = str(PySQL.selectDefaultNetSetting()["IPv4"]).split('.')
+        default_ip_values["子網路遮罩"] = str(PySQL.selectDefaultNetSetting()["SubnetMask"]).split('.')
+        default_ip_values["預設閘道"] = str(PySQL.selectDefaultNetSetting()["DefaultGateway"]).split('.')
+        default_ip_values["主機名稱"] = PySQL.selectDefaultNetSetting()["Hostname"]
+        
 
-        try:
-            with open(default_ip_file, 'r', encoding='utf-8') as file:
-                json_str = file.read()
-                default_values = json.loads(json_str)
-                # print(default_values)
-        except (FileNotFoundError, json.JSONDecodeError) as e:
-            print(f"Error reading default values: {e}")
-            default_values = {}
-
-        # 獲取預設的 IP 值
-        default_ip_values = default_values.get('default', {}).get('ip_values',{})
-        # print(default_ip_values)
-
+        # ips={default_ip_values["IPv4"], default_ip_values["子網路遮罩"], default_ip_values["預設閘道"]}
         # 將預設值填入對應的 QLineEdit
         for name, input_boxes in self.ipconfig_texts.items():
             values = default_ip_values.get(name, [])  # 從 default_ip_values 取得對應名稱的值
             for input_box, value in zip(input_boxes, values):
                 input_box.setText(value)
+        self.hostname_Input.setText(default_ip_values["主機名稱"])
+        current_datetime = QDateTime.currentDateTime()
+        formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[2][1]} hh:mm:ss")
+        print(f"{formatted_datetime}\n\r{default_ip_values}")
+
 
     def write_ip_info(self, username):
-        
-        # 讀取現有的使用者資訊或創建一個新的使用者資訊字典
-        try:
-            with open(log_file, 'r', encoding='utf-8') as file:
-                ip_update_info = json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
-            ip_update_info = {}
-
         # 將 QlineEdit 對象轉換為其文本值
-        converted_ip_values = {}
         for name, input_boxes in self.ipconfig_texts.items():
             values = [input_box.text() for input_box in input_boxes]
-            converted_ip_values[name] = values
+            set_ip_values[name] = '.'.join(values)
+        current_datetime = QDateTime.currentDateTime()
+        formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[2][1]} hh:mm:ss")
+        set_ip_values["使用者"] = username
+        set_ip_values["時間"] = formatted_datetime
+        set_ip_values["主機名稱"] = self.hostname_Input.text() or username
 
-        # 創建新的使用者資訊，包括使用者名稱和時間戳記
-        user_info = {
-            'username': username,
-            'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'ip_values': converted_ip_values
-        }
+        PySQL.updateNetSetting(set_ip_values)
+        # print(f"{username}:{set_ip_values}")
 
-        # 使用不同的時間戳記作為鍵，以確保每次都是新增獨立的紀錄
-        timestamp_key = datetime.now().strftime('%Y%m%d%H%M%S')
-        ip_update_info[timestamp_key] = user_info
+
+        
+
+        
+
+
+    #region IP <> Json File
+    # def ip_to_default(self):
+
+    #     try:
+    #         with open(default_ip_file, 'r', encoding='utf-8') as file:
+    #             json_str = file.read()
+    #             default_values = json.loads(json_str)
+    #             # print(default_values)
+    #     except (FileNotFoundError, json.JSONDecodeError) as e:
+    #         print(f"Error reading default values: {e}")
+    #         default_values = {}
+
+    #     # 獲取預設的 IP 值
+    #     default_ip_values = default_values.get('default', {}).get('ip_values',{})
+    #     # print(default_ip_values)
+
+    #     # 將預設值填入對應的 QLineEdit
+    #     for name, input_boxes in self.ipconfig_texts.items():
+    #         values = default_ip_values.get(name, [])  # 從 default_ip_values 取得對應名稱的值
+    #         for input_box, value in zip(input_boxes, values):
+    #             input_box.setText(value)
+
+    # def write_ip_info(self, username):
+        
+    #     # 讀取現有的使用者資訊或創建一個新的使用者資訊字典
+    #     try:
+    #         with open(log_file, 'r', encoding='utf-8') as file:
+    #             ip_update_info = json.load(file)
+    #     except (FileNotFoundError, json.JSONDecodeError):
+    #         ip_update_info = {}
+
+    #     # 將 QlineEdit 對象轉換為其文本值
+    #     converted_ip_values = {}
+    #     for name, input_boxes in self.ipconfig_texts.items():
+    #         values = [input_box.text() for input_box in input_boxes]
+    #         converted_ip_values[name] = values
+
+    #     # 創建新的使用者資訊，包括使用者名稱和時間戳記
+    #     user_info = {
+    #         'username': username,
+    #         'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+    #         'ip_values': converted_ip_values
+    #     }
+
+    #     # 使用不同的時間戳記作為鍵，以確保每次都是新增獨立的紀錄
+    #     timestamp_key = datetime.now().strftime('%Y%m%d%H%M%S')
+    #     ip_update_info[timestamp_key] = user_info
             
-        print(user_info)
+    #     print(user_info)
 
-        # 寫入更新後的使用者資訊到檔案
-        with open(log_file, 'w', encoding='utf-8') as file:
-            json_str = json.dumps(ip_update_info, ensure_ascii=False)
-            json_string = json_str.replace(', "ip_values": ', ', "ip_values":\n').replace(']}},',']}},\n').replace('"],','"],\n')
-            file.write(json_string)
+    #     # 寫入更新後的使用者資訊到檔案
+    #     with open(log_file, 'w', encoding='utf-8') as file:
+    #         json_str = json.dumps(ip_update_info, ensure_ascii=False)
+    #         json_string = json_str.replace(', "ip_values": ', ', "ip_values":\n').replace(']}},',']}},\n').replace('"],','"],\n')
+    #         file.write(json_string)
 
 
-        previous_sub_frame = self.stacked_widget.currentWidget()
-        self.stacked_widget.removeWidget(previous_sub_frame)
-        self.current_page_index = self.stacked_widget.currentIndex()
+    #     previous_sub_frame = self.stacked_widget.currentWidget()
+    #     self.stacked_widget.removeWidget(previous_sub_frame)
+    #     self.current_page_index = self.stacked_widget.currentIndex()
 
-        for title, sub_page_index in list(self.sub_pages.items()):
-            if sub_page_index not in range(self.stacked_widget.count()):
-                del self.sub_pages[title]
+    #     for title, sub_page_index in list(self.sub_pages.items()):
+    #         if sub_page_index not in range(self.stacked_widget.count()):
+    #             del self.sub_pages[title]
 
-        self.stacked_widget.setCurrentIndex(self.current_page_index)
+    #     self.stacked_widget.setCurrentIndex(self.current_page_index)
+        
+    #endregion
 
     
+        
+    def show_networt(self):
+
+        # network_info = '網路介面資訊:' + '暫未提供' + '\n'
+        network_info = '網路介面資訊:' + '\n'
+        for line in self.get_network_info():
+            network_info += line + '\n'
+        # print(network_info)
+            
+        MyDialog(network_info).exec_()
+
     def get_network_info(self):
         try:
             interfaces = psutil.net_if_addrs()
@@ -293,16 +376,6 @@ class internetFrame(QWidget):
             return result
         except Exception as e:
             return f'無法取得網路介面資訊: {e}'
-        
-    def show_networt(self):
-
-        # network_info = '網路介面資訊:' + '暫未提供' + '\n'
-        network_info = '網路介面資訊:' + '\n'
-        for line in self.get_network_info():
-            network_info += line + '\n'
-        # print(network_info)
-            
-        MyDialog(network_info).exec_()
 
         
 class MyDialog(QDialog):
