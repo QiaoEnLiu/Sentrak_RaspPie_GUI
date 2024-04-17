@@ -85,6 +85,8 @@ class internetFrame(QWidget):
         # dns_layout, dns_input_boxes = self.ip_input_layout("DNS 伺服器")
         hostname_layout = QVBoxLayout()
 
+        font.setPointSize(16)
+
         # 將 input_boxes 賦值給對應的 ipconfig_texts 鍵
         self.ipconfig_texts["IPv4"] = ipv4_input_boxes
         self.ipconfig_texts["子網路遮罩"] = subnet_input_boxes
