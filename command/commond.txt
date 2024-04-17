@@ -20,10 +20,15 @@ Start_Process "URL"
 
 Linux:
 
+sudo apt-get update
+sudo apt-get upgrade
+
 pyinstaller --name Sentrak main.py
 
 xrandr
 xrandr --output HDMI-1 --mode 1920x1080
+
+xrandr --output HDMI-1 --rotate
 
 
 cd /media/joejoe/ESD-USB/
@@ -34,3 +39,5 @@ sudo umount /media/amin12-6/ESD-USB
 fc-list
 
 dmesg | grep ttyUSB
+
+ps aux | grep

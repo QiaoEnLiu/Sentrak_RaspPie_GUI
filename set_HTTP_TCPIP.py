@@ -13,7 +13,7 @@ try:
     from PyQt5.QtGui import QFont, QIntValidator
     # from datetime import datetime
 
-    import os, traceback, json, psutil
+    import os, traceback, json, psutil, socket, subprocess, platform
 
     import ProjectPublicVariable as PPV
     import PySQL
@@ -99,10 +99,16 @@ class internetFrame(QWidget):
         hostname_layout.addWidget(self.hostname_Input)
 
         # 獲取預設的 IP 值
-        last_ip_values["IPv4"] = str(PySQL.selectLastNetSetting()["IPv4"]).split('.')
-        last_ip_values["子網路遮罩"] = str(PySQL.selectLastNetSetting()["SubnetMask"]).split('.')
-        last_ip_values["預設閘道"] = str(PySQL.selectLastNetSetting()["DefaultGateway"]).split('.')
-        last_ip_values["主機名稱"] = PySQL.selectLastNetSetting()["Hostname"]
+        print(self.get_main_network_info())
+        last_ip_values["IPv4"] = self.get_main_network_info()["IPv4"].split('.')
+        last_ip_values["子網路遮罩"] = self.get_main_network_info()["SubnetMask"].split('.')
+        last_ip_values["預設閘道"] = self.get_main_network_info()["DefaultGateway"].split('.')
+        last_ip_values["主機名稱"] = self.get_main_network_info()["Hostname"]
+
+        # last_ip_values["IPv4"] = str(PySQL.selectLastNetSetting()["IPv4"]).split('.')
+        # last_ip_values["子網路遮罩"] = str(PySQL.selectLastNetSetting()["SubnetMask"]).split('.')
+        # last_ip_values["預設閘道"] = str(PySQL.selectLastNetSetting()["DefaultGateway"]).split('.')
+        # last_ip_values["主機名稱"] = PySQL.selectLastNetSetting()["Hostname"]
 
         # 將預設值填入對應的 QLineEdit
         for name, input_boxes in self.ipconfig_texts.items():
@@ -275,13 +281,123 @@ class internetFrame(QWidget):
         PySQL.updateNetSetting(set_ip_values)
         # print(f"{username}:{set_ip_values}")
 
+    
+        
+    def show_networt(self):
+
+        # network_info = '網路介面資訊:' + '暫未提供' + '\n'
+        network_info = '網路介面資訊:' + '\n'
+        for line in self.get_network_info():
+            network_info += line + '\n'
+        # print(network_info)
+            
+        MyDialog(network_info).exec_()
+    
+    def get_main_network_info(self):
+        try:
+            hostname = socket.gethostname()
+
+            # 獲取IPv4地址、子網路遮罩和預設閘道（針對Windows）
+            if platform.system() == "Windows":
+                result = subprocess.getoutput("ipconfig | findstr IPv4")
+                ip_line = [line for line in result.splitlines() if "IPv4 Address" in line][0]
+                ip_address = ip_line.split(":")[1].strip()
+
+                result = subprocess.getoutput("ipconfig | findstr Subnet")
+                netmask_line = [line for line in result.splitlines() if "Subnet Mask" in line][0]
+                netmask = netmask_line.split(":")[1].strip()
+
+                result = subprocess.getoutput("ipconfig | findstr Default")
+                gateway_line = [line for line in result.splitlines() if "Default Gateway" in line][0]
+                gateway = gateway_line.split(":")[1].strip()
+
+            # 獲取IPv4地址、子網路遮罩和預設閘道（針對Linux）
+            elif platform.system() == "Linux":
+
+                # 獲取IPv4地址和子網遮罩（針對Linux）
+                result = subprocess.getoutput("ip addr show | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}'")
+                ip_subnet = result.split()[0]
+                ip_address, cidr = ip_subnet.split("/")
+                netmask = PPV.cidr_to_netmask(int(cidr))
+
+                # 獲取預設閘道（針對Linux）
+                result = subprocess.getoutput("ip route | grep default | awk '{print $3}'")
+                gateway = result.splitlines()[0]
+
+            return {"IPv4": ip_address, "SubnetMask": netmask, "DefaultGateway": gateway, "Hostname": hostname}
+
+        except socket.gaierror:
+            return {'error': '無法取得主機IP地址'}
+        except IndexError:
+            return {'error': '無法解析網絡輸出'}
+        except Exception as e:
+            return {'error': f'發生錯誤: {e}'}
+    
+    
+    def get_network_info(self):
+        try:
+            addresses = psutil.net_if_addrs()
+            stats = psutil.net_if_stats()
+            result = []
+
+            # 獲取當前連線的網路介面
+            current_interface = psutil.net_connections(kind='inet')[0].laddr[0]
+
+            # 獲取主機名稱
+            hostname = socket.gethostname()
+            result.append(f'Hostname: {hostname}')
+            for interface, addrs in addresses.items():
+                result.append(f' Interface: {interface} {"(Connected)" if interface == current_interface else ""}')
+                for addr in addrs:
+                    result.append(f'   Address Family: {addr.family}')
+                    result.append(f'     Address: {addr.address}')
+                    result.append(f'     Netmask: {addr.netmask}')
+                    result.append(f'     Broadcast: {addr.broadcast}')
+                
+                # 添加預設閘道資訊
+                if interface in stats:
+                    gateway = 'N/A'
+                    for addr in addrs:
+                        if addr.family == socket.AF_INET:
+                            gateway = addr.address
+                            break
+                    result.append(f'     Default Gateway: {gateway}')
+                    
+            return result
+        except Exception as e:
+            traceback.print_exc()
+            return f'無法取得網路介面資訊: {e}'
+    
 
         
+class MyDialog(QDialog):
+    def __init__(self, text):
+        super().__init__()
 
-        
+        # 創建一個 QScrollArea 作為主要顯示區域
+        scroll_area = QScrollArea(self)
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
+        internetInfo_label = QLabel(text,self)
+        font.setPointSize(12)
+        internetInfo_label.setFont(font)
+        # internetInfo_label.setStyleSheet(_style) 
 
-    #region IP <> Json File
+        # internetInfo_label.setText(text)
+
+        # 將內容設置為 QScrollArea 的可滾動部分
+        scroll_area.setWidget(internetInfo_label)
+
+        # 將 QScrollArea 添加到主佈局
+        main_layout = QVBoxLayout(self)
+        main_layout.addWidget(scroll_area)
+
+        # 設定 QDialog 的大小
+        self.resize(400, 360)
+
+#region IP <> Json File
     # def ip_to_default(self):
 
     #     try:
@@ -350,57 +466,78 @@ class internetFrame(QWidget):
         
     #endregion
 
-    
+#region 失敗作：查詢主要連線
+    # def get_main_network_info(self):
+    #     try:
+    #         addresses = psutil.net_if_addrs()
+    #         stats = psutil.net_if_stats()
+
+    #         # 獲取當前連線的網路介面
+    #         current_interface = psutil.net_connections(kind='inet')[0].laddr[0]
+
+    #         # 獲取主機名稱
+    #         hostname = socket.gethostname()
+
+    #         main_network_info = {
+    #             'Hostname': hostname,
+    #             'Interfaces': {}
+    #         }
+
+    #         for interface, addrs in addresses.items():
+    #             interface_info = {
+    #                 'Connected': interface == current_interface,
+    #                 'Addresses': [],
+    #                 'DefaultGateway': 'N/A'
+    #             }
+
+    #             for addr in addrs:
+    #                 addr_info = {
+    #                     'Family': addr.family,
+    #                     'Address': addr.address,
+    #                     'Netmask': addr.netmask,
+    #                     'Broadcast': addr.broadcast
+    #                 }
+    #                 interface_info['Addresses'].append(addr_info)
+
+    #             if interface in stats:
+    #                 for addr in addrs:
+    #                     if addr.family == socket.AF_INET:
+    #                         interface_info['DefaultGateway'] = addr.address
+    #                         break
+
+    #             main_network_info['Interfaces'][interface] = interface_info
+
+    #         return main_network_info
+
+    #     except Exception as e:
+    #         return {'error': f'無法取得網路介面資訊: {e}'}
         
-    def show_networt(self):
+    # def filter_main_connection(self, network_info):
+    #     main_connection = None
+    #     other_connections = {}
 
-        # network_info = '網路介面資訊:' + '暫未提供' + '\n'
-        network_info = '網路介面資訊:' + '\n'
-        for line in self.get_network_info():
-            network_info += line + '\n'
-        # print(network_info)
-            
-        MyDialog(network_info).exec_()
+    #     for interface, info in network_info['Interfaces'].items():
+    #         if info['Connected']:
+    #             main_connection = {
+    #                 'Interface': interface,
+    #                 'Connected': info['Connected'],
+    #                 'Addresses': info['Addresses'],
+    #                 'DefaultGateway': info['DefaultGateway']
+    #             }
+    #             break
+    #         else:
+    #             other_connections[interface] = {
+    #                 'Connected': info['Connected'],
+    #                 'Addresses': info['Addresses'],
+    #                 'DefaultGateway': info['DefaultGateway']
+    #             }
 
-    def get_network_info(self):
-        try:
-            interfaces = psutil.net_if_addrs()
-            result = []
-            for interface, addresses in interfaces.items():
-                result.append(f' Interface: {interface}')
-                for address in addresses:
-                    result.append(f'   Address Family: {address.family}')
-                    result.append(f'     Address: {address.address}')
-                    result.append(f'     Netmask: {address.netmask}')
-                    result.append(f'     Broadcast: {address.broadcast}')
-            return result
-        except Exception as e:
-            return f'無法取得網路介面資訊: {e}'
+    #     filtered_info = {
+    #         'Hostname': network_info['Hostname'],
+    #         'MainConnection': main_connection,
+    #         'OtherConnections': other_connections
+    #     }
 
-        
-class MyDialog(QDialog):
-    def __init__(self, text):
-        super().__init__()
+    #     return filtered_info
+    #endregion
 
-        # 創建一個 QScrollArea 作為主要顯示區域
-        scroll_area = QScrollArea(self)
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-
-        internetInfo_label = QLabel(text,self)
-        font.setPointSize(12)
-        internetInfo_label.setFont(font)
-        # internetInfo_label.setStyleSheet(_style) 
-
-        # internetInfo_label.setText(text)
-
-        # 將內容設置為 QScrollArea 的可滾動部分
-        scroll_area.setWidget(internetInfo_label)
-
-        # 將 QScrollArea 添加到主佈局
-        main_layout = QVBoxLayout(self)
-        main_layout.addWidget(scroll_area)
-
-        # 設定 QDialog 的大小
-        self.resize(400, 360)

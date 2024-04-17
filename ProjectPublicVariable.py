@@ -308,3 +308,8 @@ presentUser = None
 #endregion
 
 IPS={"IPv4": [],"子網路遮罩":[],"預設閘道":[],"主機名稱":""}
+
+def cidr_to_netmask(cidr):
+    # 轉換CIDR表示法到子網遮罩IP
+    mask = (0xffffffff >> (32 - cidr)) << (32 - cidr)
+    return '.'.join([str((mask >> i) & 0xff) for i in [24, 16, 8, 0]])
