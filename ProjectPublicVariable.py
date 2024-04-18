@@ -268,6 +268,11 @@ dataBit={'7':'0',
          '8':'1'}
 #endregion
 
+#region 'set ct range'
+ct_range={1:'4-20mA',
+          2:'0-20mA',
+          3:'5-20mA'}
+#endregion
 
 #region 'set CT1_1', 'Set CT2_1', 'AD-CT1-Low', 'AD-CT1-High', 'AD-CT2-Low', 'AD-CT2-High',
 current_Min = 0
@@ -313,3 +318,10 @@ def cidr_to_netmask(cidr):
     # 轉換CIDR表示法到子網遮罩IP
     mask = (0xffffffff >> (32 - cidr)) << (32 - cidr)
     return '.'.join([str((mask >> i) & 0xff) for i in [24, 16, 8, 0]])
+
+
+def fromValueFindKey(d, target_value):
+    for key, value in d.items():
+        if value == target_value:
+            return key
+    return None

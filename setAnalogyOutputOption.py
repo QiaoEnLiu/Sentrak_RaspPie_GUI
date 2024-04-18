@@ -12,8 +12,9 @@ try:
     from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QHBoxLayout, QSizePolicy
     from PyQt5.QtGui import QFont
 
-    from setAnalogyTemp import analogyTempFrame
-    from setAnalogyConcentration import analogyConcentrationFrame
+    # from setAnalogyTemp import analogyTempFrame
+    # from setAnalogyConcentration import analogyConcentrationFrame
+    from setAnalogyOutput import setAnalogyOutputFrame
     
 except Exception as e:
     print(f"An error occurred: {e}")
@@ -89,12 +90,13 @@ class analogyOutputOptionFrame(QWidget):
     def analogyOptionClick(self, option, _style):
         if option not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[option]):
             print(f'進入：{option}')
-            if option == '類比濃度': # 類比濃度
-                next_frame = analogyTempFrame(option, _style, self.stacked_widget, self.sub_pages)
-            elif option == '類比溫度': # 類比溫度
-                next_frame = analogyConcentrationFrame(option, _style, self.stacked_widget, self.sub_pages)
-            else:
-                print('Wrong Option:',option)
+            next_frame = setAnalogyOutputFrame(option, _style, self.stacked_widget, self.sub_pages)
+            # if option == '類比濃度': # 類比濃度
+            #     next_frame = analogyTempFrame(option, _style, self.stacked_widget, self.sub_pages)
+            # elif option == '類比溫度': # 類比溫度
+            #     next_frame = analogyConcentrationFrame(option, _style, self.stacked_widget, self.sub_pages)
+            # else:
+            #     print('Wrong Option:',option)
 
             next_frame_index = self.stacked_widget.addWidget(next_frame)
             self.sub_pages[option] = next_frame_index
