@@ -46,7 +46,9 @@ try:
     from calibrateAnalogyOutput import calibrateAnalogyOutputFrame # 「類比輸出校正」介面
 
     # 記錄 >>
+    from records_DataStatistics import records_DataStatisticsFrame #「觀看記錄」、「統計表」介面 
     from recordDownloadFile import recordDownloadFileFrame # 「下載記錄至隨身碟」介面
+    from record_AutoManual import record_AutoManualFrame # 「記錄方式設定」介面
 
 
     # 識別 >>
@@ -359,9 +361,16 @@ class subMenuFrame(QWidget):
             #endregion
                 
             #region 「記錄」
+            elif item_text == '觀看記錄' or item_text == '統計表':
+                # 由「記錄」進入「觀看記錄」或「統計表」介面
+                next_frame = records_DataStatisticsFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             elif item_text == '下載記錄至隨身碟':
-                # 由「設定」進入「時間」介面
+                # 由「記錄」進入「時間」介面
                 next_frame = recordDownloadFileFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+
+            elif item_text == '記錄方式設定':
+                # 由「記錄」進入「記錄方式設定」介面
+                next_frame = record_AutoManualFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             #endregion
                 
             #region 「識別」

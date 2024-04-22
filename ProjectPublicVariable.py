@@ -328,6 +328,9 @@ languages={1:"中文",
            }
 #endregion
 
+setAutoManual={0:"手動",
+               1:"自動"}
+
 IPS={"IPv4": [],"子網路遮罩":[],"預設閘道":[],"主機名稱":""}
 
 def cidr_to_netmask(cidr):
