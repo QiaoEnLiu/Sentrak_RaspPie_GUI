@@ -40,6 +40,7 @@ try:
 
 
     from setTime import setTimeFrame # 「時間」選項介面
+    from setLanguage import setLanguageFrame # 「語言」選項介面
 
     # 校正 >>
     from calibrateAnalogyOutput import calibrateAnalogyOutputFrame # 「類比輸出校正」介面
@@ -345,6 +346,10 @@ class subMenuFrame(QWidget):
             elif item_text == '時間':
                 # 由「設定」進入「時間」介面
                 next_frame = setTimeFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+            
+            elif item_text == '語言':
+                # 由「設定」進入「語言」介面
+                next_frame = setLanguageFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             #endregion
                 
             #region 「校正」

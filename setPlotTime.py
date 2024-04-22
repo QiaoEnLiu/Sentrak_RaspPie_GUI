@@ -58,7 +58,7 @@ class setPlotTimeFrame(QWidget):
         set_time_layout.addWidget(set_button)
 
         main_layout.addWidget(title_label)
-        main_layout.addStretch()
+        # main_layout.addStretch()
         main_layout.addLayout(set_time_layout)
         # main_layout.addWidget(user_label)
 

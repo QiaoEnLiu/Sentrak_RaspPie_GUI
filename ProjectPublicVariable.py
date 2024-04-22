@@ -79,8 +79,8 @@ def R1X_address(searchName):
 #endregion
 
 #region R1X 地址狀態
-relays=['Relay 1']
-# relays=['Relay 1', 'Relay 2', 'Relay 3']
+# relays=['Relay 1']
+relays=['Relay 1', 'Relay 2', 'Relay 3']
 
 def alarm(relay, temp, o2):
     if relay[1]['status'][0] == '0': # 停用
@@ -297,6 +297,12 @@ def d2b(decimal): # decimal to binary
 #region 由值找索引（唯一值）
 def get_keys_from_value(dictionary, target_value):
     return [key for key, value in dictionary.items() if value == target_value]
+
+def fromValueFindKey(d, target_value):
+    for key, value in d.items():
+        if value == target_value:
+            return key
+    return None
 #endregion
 
 #region 圖表區域
@@ -312,16 +318,19 @@ plotTimeDict = {1:'5秒',
 presentUser = None
 #endregion
 
+#region 語言
+languageName=None
+languages={1:"中文",
+           2:"英文",
+           3:"德文",
+           4:"法文",
+           5:"日文",
+           }
+#endregion
+
 IPS={"IPv4": [],"子網路遮罩":[],"預設閘道":[],"主機名稱":""}
 
 def cidr_to_netmask(cidr):
     # 轉換CIDR表示法到子網遮罩IP
     mask = (0xffffffff >> (32 - cidr)) << (32 - cidr)
     return '.'.join([str((mask >> i) & 0xff) for i in [24, 16, 8, 0]])
-
-
-def fromValueFindKey(d, target_value):
-    for key, value in d.items():
-        if value == target_value:
-            return key
-    return None
