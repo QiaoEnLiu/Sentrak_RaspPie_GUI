@@ -35,8 +35,8 @@ class record_AutoManualFrame(QWidget):
 
         self.auto_manual = QComboBox()
         self.auto_manual.setFont(font)
-        self.auto_manual.addItems(PPV.setAutoManual.values()) # ['1分','5分','10分','30分','1小時']
-
+        self.auto_manual.addItems(PPV.setAutoManual.values())
+        
         set_button = QPushButton('設定', self)
         set_button.setFont(font)
         # set_button.clicked.connect(self.setPlotTimes)

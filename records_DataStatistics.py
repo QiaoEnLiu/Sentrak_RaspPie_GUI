@@ -10,6 +10,7 @@ try:
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
+    import PySQL
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -48,6 +49,7 @@ class records_DataStatisticsFrame(QWidget):
         startLabel = QLabel("啟始時間：")
         startLabel.setFont(font)
         self.startTime = QDateEdit(calendarPopup=True, date = QDate.currentDate())
+        self.startTime.setDisplayFormat(PPV.dateFormat[int(PySQL.selectSQL_Reg(4, 1))][1])
         # self.startTime.setMinimumDate(QDate(2000, 1, 1))
         # self.startTime.setMaximumDate(QDate(2025, 12, 31))
         # self.startTime.setStyleSheet('Fusion')
@@ -63,6 +65,7 @@ class records_DataStatisticsFrame(QWidget):
         endLabel = QLabel("結束時間：")
         endLabel.setFont(font)
         self.endTime = QDateEdit(calendarPopup=True, date = QDate.currentDate())
+        self.endTime.setDisplayFormat(PPV.dateFormat[int(PySQL.selectSQL_Reg(4, 1))][1])
         self.endTime.setFont(font)
         setEndLayout.addWidget(endLabel)
         setEndLayout.addWidget(self.endTime)
