@@ -328,6 +328,7 @@ languages={1:"中文",
            }
 #endregion
 
+autoManual=None
 setAutoManual={0:"手動",
                1:"自動"}
 

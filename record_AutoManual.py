@@ -9,6 +9,7 @@ try:
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
+    import PySQL
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -36,10 +37,11 @@ class record_AutoManualFrame(QWidget):
         self.auto_manual = QComboBox()
         self.auto_manual.setFont(font)
         self.auto_manual.addItems(PPV.setAutoManual.values())
+        self.auto_manual.setCurrentIndex(int(PySQL.selectSQL_Var("autoManual")))
         
         set_button = QPushButton('設定', self)
         set_button.setFont(font)
-        # set_button.clicked.connect(self.setPlotTimes)
+        set_button.clicked.connect(self.setAutoManual)
 
         set_auto_manual_layout = QVBoxLayout()
         set_auto_manual_layout.addWidget(self.auto_manual)
@@ -54,7 +56,6 @@ class record_AutoManualFrame(QWidget):
         main_layout.addLayout(set_auto_manual_layout)
 
 
-
         print(f'{title}畫面')
 
         self.stacked_widget = stacked_widget
@@ -62,3 +63,8 @@ class record_AutoManualFrame(QWidget):
         self.current_page_index = end_frame_index # 將當前的畫面索引設為 plot_page_index
         # 設定當前顯示的子畫面索引
         print(f'{title} Index: {self.stacked_widget.count()}')
+    
+    def setAutoManual(self):
+        PySQL.updateSQL_Var("autoManual", self.auto_manual.currentIndex())
+        print(f"設定記錄方式為：{self.auto_manual.currentText()}")
+    
