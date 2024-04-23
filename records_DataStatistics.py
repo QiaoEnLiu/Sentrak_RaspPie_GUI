@@ -6,7 +6,7 @@
 try:
     import traceback
     from PyQt5.QtCore import Qt, QDate
-    from PyQt5.QtWidgets import QWidget, QLabel, QDateEdit, QVBoxLayout,QHBoxLayout, QPushButton
+    from PyQt5.QtWidgets import QWidget, QLabel, QDateEdit, QVBoxLayout, QHBoxLayout, QPushButton, QCalendarWidget
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
@@ -30,7 +30,7 @@ class records_DataStatisticsFrame(QWidget):
         title_label.setFont(font)
         # title_label.setStyleSheet(_style)
 
-        font.setPointSize(18)
+        font.setPointSize(16)
         # user_label = QLabel(PPV.presentUser.userInfo())
         # user_label.setFont(font)
         # user_label.setStyleSheet(_style)
@@ -43,43 +43,58 @@ class records_DataStatisticsFrame(QWidget):
 
         setRecordTimeLayout = QVBoxLayout()
 
+        startCalendar = CustomDateEdit(self)
+        endCalendar = CustomDateEdit(self)
+
+        # startCalendar.setNavigationBarVisible(True)
+        # endCalendar.setNavigationBarVisible(True)
+
+
         setStartLayout = QVBoxLayout()
-        startLabelLayout = QVBoxLayout()
-        startTimeLayout = QVBoxLayout()
+        # startLabelLayout = QVBoxLayout()
+        # startTimeLayout = QVBoxLayout()
         startLabel = QLabel("啟始時間：")
         startLabel.setFont(font)
-        self.startTime = QDateEdit(calendarPopup=True, date = QDate.currentDate())
+        # self.startTime = QDateEdit(calendarPopup = True, date = QDate.currentDate())
+        self.startTime = QDateEdit(self)
+        self.startTime.setCalendarPopup(True)
+        self.startTime.setCalendarWidget(startCalendar)
+        self.startTime.setDate(QDate.currentDate())
         self.startTime.setDisplayFormat(PPV.dateFormat[int(PySQL.selectSQL_Reg(4, 1))][1])
         # self.startTime.setMinimumDate(QDate(2000, 1, 1))
         # self.startTime.setMaximumDate(QDate(2025, 12, 31))
         # self.startTime.setStyleSheet('Fusion')
         self.startTime.setFont(font)
-        startLabelLayout.addWidget(startLabel)
-        startTimeLayout.addWidget(self.startTime)
-        setStartLayout.addLayout(startLabelLayout)
-        setStartLayout.addLayout(startTimeLayout)
+        setStartLayout.addWidget(startLabel)
+        setStartLayout.addWidget(self.startTime)
+        # setStartLayout.addLayout(startLabelLayout)
+        # setStartLayout.addLayout(startTimeLayout)
 
         setEndLayout = QVBoxLayout()
-        endLabelLayout = QVBoxLayout()
-        endTimeLayout = QVBoxLayout()
+        # endLabelLayout = QVBoxLayout()
+        # endTimeLayout = QVBoxLayout()
         endLabel = QLabel("結束時間：")
         endLabel.setFont(font)
-        self.endTime = QDateEdit(calendarPopup=True, date = QDate.currentDate())
+        # self.endTime = QDateEdit(calendarPopup = True, date = QDate.currentDate())
+        self.endTime = QDateEdit(self)
+        self.endTime.setCalendarPopup(True)
+        self.endTime.setCalendarWidget(endCalendar)
+        self.endTime.setDate(QDate.currentDate())
         self.endTime.setDisplayFormat(PPV.dateFormat[int(PySQL.selectSQL_Reg(4, 1))][1])
         self.endTime.setFont(font)
         setEndLayout.addWidget(endLabel)
         setEndLayout.addWidget(self.endTime)
-        setEndLayout.addLayout(endLabelLayout)
-        setEndLayout.addLayout(endTimeLayout)
+        # setEndLayout.addLayout(endLabelLayout)
+        # setEndLayout.addLayout(endTimeLayout)
 
         setLayout = QVBoxLayout()
         set_button = QPushButton('設定區間', self)
         set_button.setFont(font)
         setLayout.addWidget(set_button)
 
-        setRecordTimeLayout.addStretch()
+        # setRecordTimeLayout.addStretch()
         setRecordTimeLayout.addLayout(setStartLayout)
-        setRecordTimeLayout.addStretch()
+        # setRecordTimeLayout.addStretch()
         setRecordTimeLayout.addLayout(setEndLayout)
         setRecordTimeLayout.addStretch()
         setRecordTimeLayout.addLayout(setLayout)
@@ -95,16 +110,21 @@ class records_DataStatisticsFrame(QWidget):
         # 設定當前顯示的子畫面索引
         print(f'{title} Index: {self.stacked_widget.count()}')
 
+class CustomDateEdit(QCalendarWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setNavigationBarVisible(True)
 
-class CustomDateEdit(QDateEdit):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+# class CustomDateEdit(QDateEdit):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
         
-    def showPopup(self):
-        self.calendarWidget().show()
-        self.calendarWidget().raise_()
-        self.calendarWidget().activateWindow()
         
-        # 顯示年份和月份選擇
-        self.calendarWidget().showNavigationBar()
-        self.calendarWidget().showMonth()
+    # def showPopup(self):
+    #     self.calendarWidget().show()
+    #     self.calendarWidget().raise_()
+    #     self.calendarWidget().activateWindow()
+        
+    #     # 顯示年份和月份選擇
+    #     self.calendarWidget().showNavigationBar()
+    #     self.calendarWidget().showMonth()
