@@ -30,6 +30,10 @@ subMenu = {
           '儀器資訊':'型號、序號、生產日期……',
           '感測器資訊':'型號、序號、生產日期……'}
           }
+
+calibrateAirManualOption={"直接校正":"使用已知氧氣濃度之氣體、液體進行校正",
+                          "空氣校正":"將感測器置於空氣中校正"}
+
 #endregion
 
 
@@ -272,6 +276,16 @@ dataBit={'7':'0',
 ct_range={1:'4-20mA',
           2:'0-20mA',
           3:'5-20mA'}
+#endregion
+
+#region Member
+actCO2_Insensitivity={0:"停用",
+                      1:"啟用"}
+
+diaphragm={0:"90952",
+           1:"90956",
+           2:"90958",
+           3:"90935"}
 #endregion
 
 #region 'set CT1_1', 'Set CT2_1', 'AD-CT1-Low', 'AD-CT1-High', 'AD-CT2-Low', 'AD-CT2-High',

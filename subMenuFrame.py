@@ -43,6 +43,7 @@ try:
     from setLanguage import setLanguageFrame # 「語言」選項介面
 
     # 校正 >>
+    from calibrateAirManualOption import calibrateAirManualOptionFrame # 「感測器校正」選頁介面
     from calibrateAnalogyOutput import calibrateAnalogyOutputFrame # 「類比輸出校正」介面
 
     # 記錄 >>
@@ -355,6 +356,9 @@ class subMenuFrame(QWidget):
             #endregion
                 
             #region 「校正」
+            elif item_text == '感測器校正':
+                # 由「校正」進入「感測器校正」選項介面
+                next_frame = calibrateAirManualOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             elif item_text == '類比輸出校正':
                 # 由「校正」進入「類比輸出校正」介面
                 next_frame = calibrateAnalogyOutputFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
