@@ -45,6 +45,7 @@ try:
     # 校正 >>
     from calibrateAirManualOption import calibrateAirManualOptionFrame # 「感測器校正」選頁介面
     from calibrateAnalogyOutput import calibrateAnalogyOutputFrame # 「類比輸出校正」介面
+    from calibratePressure import calibratePressureFrame # 「大氣壓力校正」介面
 
     # 記錄 >>
     from records_DataStatistics import records_DataStatisticsFrame #「觀看記錄」、「統計表」介面 
@@ -362,6 +363,9 @@ class subMenuFrame(QWidget):
             elif item_text == '類比輸出校正':
                 # 由「校正」進入「類比輸出校正」介面
                 next_frame = calibrateAnalogyOutputFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+            elif item_text == '大氣壓力校正':
+                # 由「校正」進入「大氣壓力校正」介面
+                next_frame = calibratePressureFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             #endregion
                 
             #region 「記錄」

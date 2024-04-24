@@ -42,19 +42,19 @@ class calibrateAirManualFrame(QWidget):
         # main_layout.addWidget(user_label)
 
         manualLayout=QVBoxLayout()
-        manualLabel=QLabel("直接校正：")
+        manualLabel=QLabel("輸入校正數值：")
         manualLabel.setFont(font)
         self.manualInput = QLineEdit()
         self.manualInput.setFont(font)
         manualLayout.addWidget(manualLabel)
         manualLayout.addWidget(self.manualInput)
 
-        if self.title == "空氣校正":
-            manualLabel.setEnabled(False)
-            self.manualInput.setEnabled(False)
-        else:
+        if self.title == "直接校正":
             manualLabel.setEnabled(True)
             self.manualInput.setEnabled(True)
+        else:
+            manualLabel.setEnabled(False)
+            self.manualInput.setEnabled(False)
 
         
 
@@ -90,6 +90,7 @@ class calibrateAirManualFrame(QWidget):
         main_layout.addLayout(manualLayout)
         main_layout.addLayout(diaphragmLayout)
         main_layout.addLayout(actCO2Layout)
+        main_layout.addStretch()
         main_layout.addWidget(cali_button)
 
         # print('終節點測試畫面：', self.title)
