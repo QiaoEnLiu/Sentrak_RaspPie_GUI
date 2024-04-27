@@ -55,7 +55,7 @@ try:
 
     # 識別 >>
     from id_Frame import id_LogIn_Frame # 登入訊息
-    from id_deviceInfo import deviceInfoFrame # 「儀器資訊」介面
+    from id_DeviceSensorInfo import deviceSensorInfoFrame # 「儀器資訊」、「感測器資訊」介面
 
     # 未實作功能測試介面
     from testEndFrame import testEndFrame
@@ -81,7 +81,7 @@ class subMenuFrame(QWidget):
         super().__init__()
         self.sub_pages = sub_pages
         self.stacked_widget = stacked_widget
-        self.id_login_frame = id_LogIn_Frame
+        # self.id_login_frame = id_LogIn_Frame
 
         self.title = title
         # print(title,PPV.presentUser.userInfo())
@@ -384,12 +384,12 @@ class subMenuFrame(QWidget):
             #region 「識別」
             elif item_text == '登入身份':
                 # 由「識別」進入「登入身份」介面，此功能須再與解鎖功能區分
-                # next_frame = id_LogIn_Frame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-                next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                next_frame = id_LogIn_Frame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                # next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
 
-            elif item_text == '儀器資訊': 
-                # 由「識別」進入「儀器資訊」介面，暫以本機開發硬體測試
-                next_frame = deviceInfoFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+            elif item_text == '儀器資訊' or item_text == '感測器資訊': 
+                # 由「識別」進入「儀器資訊」或「感測器資訊」介面，暫以本機開發硬體測試
+                next_frame = deviceSensorInfoFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             #endregion
 
             else:

@@ -1,5 +1,5 @@
 #zh-tw
-# id_deviceInFo.py
+# id_DeviceSensorInfo.py
 # 「儀器資訊」
 
 # 此程式碼為「識別」底下「儀器資訊」
@@ -22,7 +22,7 @@ except Exception as e:
 
 font = QFont()
 
-class deviceInfoFrame(QWidget):
+class deviceSensorInfoFrame(QWidget):
     def __init__(self, title, _style, stacked_widget, sub_pages):
         super().__init__()
         # print(title)

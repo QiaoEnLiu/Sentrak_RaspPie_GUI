@@ -23,7 +23,7 @@ font = QFont()
 class id_LogIn_Frame(QWidget):
     login_successful = pyqtSignal(bool)
 
-    def __init__(self, title, _style, user, stacked_widget, sub_pages): # ,main_window
+    def __init__(self, title, _style, stacked_widget, sub_pages): # ,main_window
         super().__init__()
         print('進入畫面：', title)  
         self.sub_pages=sub_pages
@@ -34,7 +34,7 @@ class id_LogIn_Frame(QWidget):
         title_layout.setSpacing(0)
         title_label = QLabel(title, self)
         title_label.setContentsMargins(0, 0, 0, 0)
-        title_label.setAlignment(Qt.AlignTop)  
+        title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(18)
         title_label.setFont(font)
         # title_label.setStyleSheet(_style)
@@ -45,67 +45,67 @@ class id_LogIn_Frame(QWidget):
         self.username_label = QLabel("帳號:", self)
         self.username_label.setFont(font)
         # self.username_label.setStyleSheet("background-color: lightblue;")
-        self.username_label.setAlignment(Qt.AlignCenter)
+        # self.username_label.setAlignment(Qt.AlignCenter)
         self.username_input = QLineEdit(self)
         self.username_input.setFont(font)
-        self.username_input.setAlignment(Qt.AlignCenter)
-        self.username_denial_label = QLabel("帳號錯誤！", self)
+        # self.username_input.setAlignment(Qt.AlignCenter)
+        self.username_denial_label = QLabel()
         self.username_denial_label.setFont(font)
         self.username_denial_label.setStyleSheet("color: red;")
 
         # 密碼輸入框
         self.password_label = QLabel("密碼:", self)
         self.password_label.setFont(font)
-        self.password_label.setAlignment(Qt.AlignCenter)
+        # self.password_label.setAlignment(Qt.AlignCenter)
         self.password_input = QLineEdit(self)
         self.password_input.setFont(font)
-        self.password_input.setAlignment(Qt.AlignCenter)
+        # self.password_input.setAlignment(Qt.AlignCenter)
         self.password_input.setEchoMode(QLineEdit.Password)  # 隱藏輸入的文字
-        self.password_denial_label = QLabel("密碼錯誤！", self)
+        self.password_denial_label = QLabel()
         self.password_denial_label.setFont(font)
         self.password_denial_label.setStyleSheet("color: red;")
 
-        font.setPointSize(20)
-        self.login_label = QLabel("登入成功！<p>若要重新登入，請登出再登入。", self)
-        self.login_label.setFont(font)
+        # font.setPointSize(16)
+        # self.login_label = QLabel("登入成功！<p>若要重新登入，請登出再登入。", self)
+        # self.login_label.setFont(font)
 
 
          # 登入按鈕
         font.setPointSize(12)
         self.login_button = QPushButton("登入", self)
         self.login_button.setFont(font)
-        self.login_button.clicked.connect(self.handle_login)
+        # self.login_button.clicked.connect(self.handle_login)
         
         # 水平佈局1，包含帳號標籤和輸入框
         username_layout = QVBoxLayout()
-        username_layout.setContentsMargins(20, 20, 20, 20)
+        username_layout.setContentsMargins(15, 15, 15, 15)
         username_input_layout = QHBoxLayout()
-        username_denial_layout = QHBoxLayout()
+        # username_denial_layout = QHBoxLayout()
         username_input_layout.addWidget(self.username_label)
         username_input_layout.addWidget(self.username_input)
-        username_denial_layout.addWidget(self.username_denial_label)
+        # username_denial_layout.addWidget(self.username_denial_label)
         username_layout.addLayout(username_input_layout)
-        username_layout.addLayout(username_denial_layout)
+        # username_layout.addLayout(username_denial_layout)
         
 
         # 水平佈局2，包含密碼標籤和輸入框
         password_layout = QVBoxLayout()
-        password_layout.setContentsMargins(20, 20, 20, 20)
+        password_layout.setContentsMargins(15, 15, 15, 15)
         password_input_layout = QHBoxLayout()
-        password_denial_layout = QHBoxLayout()
+        # password_denial_layout = QHBoxLayout()
         password_input_layout.addWidget(self.password_label)
         password_input_layout.addWidget(self.password_input)
-        password_denial_layout.addWidget(self.password_denial_label)
+        # password_denial_layout.addWidget(self.password_denial_label)
         password_layout.addLayout(password_input_layout)
-        password_layout.addLayout(password_denial_layout)
+        # password_layout.addLayout(password_denial_layout)
 
-        loginSuccess_layout = QVBoxLayout()
-        loginSuccess_layout.setContentsMargins(20, 20, 20, 20)
-        loginSuccess_layout.addWidget(self.login_label)
+        # loginSuccess_layout = QVBoxLayout()
+        # loginSuccess_layout.setContentsMargins(15, 15, 15, 15)
+        # loginSuccess_layout.addWidget(self.login_label)
 
 
         login_bt_layout = QHBoxLayout()
-        login_bt_layout.setContentsMargins(20, 20, 20, 20)
+        login_bt_layout.setContentsMargins(15, 15, 15, 15)
         login_bt_layout.addWidget(self.login_button)
 
         # 垂直佈局，包含所有元素
@@ -116,8 +116,8 @@ class id_LogIn_Frame(QWidget):
         id_LogIn_frame_layout.addStretch(1)
         id_LogIn_frame_layout.addLayout(username_layout)
         id_LogIn_frame_layout.addLayout(password_layout)
-        id_LogIn_frame_layout.addLayout(loginSuccess_layout)
-        id_LogIn_frame_layout.addStretch(1)
+        # id_LogIn_frame_layout.addLayout(loginSuccess_layout)
+        # id_LogIn_frame_layout.addStretch(1)
         id_LogIn_frame_layout.addLayout(login_bt_layout)
 
         # self.login_successful.connect(self.login_successful_callback)
