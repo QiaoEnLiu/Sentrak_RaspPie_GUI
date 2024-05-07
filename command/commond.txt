@@ -35,6 +35,7 @@ cd /media/joejoe/ESD-USB/
 cd /media/amin12-6/ESD-USB/
 sudo umount /media/joejoe/ESD-USB
 sudo umount /media/amin12-6/ESD-USB
+eject
 
 fc-list
 

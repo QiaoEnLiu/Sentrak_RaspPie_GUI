@@ -8,7 +8,7 @@
 
 try:
     
-    import sys, os, traceback, minimalmodbus, threading, platform, serial
+    import sys, os, traceback, minimalmodbus, threading, platform, serial,asyncio
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
 
@@ -60,18 +60,18 @@ spacer_right = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 spacer_left = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
 
-modbusTempUnit, sqlTempUnit = 0, 0
-modbusDateFormat, sqlDateFormat = 0, 0
+# modbusTempUnit, sqlTempUnit = 0, 0
+# modbusDateFormat, sqlDateFormat = 0, 0
 
-modbusGasUnit, sqlGasUnit = 0, 0
+# modbusGasUnit, sqlGasUnit = 0, 0
 
 
 # dateFormateIndex=2
 format_wedget = None
-oxygen_concentration = 0.00 # 12.56
+# oxygen_concentration = 0.00 # 12.56
 temperature_unit_text='Celsius' # Celsius, Fahrenheit
 temperature_unit_default='°C'
-temperature = 0.00 # 攝氏 16.8
+# temperature = 0.00 # 攝氏 16.8
 
 #endregion
 
@@ -93,6 +93,15 @@ class MyWindow(QMainWindow):
         self.setWindowTitle("Sentrak_RaspPie_GUI")
 
         self.isLogin=False
+
+        self.oxygen_concentration = 0.00
+        self.temperature = 0.00
+
+
+        self.sqlTempUnit = 0
+        self.sqlDateFormat = 0
+
+        self.sqlGasUnit = 0
 
         #region 視窗大小
 
@@ -229,10 +238,10 @@ class MyWindow(QMainWindow):
         # temperature_unit_default=unit_transfer.set_temperature_unit(unit=temperature_unit_text)
         # temperature=unit_transfer.convert_temperature(temperature=temperature,unit=temperature_unit_text)
         self.oxygen_label = QLabel("O<sub>2</sub>") # ° 為Alt 0176
-        self.o2Data = QLabel(f"{oxygen_concentration:.2f}")
+        self.o2Data = QLabel(f"{self.oxygen_concentration:.2f}")
         self.o2Unite = QLabel(" ppb")
         self.temperture_label=QLabel(f"T")
-        self.tempData = QLabel(f"{temperature:.2f}")
+        self.tempData = QLabel(f"{self.temperature:.2f}")
         self.tempUnit = QLabel(" °C")
         # self.oxygen_label.setAlignment(Qt.AlignCenter)  # 文字置中
         # self.temperture_label.setAlignment(Qt.AlignCenter)
@@ -426,6 +435,8 @@ class MyWindow(QMainWindow):
         PPV.timer.timeout.connect(self.update_datetime)
         PPV.timer.start(1000)  # 每秒更新一次
 
+
+
         # 更新一次日期時間，避免一開始顯示空白
         # self.update_datetime()
         #endregion
@@ -444,7 +455,7 @@ class MyWindow(QMainWindow):
             
     #region 時間更新
     def update_datetime(self):
-        global oxygen_concentration, temperature
+        # global oxygen_concentration, temperature
         try:
             #region 更新圖表
             
@@ -453,8 +464,8 @@ class MyWindow(QMainWindow):
 
             # 重新繪製折線圖
             self.plot_canvas.plot(temperature_unit = temperature_unit_text, 
-                                oxygen_concentration = oxygen_concentration, 
-                                temperature = temperature #temperature: Celsius, Fahrenheit
+                                oxygen_concentration = self.oxygen_concentration, 
+                                temperature = self.temperature #temperature: Celsius, Fahrenheit
                                 )  
 
             # 在這裡更新畫布
@@ -464,13 +475,13 @@ class MyWindow(QMainWindow):
             #region modbus RTU讀取（氧氣濃度、溫度）
             # 定義一個函數，用於在執行緒中執行Modbus讀取
             def modbus_read_thread():
-                global oxygen_concentration, temperature
+                # global oxygen_concentration, temperature
                 current_datetime = QDateTime.currentDateTime()
 
                 # 讀取SQL的暫存資料表
-                sqlGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
-                sqlDateFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
-                sqlTempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
+                self.sqlGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
+                self.sqlDateFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
+                self.sqlTempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
 
                 try:
                     # 成功連線下，以下讀取modbus可以執行
@@ -489,15 +500,15 @@ class MyWindow(QMainWindow):
 
 
                     # 讀取濃度、溫度變動值
-                    oxygen_concentration = PPV.instrument_ID3.read_float(PPV.R3X_address('Gas'), functioncode=4)
-                    temperature = PPV.instrument_ID3.read_float(PPV.R3X_address('Temperature'), functioncode=4)
+                    self.oxygen_concentration = PPV.instrument_ID3.read_float(PPV.R3X_address('Gas'), functioncode=4)
+                    self.temperature = PPV.instrument_ID3.read_float(PPV.R3X_address('Temperature'), functioncode=4)
 
                     # 讀取modbus的Reg設定值
                     # modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
                     # modbusDateFormat =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
                     # modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
 
-                    self.alarm1_label.setVisible(PPV.alarm(PySQL.selectAlarmRelay(), temperature, oxygen_concentration))
+                    self.alarm1_label.setVisible(PPV.alarm(PySQL.selectAlarmRelay(), self.temperature, self.oxygen_concentration))
 
                     if self.alarm1_label.isVisible():
                         self.alarmNull_label.setVisible(False)
@@ -542,22 +553,22 @@ class MyWindow(QMainWindow):
 
                     self.stateConnect_label.setText('離線')
                     # print(f'No response from the instrument: {e}')
-                except AttributeError as e: # 略過無法取得裝置變數的錯誤（因沒有埠號）
-                    pass
-                except serial.SerialException as e: # 略過未使用埠號、虛擬埠的錯誤
-                    pass
+                # except AttributeError as e: # 略過無法取得裝置變數的錯誤（因沒有埠號）
+                #     pass
+                # except serial.SerialException as e: # 略過未使用埠號、虛擬埠的錯誤
+                #     pass
                 except Exception as e:
                     traceback.print_exc()
                     print(f'Thread Inside Exception: {e}')
 
-                self.o2Data.setText(f"{oxygen_concentration:.2f}")
-                self.o2Unite.setText(f"{PPV.o2_GasUnitDist[sqlGasUnit]}")
+                self.o2Data.setText(f"{self.oxygen_concentration:.2f}")
+                self.o2Unite.setText(f"{PPV.o2_GasUnitDist[self.sqlGasUnit]}")
                     
-                self.tempData.setText(f"{temperature:.2f}")
-                self.tempUnit.setText(f"{PPV.tempUnitDist[sqlTempUnit]}")
+                self.tempData.setText(f"{self.temperature:.2f}")
+                self.tempUnit.setText(f"{PPV.tempUnitDist[self.sqlTempUnit]}")
             
                 # print(dateFormateIndex)
-                formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[sqlDateFormat][1]} hh:mm:ss")
+                formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[self.sqlDateFormat][1]} hh:mm:ss")
                 PPV.current_datetime = current_datetime
                 # print(formatted_datetime)
                 self.datetime.setText(formatted_datetime)
@@ -889,13 +900,14 @@ class MyWindow(QMainWindow):
     #endregion 
 
 #endregion
+
+
 if __name__ == '__main__':
 
 
     print("Current working directory:", os.getcwd())
 
     try:
-
         app = QApplication(sys.argv)
         window = MyWindow()
         sys.exit(app.exec_())
