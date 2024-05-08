@@ -457,26 +457,10 @@ class MyWindow(QMainWindow):
     def update_datetime(self):
         # global oxygen_concentration, temperature
         try:
-            #region 更新圖表
-            
-            # 清除之前的圖例
-            self.plot_canvas.ax.clear()
-
-            # 重新繪製折線圖
-            self.plot_canvas.plot(temperature_unit = temperature_unit_text, 
-                                oxygen_concentration = self.oxygen_concentration, 
-                                temperature = self.temperature #temperature: Celsius, Fahrenheit
-                                )  
-
-            # 在這裡更新畫布
-            self.plot_canvas.draw()
-            #endregion
-
             #region modbus RTU讀取（氧氣濃度、溫度）
             # 定義一個函數，用於在執行緒中執行Modbus讀取
             def modbus_read_thread():
                 # global oxygen_concentration, temperature
-                current_datetime = QDateTime.currentDateTime()
 
                 # 讀取SQL的暫存資料表
                 self.sqlGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
@@ -513,7 +497,7 @@ class MyWindow(QMainWindow):
                     if self.alarm1_label.isVisible():
                         self.alarmNull_label.setVisible(False)
 
-
+                    #region 讀取R4X
                     # 讀取地址範圍為 0 到 15 的保持寄存器值
                     values_0_to_15 = PPV.instrument_ID1.read_registers(0, 15, functioncode=3)
 
@@ -543,6 +527,7 @@ class MyWindow(QMainWindow):
                         else:
                             if value != int(PySQL.selectSQL_Reg(regDF=4, regKey=key)):
                                 PPV.instrument_ID1.write_register(key, int(PySQL.selectSQL_Reg(regDF=4, regKey=key)), functioncode=6)
+                    #endregion
 
                     self.stateConnect_label.setText('已連線')
                     # print(f'O2:{oxygen_concentration:.2f} {o2_GasUnitDist[setGasUnit]}, T:{temperature:.2f} {tempUnitDist[temp_unit]}')
@@ -553,10 +538,10 @@ class MyWindow(QMainWindow):
 
                     self.stateConnect_label.setText('離線')
                     # print(f'No response from the instrument: {e}')
-                # except AttributeError as e: # 略過無法取得裝置變數的錯誤（因沒有埠號）
-                #     pass
-                # except serial.SerialException as e: # 略過未使用埠號、虛擬埠的錯誤
-                #     pass
+                except AttributeError as e: # 略過無法取得裝置變數的錯誤（因沒有埠號）
+                    pass
+                except serial.SerialException as e: # 略過未使用埠號、虛擬埠的錯誤
+                    pass
                 except Exception as e:
                     traceback.print_exc()
                     print(f'Thread Inside Exception: {e}')
@@ -579,9 +564,25 @@ class MyWindow(QMainWindow):
             # 執行緒啟動與modbus互動
             modbus_thread = threading.Thread(target=modbus_read_thread)
             modbus_thread.start()
+            current_datetime = QDateTime.currentDateTime()
             # formatted_datetime = current_datetime.toString("yyyy-MM-dd hh:mm:ss")
             # self.datetime_label.setText(formatted_datetime)
             # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit_default}')
+
+            '''#region 更新圖表
+                
+            # 清除之前的圖例
+            self.plot_canvas.ax.clear()
+
+            # 重新繪製折線圖
+            self.plot_canvas.plot(temperature_unit = temperature_unit_text, 
+                                oxygen_concentration = self.oxygen_concentration, 
+                                temperature = self.temperature #temperature: Celsius, Fahrenheit
+                                )  
+
+            # 在這裡更新畫布
+            self.plot_canvas.draw()
+            #endregion'''
 
             #endregion
 
@@ -589,6 +590,7 @@ class MyWindow(QMainWindow):
         except Exception as e:
             traceback.print_exc()
             print(f'Exception in update_datetime: {e}')
+
 
     #endregion
 
