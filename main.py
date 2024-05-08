@@ -569,7 +569,7 @@ class MyWindow(QMainWindow):
             # self.datetime_label.setText(formatted_datetime)
             # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit_default}')
 
-            '''#region 更新圖表
+            #region 更新圖表
                 
             # 清除之前的圖例
             self.plot_canvas.ax.clear()
@@ -582,7 +582,7 @@ class MyWindow(QMainWindow):
 
             # 在這裡更新畫布
             self.plot_canvas.draw()
-            #endregion'''
+            #endregion
 
             #endregion
 
