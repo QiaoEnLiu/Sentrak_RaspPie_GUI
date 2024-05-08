@@ -80,7 +80,7 @@ class plotCanvas(FigureCanvas):
 
         # print(f'{self.x_data[-1]} O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit}')
         # print(f"{type(PySQL.selectSQL_Var('plotTime'))}:{PySQL.selectSQL_Var('plotTime')}")
-        PPV.plotTime = PPV.plotTimeDict[int(PySQL.selectSQL_Var('plotTime'))]
+        
         if PPV.plotTime == '5秒':
             plotTime_limit=5
         elif PPV.plotTime == '10秒':

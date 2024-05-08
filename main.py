@@ -8,7 +8,7 @@
 
 try:
     
-    import sys, os, traceback, minimalmodbus, threading, platform, serial,asyncio
+    import sys, os, traceback, minimalmodbus, threading, platform, serial
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
 
@@ -17,11 +17,10 @@ try:
     from PyQt5.QtWidgets import \
         QApplication, QMainWindow, QWidget, QStatusBar, QVBoxLayout,\
         QHBoxLayout, QLabel, QSpacerItem, QSizePolicy, QFrame, QGridLayout,\
-        QPushButton, QStackedWidget, QMessageBox, QDesktopWidget,\
-        QRadioButton, QButtonGroup
-    from PyQt5.QtCore import Qt, QTimer, QDateTime, QByteArray, pyqtSlot, pyqtSignal
-    from PyQt5.QtGui import QFont, QPixmap, QImage, QIcon
-    from pkg_resources import resource_filename
+        QPushButton, QStackedWidget, QMessageBox, QDesktopWidget\
+        
+    from PyQt5.QtCore import Qt, QDateTime
+    from PyQt5.QtGui import QFont
     from imgResource import setButtonIcon, setLabelIcon, \
         stateAlarm_icons, stateWire_icons, stateRecord_icons\
         ,stateBatteryCharge_icons ,stateBattery_icons ,stateInbMenu_icons, lock_icons
@@ -429,7 +428,7 @@ class MyWindow(QMainWindow):
 
         #endregion
 
-        #region 更新日期時間並持續讓modbus讀取資料進圖表    
+        #region 每秒動態更新（日期時間、警告、圖表及讀取modbus數據）    
         # self.timer = QTimer(self) # 更新日期時間的 QTimer
         # PPV.timer.timeout.connect(self.update_modbus_data)
         PPV.timer.timeout.connect(self.update_datetime)
@@ -453,11 +452,11 @@ class MyWindow(QMainWindow):
     #endregion
    
             
-    #region 時間更新
+    #region 動態更新
     def update_datetime(self):
         # global oxygen_concentration, temperature
         try:
-            #region modbus RTU讀取（氧氣濃度、溫度）
+            #region modbus RTU讀取
             # 定義一個函數，用於在執行緒中執行Modbus讀取
             def modbus_read_thread():
                 # global oxygen_concentration, temperature
@@ -466,7 +465,8 @@ class MyWindow(QMainWindow):
                 self.sqlGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
                 self.sqlDateFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
                 self.sqlTempUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 0))
-
+                
+                #region 讀取modbus數據
                 try:
                     # 成功連線下，以下讀取modbus可以執行
                     #region 讀取R1X（只要讀bit就好）
@@ -493,11 +493,6 @@ class MyWindow(QMainWindow):
                     # modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
 
                     #endregion
-
-                    self.alarm1_label.setVisible(PPV.alarm(PySQL.selectAlarmRelay(), self.temperature, self.oxygen_concentration))
-
-                    if self.alarm1_label.isVisible():
-                        self.alarmNull_label.setVisible(False)
 
                     #region 讀取R4X
                     # 讀取地址範圍為 0 到 15 的保持寄存器值
@@ -547,35 +542,46 @@ class MyWindow(QMainWindow):
                 except Exception as e:
                     traceback.print_exc()
                     print(f'Thread Inside Exception: {e}')
-
-                self.o2Data.setText(f"{self.oxygen_concentration:.2f}")
-                self.o2Unite.setText(f"{PPV.o2_GasUnitDist[self.sqlGasUnit]}")
-                    
-                self.tempData.setText(f"{self.temperature:.2f}")
-                self.tempUnit.setText(f"{PPV.tempUnitDist[self.sqlTempUnit]}")
-            
-                # print(dateFormateIndex)
-                formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[self.sqlDateFormat][1]} hh:mm:ss")
-                PPV.current_datetime = current_datetime
-                # print(formatted_datetime)
-                self.datetime.setText(formatted_datetime)
-                # print(self.datetime.text())
-
-                # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
+                #endregion
 
             # 執行緒啟動與modbus互動
             modbus_thread = threading.Thread(target=modbus_read_thread)
             modbus_thread.start()
-            current_datetime = QDateTime.currentDateTime()
-            # formatted_datetime = current_datetime.toString("yyyy-MM-dd hh:mm:ss")
-            # self.datetime_label.setText(formatted_datetime)
-            # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit_default}')
+            #endregion
 
+            #region 警告圖示動態顯示
+            self.alarm1_label.setVisible(PPV.alarm(PySQL.selectAlarmRelay(), self.temperature, self.oxygen_concentration))
+            if self.alarm1_label.isVisible():
+                self.alarmNull_label.setVisible(False)
+
+            #endregion
+            
+            #region 時間動態顯示
+            current_datetime = QDateTime.currentDateTime()
+            formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[self.sqlDateFormat][1]} hh:mm:ss")
+            PPV.current_datetime = current_datetime
+            self.datetime.setText(formatted_datetime)
+
+            #endregion
+
+            #region 氧氣濃度、溫度動態顯示
+            self.o2Data.setText(f"{self.oxygen_concentration:.2f}")
+            self.o2Unite.setText(f"{PPV.o2_GasUnitDist[self.sqlGasUnit]}")
+                    
+            self.tempData.setText(f"{self.temperature:.2f}")
+            self.tempUnit.setText(f"{PPV.tempUnitDist[self.sqlTempUnit]}")
+
+            # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
+            # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit_default}')
+            #endregion
+            
+            
             #region 更新圖表
                 
             # 清除之前的圖例
             self.plot_canvas.ax.clear()
 
+            PPV.plotTime = PPV.plotTimeDict[int(PySQL.selectSQL_Var('plotTime'))]
             # 重新繪製折線圖
             self.plot_canvas.plot(temperature_unit = temperature_unit_text, 
                                 oxygen_concentration = self.oxygen_concentration, 
@@ -586,9 +592,6 @@ class MyWindow(QMainWindow):
             self.plot_canvas.draw()
             #endregion
 
-            #endregion
-
-            
         except Exception as e:
             traceback.print_exc()
             print(f'Exception in update_datetime: {e}')
