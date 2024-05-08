@@ -482,7 +482,7 @@ class MyWindow(QMainWindow):
                             PPV.instrument_ID1.write_bit(address, int(PySQL.selectSQL_Reg(regDF=1, regKey=address)))
                     #endregion
 
-
+                    #region 讀取R3X
                     # 讀取濃度、溫度變動值
                     self.oxygen_concentration = PPV.instrument_ID3.read_float(PPV.R3X_address('Gas'), functioncode=4)
                     self.temperature = PPV.instrument_ID3.read_float(PPV.R3X_address('Temperature'), functioncode=4)
@@ -491,6 +491,8 @@ class MyWindow(QMainWindow):
                     # modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
                     # modbusDateFormat =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
                     # modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
+
+                    #endregion
 
                     self.alarm1_label.setVisible(PPV.alarm(PySQL.selectAlarmRelay(), self.temperature, self.oxygen_concentration))
 
