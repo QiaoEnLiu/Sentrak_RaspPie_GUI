@@ -40,7 +40,7 @@ class plotCanvas(FigureCanvas):
         self.ax = self.figure.add_subplot(111)
         self.ax.spines['right'].set_visible(False)
         self.ax.spines['top'].set_visible(False)
-        
+
     #region 繪製圖表
     def plot(self, temperature_unit, oxygen_concentration, temperature):
         global plotTime_limit
@@ -63,7 +63,7 @@ class plotCanvas(FigureCanvas):
             elif 'WenQuanYi Zen Hei' in font.name:
                 selected_font = font.fname
                 break
-        #end region
+        #endregion
 
         # 使用選擇的字型進行圖表繪製
         font = FontProperties(fname=selected_font, size=10)
