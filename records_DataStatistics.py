@@ -46,8 +46,8 @@ class records_DataStatisticsFrame(QWidget):
 
         setRecordDateLayout = QVBoxLayout()
 
-        startCalendar = CustomDateEdit(self)
-        endCalendar = CustomDateEdit(self)
+        # startCalendar = CustomDateEdit(self)
+        # endCalendar = CustomDateEdit(self)
 
         # startCalendar.setNavigationBarVisible(True)
         # endCalendar.setNavigationBarVisible(True)
@@ -61,7 +61,7 @@ class records_DataStatisticsFrame(QWidget):
         # self.startDate = QDateEdit(calendarPopup = True, date = QDate.currentDate())
         self.startDate = QDateEdit(self)
         self.startDate.setCalendarPopup(True)
-        self.startDate.setCalendarWidget(startCalendar)
+        # self.startDate.setCalendarWidget(startCalendar)
         self.startDate.setDate(QDate.currentDate())
         self.startDate.setDisplayFormat(self.dateFormat)
 
@@ -82,7 +82,7 @@ class records_DataStatisticsFrame(QWidget):
         # self.endDate = QDateEdit(calendarPopup = True, date = QDate.currentDate())
         self.endDate = QDateEdit(self)
         self.endDate.setCalendarPopup(True)
-        self.endDate.setCalendarWidget(endCalendar)
+        # self.endDate.setCalendarWidget(endCalendar)
         self.endDate.setDate(QDate.currentDate())
         self.endDate.setDisplayFormat(self.dateFormat)
         self.endDate.setFont(font)
