@@ -141,16 +141,3 @@ class CustomDateEdit(QCalendarWidget):
         super().__init__(parent)
         self.setNavigationBarVisible(True)
 
-# class CustomDateEdit(QDateEdit):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-        
-        
-    # def showPopup(self):
-    #     self.calendarWidget().show()
-    #     self.calendarWidget().raise_()
-    #     self.calendarWidget().activateWindow()
-        
-    #     # 顯示年份和月份選擇
-    #     self.calendarWidget().showNavigationBar()
-    #     self.calendarWidget().showMonth()
