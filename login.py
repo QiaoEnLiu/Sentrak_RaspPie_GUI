@@ -120,7 +120,7 @@ class LoginDialog(QDialog):
         self.setWindowTitle('員工登入')
 
         # 設置對話框大小
-        self.setFixedSize(480, 280)
+        self.setFixedSize(480, 360)
 
     def handle_login(self): #讀取字典
         # 獲取輸入的帳號和密碼

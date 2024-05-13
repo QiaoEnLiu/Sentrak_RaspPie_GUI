@@ -6,7 +6,7 @@
 try:
     import traceback
     from PyQt5.QtCore import Qt, QDate
-    from PyQt5.QtWidgets import QWidget, QLabel,QLineEdit, QDateEdit, QVBoxLayout, QHBoxLayout, QPushButton, QCalendarWidget, QDialogButtonBox, QDialog
+    from PyQt5.QtWidgets import QWidget, QLabel,QLineEdit, QDateEdit, QVBoxLayout, QHBoxLayout, QPushButton, QCalendarWidget, QDialogButtonBox, QDialog,QMessageBox
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
@@ -48,21 +48,24 @@ class records_DataStatisticsFrame(QWidget):
 
         setStartLayout = QVBoxLayout()
         self.startLabel = QLabel("啟始時間：")
+        # testCalendar = QCalendarWidget()
         self.startLabel.setFont(font)
         self.startDate = QLineEdit()
         self.startDate.setPlaceholderText("Click me to open calendar")
-        self.startDate.mousePressEvent = self.openCalendar
+        self.startDate.mousePressEvent = self.openDialogCalendar
         
         self.startDate.setFont(font)
         setStartLayout.addWidget(self.startLabel)
         setStartLayout.addWidget(self.startDate)
+        # setStartLayout.addWidget(testCalendar)
+
 
         setEndLayout = QVBoxLayout()
         self.endLabel = QLabel("結束時間：")
         self.endLabel.setFont(font)
         self.endDate = QLineEdit()
         self.endDate.setPlaceholderText("Click me to open calendar")
-        self.endDate.mousePressEvent = self.openCalendar
+        self.endDate.mousePressEvent = self.openMessageCalendar
         
         self.endDate.setFont(font)
         setEndLayout.addWidget(self.endLabel)
@@ -77,9 +80,9 @@ class records_DataStatisticsFrame(QWidget):
         set_button.setFont(font)
         setLayout.addWidget(set_button)
 
-        # setRecordDateLayout.addStretch()
+        setRecordDateLayout.addStretch()
         setRecordDateLayout.addLayout(setStartLayout)
-        # setRecordDateLayout.addStretch()
+        setRecordDateLayout.addStretch()
         setRecordDateLayout.addLayout(setEndLayout)
         setRecordDateLayout.addStretch()
         setRecordDateLayout.addLayout(setLayout)
@@ -95,9 +98,17 @@ class records_DataStatisticsFrame(QWidget):
         # 設定當前顯示的子畫面索引
         print(f'{title} Index: {self.stacked_widget.count()}')
 
-    def openCalendar(self, event):
+    def openDialogCalendar(self, event):
         if event.button() == Qt.LeftButton:  # 檢查是否是左鍵按下
             dialog = CalendarDialog(self)
+            if dialog.exec_() == QDialog.Accepted:
+                print("User clicked OK")
+            else:
+                print("User clicked Cancel")
+
+    def openMessageCalendar(self, event):
+        if event.button() == Qt.LeftButton:  # 檢查是否是左鍵按下
+            dialog = CalendarMessageBox(self)
             if dialog.exec_() == QDialog.Accepted:
                 print("User clicked OK")
             else:
@@ -129,8 +140,9 @@ class CalendarDialog(QDialog):
         self.selectedDateLabel = QLabel("選擇時間：")
         self.selectedDateLabel.setAlignment(Qt.AlignLeft)
 
-        self.calendar = QCalendarWidget()
+        self.calendar = QCalendarWidget(self)
         self.calendar.setGridVisible(True)
+        self.calendar.setNavigationBarVisible(True)
 
         layout = QVBoxLayout()
         layout.addWidget(self.selectedDateLabel)
@@ -148,12 +160,27 @@ class CalendarDialog(QDialog):
         mainLayout = QVBoxLayout()
         mainLayout.addWidget(widget)
 
+        self.setFixedSize(480, 280)
+
         self.setLayout(mainLayout)
 
     def accept(self):
         selectedDate = self.calendar.selectedDate()
         print("Selected Date:", selectedDate.toString("yyyy-MM-dd"))
         super(CalendarDialog, self).accept()
+
+class CalendarMessageBox(QMessageBox):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle('選擇日期')
+
+        self.calendar = QCalendarWidget()
+        self.calendar.setGridVisible(True)
+        self.setText('選擇日期:')
+        self.layout().addWidget(self.calendar)
+
+    def selectedDate(self):
+        return self.calendar.selectedDate()
 
 
 
