@@ -6,7 +6,7 @@
 try:
     import traceback
     from PyQt5.QtCore import Qt, QDate
-    from PyQt5.QtWidgets import QWidget, QLabel, QDateEdit, QVBoxLayout, QHBoxLayout, QPushButton, QCalendarWidget
+    from PyQt5.QtWidgets import QWidget, QLabel,QLineEdit, QDateEdit, QVBoxLayout, QHBoxLayout, QPushButton, QCalendarWidget, QDialogButtonBox, QDialog
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
@@ -46,53 +46,30 @@ class records_DataStatisticsFrame(QWidget):
 
         setRecordDateLayout = QVBoxLayout()
 
-        # startCalendar = CustomDateEdit(self)
-        # endCalendar = CustomDateEdit(self)
-
-        # startCalendar.setNavigationBarVisible(True)
-        # endCalendar.setNavigationBarVisible(True)
-
-
         setStartLayout = QVBoxLayout()
-        # startLabelLayout = QVBoxLayout()
-        # startDateLayout = QVBoxLayout()
         self.startLabel = QLabel("啟始時間：")
         self.startLabel.setFont(font)
-        # self.startDate = QDateEdit(calendarPopup = True, date = QDate.currentDate())
-        self.startDate = QDateEdit(self)
-        self.startDate.setCalendarPopup(True)
-        # self.startDate.setCalendarWidget(startCalendar)
-        self.startDate.setDate(QDate.currentDate())
-        self.startDate.setDisplayFormat(self.dateFormat)
-
-        # self.startDate.setMinimumDate(QDate(2000, 1, 1))
-        # self.startDate.setMaximumDate(QDate(2025, 12, 31))
-        # self.startDate.setStyleSheet('Fusion')
+        self.startDate = QLineEdit()
+        self.startDate.setPlaceholderText("Click me to open calendar")
+        self.startDate.mousePressEvent = self.openCalendar
+        
         self.startDate.setFont(font)
         setStartLayout.addWidget(self.startLabel)
         setStartLayout.addWidget(self.startDate)
-        # setStartLayout.addLayout(startLabelLayout)
-        # setStartLayout.addLayout(startDateLayout)
 
         setEndLayout = QVBoxLayout()
-        # endLabelLayout = QVBoxLayout()
-        # endDateLayout = QVBoxLayout()
         self.endLabel = QLabel("結束時間：")
         self.endLabel.setFont(font)
-        # self.endDate = QDateEdit(calendarPopup = True, date = QDate.currentDate())
-        self.endDate = QDateEdit(self)
-        self.endDate.setCalendarPopup(True)
-        # self.endDate.setCalendarWidget(endCalendar)
-        self.endDate.setDate(QDate.currentDate())
-        self.endDate.setDisplayFormat(self.dateFormat)
+        self.endDate = QLineEdit()
+        self.endDate.setPlaceholderText("Click me to open calendar")
+        self.endDate.mousePressEvent = self.openCalendar
+        
         self.endDate.setFont(font)
         setEndLayout.addWidget(self.endLabel)
         setEndLayout.addWidget(self.endDate)
-        # setEndLayout.addLayout(endLabelLayout)
-        # setEndLayout.addLayout(endDateLayout)
 
-        self.startDate.dateChanged.connect(self.updateEndDate)
-        self.endDate.dateChanged.connect(self.checkEndDate)
+        # self.startDate.dateChanged.connect(self.updateEndDate)
+        # self.endDate.dateChanged.connect(self.checkEndDate)
 
         setLayout = QVBoxLayout()
         set_button = QPushButton('設定區間', self)
@@ -117,6 +94,14 @@ class records_DataStatisticsFrame(QWidget):
         self.current_page_index = end_frame_index # 將當前的畫面索引設為 plot_page_index
         # 設定當前顯示的子畫面索引
         print(f'{title} Index: {self.stacked_widget.count()}')
+
+    def openCalendar(self, event):
+        if event.button() == Qt.LeftButton:  # 檢查是否是左鍵按下
+            dialog = CalendarDialog(self)
+            if dialog.exec_() == QDialog.Accepted:
+                print("User clicked OK")
+            else:
+                print("User clicked Cancel")
     
     def updateEndDate(self, date):
         self.endDate.setMinimumDate(date)
@@ -136,8 +121,39 @@ class records_DataStatisticsFrame(QWidget):
                         self.endLabel.text() + selectEndDate  + "\n\r"
         print(setIntervalInfo)
 
-class CustomDateEdit(QCalendarWidget):
+class CalendarDialog(QDialog):
     def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setNavigationBarVisible(True)
+        super(CalendarDialog, self).__init__(parent)
+        self.setWindowTitle('Select Date')
+
+        self.selectedDateLabel = QLabel("選擇時間：")
+        self.selectedDateLabel.setAlignment(Qt.AlignLeft)
+
+        self.calendar = QCalendarWidget()
+        self.calendar.setGridVisible(True)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.selectedDateLabel)
+        layout.addWidget(self.calendar)
+
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttonBox.accepted.connect(self.accept)
+        buttonBox.rejected.connect(self.reject)
+
+        layout.addWidget(buttonBox)
+
+        widget = QWidget()
+        widget.setLayout(layout)
+
+        mainLayout = QVBoxLayout()
+        mainLayout.addWidget(widget)
+
+        self.setLayout(mainLayout)
+
+    def accept(self):
+        selectedDate = self.calendar.selectedDate()
+        print("Selected Date:", selectedDate.toString("yyyy-MM-dd"))
+        super(CalendarDialog, self).accept()
+
+
 
