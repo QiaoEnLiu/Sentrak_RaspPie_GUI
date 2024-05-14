@@ -42,7 +42,17 @@ class CalendarDialog(QDialog):
 class MainApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.initUI()
+        # self.initUI()
+        mainLayout = QVBoxLayout()
+        self.setGeometry(100, 100, 300, 200)
+        self.setWindowTitle('Main Window')
+
+        self.lineEdit = QLineEdit(self)
+        self.lineEdit.setGeometry(100, 50, 100, 30)
+        self.lineEdit.setPlaceholderText("Click me to open calendar")
+        self.lineEdit.mousePressEvent = self.openCalendar  # 將 mousePressEvent 設置為 openCalendar 函數
+        mainLayout.addWidget(self.lineEdit)
+
 
     def initUI(self):
         self.setGeometry(100, 100, 300, 200)

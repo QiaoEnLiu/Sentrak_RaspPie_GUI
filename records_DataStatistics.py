@@ -6,7 +6,7 @@
 try:
     import traceback
     from PyQt5.QtCore import Qt, QDate
-    from PyQt5.QtWidgets import QWidget, QLabel,QLineEdit, QDateEdit, QVBoxLayout, QHBoxLayout, QPushButton, QCalendarWidget, QDialogButtonBox, QDialog,QMessageBox
+    from PyQt5.QtWidgets import QWidget, QLabel,QLineEdit, QDateEdit, QVBoxLayout, QHBoxLayout, QPushButton, QCalendarWidget, QDialogButtonBox, QDialog, QMessageBox, QDateTimeEdit
     from PyQt5.QtGui import QFont
 
     import ProjectPublicVariable as PPV
@@ -48,16 +48,15 @@ class records_DataStatisticsFrame(QWidget):
 
         setStartLayout = QVBoxLayout()
         self.startLabel = QLabel("啟始時間：")
-        # testCalendar = QCalendarWidget()
         self.startLabel.setFont(font)
         self.startDate = QLineEdit()
         self.startDate.setPlaceholderText("Click me to open calendar")
         self.startDate.mousePressEvent = self.openDialogCalendar
         
+        
         self.startDate.setFont(font)
         setStartLayout.addWidget(self.startLabel)
         setStartLayout.addWidget(self.startDate)
-        # setStartLayout.addWidget(testCalendar)
 
 
         setEndLayout = QVBoxLayout()
@@ -65,7 +64,7 @@ class records_DataStatisticsFrame(QWidget):
         self.endLabel.setFont(font)
         self.endDate = QLineEdit()
         self.endDate.setPlaceholderText("Click me to open calendar")
-        self.endDate.mousePressEvent = self.openMessageCalendar
+        self.endDate.mousePressEvent = self.openDialogCalendar
         
         self.endDate.setFont(font)
         setEndLayout.addWidget(self.endLabel)
@@ -137,15 +136,44 @@ class CalendarDialog(QDialog):
         super(CalendarDialog, self).__init__(parent)
         self.setWindowTitle('Select Date')
 
-        self.selectedDateLabel = QLabel("選擇時間：")
-        self.selectedDateLabel.setAlignment(Qt.AlignLeft)
+        # self.selectedDateLabel = QLabel("選擇時間：")
+        # self.selectedDateLabel.setAlignment(Qt.AlignLeft)
 
-        self.calendar = QCalendarWidget(self)
+        self.calendar = QCalendarWidget()
         self.calendar.setGridVisible(True)
         self.calendar.setNavigationBarVisible(True)
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.selectedDateLabel)
+        self. calendar.setStyleSheet("""
+            QCalendarWidget {
+                background-color: white;
+                border: 2px solid #2a82da;
+            }
+
+            QCalendarWidget QToolButton {
+                color: #2a82da;
+                font-weight: bold;
+            }
+
+            QCalendarWidget QToolButton:hover {
+                background-color: #2a82da;
+                color: white;
+            }
+
+            QCalendarWidget QToolButton#qt_calendar_prevmonth {
+                qproperty-icon: url(:/qss_icons/rc/arrow_left.png);
+            }
+
+            QCalendarWidget QToolButton#qt_calendar_nextmonth {
+                qproperty-icon: url(:/qss_icons/rc/arrow_right.png);
+            }
+
+            QCalendarWidget QSpinBox {
+                width: 60px;
+            }
+        """)
+
+        layout = QVBoxLayout(self)
+        # layout.addWidget(self.selectedDateLabel)
         layout.addWidget(self.calendar)
 
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
