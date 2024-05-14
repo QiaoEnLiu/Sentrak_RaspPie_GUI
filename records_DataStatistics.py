@@ -105,13 +105,6 @@ class records_DataStatisticsFrame(QWidget):
             else:
                 print("User clicked Cancel")
 
-    def openMessageCalendar(self, event):
-        if event.button() == Qt.LeftButton:  # 檢查是否是左鍵按下
-            dialog = CalendarMessageBox(self)
-            if dialog.exec_() == QDialog.Accepted:
-                print("User clicked OK")
-            else:
-                print("User clicked Cancel")
     
     def updateEndDate(self, date):
         self.endDate.setMinimumDate(date)
@@ -132,48 +125,77 @@ class records_DataStatisticsFrame(QWidget):
         print(setIntervalInfo)
 
 class CalendarDialog(QDialog):
+    
     def __init__(self, parent=None):
         super(CalendarDialog, self).__init__(parent)
         self.setWindowTitle('Select Date')
+        font.setPointSize(20)
 
-        # self.selectedDateLabel = QLabel("選擇時間：")
-        # self.selectedDateLabel.setAlignment(Qt.AlignLeft)
+        self.selectedDateLabel = QLabel("選擇時間：")
+        self.selectedDateLabel.setAlignment(Qt.AlignLeft)
+        self.selectedDateLabel.setFont(font)
 
+        font.setPointSize(16)
         self.calendar = QCalendarWidget()
         self.calendar.setGridVisible(True)
-        self.calendar.setNavigationBarVisible(True)
+        # self.calendar.setNavigationBarVisible(True)
+        self.calendar.setFont(font)
 
-        self. calendar.setStyleSheet("""
+        #region 以下客製化樣式是解決年份及月份未顯示的問題
+        self.calendar.setStyleSheet("""
             QCalendarWidget {
-                background-color: white;
-                border: 2px solid #2a82da;
+                background-color: black;
+                border: 2px solid #000000;
             }
 
             QCalendarWidget QToolButton {
-                color: #2a82da;
+                color: #000000;
                 font-weight: bold;
             }
 
             QCalendarWidget QToolButton:hover {
                 background-color: #2a82da;
-                color: white;
+                color: black;
+            }
+            
+            QCalendarWidget QMenu {
+                background-color: white;
             }
 
-            QCalendarWidget QToolButton#qt_calendar_prevmonth {
-                qproperty-icon: url(:/qss_icons/rc/arrow_left.png);
+            QCalendarWidget QMenu::item {
+                color: black;
             }
 
-            QCalendarWidget QToolButton#qt_calendar_nextmonth {
-                qproperty-icon: url(:/qss_icons/rc/arrow_right.png);
+            QCalendarWidget QMenu::item:selected {
+                background-color: #2a82da;
             }
+                                    
+            QCalendarWidget QAbstractItemView:enabled {
+                color: black;
+            }
+
+            QCalendarWidget QAbstractItemView:enabled:hover {
+                background-color: #2a82da;
+                color: black;
+            }
+
+            QCalendarWidget QAbstractItemView:enabled:selected {
+                background-color: #2a82da;
+                color: black;
+            }
+
 
             QCalendarWidget QSpinBox {
                 width: 60px;
             }
+                                    
+                                     
+
         """)
+        #endregion
 
         layout = QVBoxLayout(self)
-        # layout.addWidget(self.selectedDateLabel)
+        layout.addWidget(self.selectedDateLabel)
         layout.addWidget(self.calendar)
 
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
@@ -188,7 +210,7 @@ class CalendarDialog(QDialog):
         mainLayout = QVBoxLayout()
         mainLayout.addWidget(widget)
 
-        self.setFixedSize(480, 280)
+        self.setFixedSize(480, 360)
 
         self.setLayout(mainLayout)
 
@@ -197,18 +219,6 @@ class CalendarDialog(QDialog):
         print("Selected Date:", selectedDate.toString("yyyy-MM-dd"))
         super(CalendarDialog, self).accept()
 
-class CalendarMessageBox(QMessageBox):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle('選擇日期')
-
-        self.calendar = QCalendarWidget()
-        self.calendar.setGridVisible(True)
-        self.setText('選擇日期:')
-        self.layout().addWidget(self.calendar)
-
-    def selectedDate(self):
-        return self.calendar.selectedDate()
 
 
 

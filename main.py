@@ -431,8 +431,8 @@ class MyWindow(QMainWindow):
         #region 每秒動態更新（日期時間、警告、圖表及讀取modbus數據）    
         # self.timer = QTimer(self) # 更新日期時間的 QTimer
         # PPV.timer.timeout.connect(self.update_modbus_data)
-        PPV.timer.timeout.connect(self.update)
-        PPV.timer.start(1000)  # 每秒更新一次
+        # PPV.timer.timeout.connect(self.update)
+        # PPV.timer.start(1000)  # 每秒更新一次
 
 
 

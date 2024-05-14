@@ -15,6 +15,62 @@ class CalendarDialog(QDialog):
         self.calendar = QCalendarWidget()
         self.calendar.setGridVisible(True)
 
+        self.calendar.setStyleSheet("""
+            QCalendarWidget {
+                background-color: black;
+                border: 2px solid #000000;
+            }
+
+            QCalendarWidget QToolButton {
+                color: #000000;
+                font-weight: bold;
+            }
+
+            QCalendarWidget QToolButton:hover {
+                background-color: #2a82da;
+                color: black;
+            }
+                                    
+            QCalendarWidget QMenu {
+                background-color: white;
+            }
+
+            QCalendarWidget QMenu::item {
+                color: black;
+            }
+
+            QCalendarWidget QMenu::item:selected {
+                background-color: #2a82da;
+            }
+                                     
+            QCalendarWidget QAbstractItemView:enabled {
+                color: black;
+            }
+
+            QCalendarWidget QAbstractItemView:enabled:hover {
+                background-color: #2a82da;
+                color: black;
+            }
+
+            QCalendarWidget QAbstractItemView:enabled:selected {
+                background-color: #2a82da;
+                color: black;
+            }
+                                    
+            QCalendarWidget QSpinBox {
+                width: 60px;
+            }
+                                    
+                                    
+            # QCalendarWidget QToolButton#qt_calendar_prevmonth {
+            #     qproperty-icon: url(:/qss_icons/rc/arrow_left.png);
+            # }
+
+            # QCalendarWidget QToolButton#qt_calendar_nextmonth {
+            #     qproperty-icon: url(:/qss_icons/rc/arrow_right.png);
+            # }
+        """)
+
         layout = QVBoxLayout()
         layout.addWidget(self.selectedDateLabel)
         layout.addWidget(self.calendar)
