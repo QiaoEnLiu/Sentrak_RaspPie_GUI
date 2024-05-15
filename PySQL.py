@@ -25,9 +25,12 @@ def execute_query(query, params=()):
 
 # 針對新增、刪除、修改的提交
 def commit_SQL():
+    try:
         with sqlite3.connect(db_path) as conn:
-                conn.commit()   # 提交資料庫更改
-                print("Commit To SQL Success\n")
+            conn.commit()   # 提交資料庫更改
+            print("Commit To SQL Success\n")
+    except sqlite3.Error as e:
+        print(f"Error connecting to SQLite database: {e}\n")
 
 #endregion
 
@@ -54,7 +57,7 @@ def updateSQL_Reg(regDF, regKey, updateValue):
         query = "UPDATE {} SET Value = ? WHERE Reg = ?".format(dataFrame)
         # 嘗試執行更新查詢
         execute_query(query, (updateValue, regKey,))
-        print(f"\nSQL Update Success:\n\r--{regDFs[regDF]} Address: {regKey}\n\r--Update Value: {updateValue}")
+        print(f"\nSQL Update:\n\r--{regDFs[regDF]} Address: {regKey}\n\r--Update Value: {updateValue}")
         commit_SQL()
 
 
@@ -83,13 +86,16 @@ def updateSQL_Reg(regDF, regKey, updateValue):
 def selectSQL_Var(var):
         query = "SELECT Value FROM otherCacheVariable WHERE Variable = ?"
         result = execute_query(query, (var,))
+        # for i in result:
+        #         for j in i:
+        #                 print(j)
         return result[0][0] if result else None
 
 def updateSQL_Var(var, updateValue):
         query = "UPDATE otherCacheVariable SET Value = ? WHERE Variable = ?"
         execute_query(query, (updateValue, var,))
         commit_SQL()
-        print(f"\nSQL Update Success:\n\r--otherCacheVariable Address: {var}\n\r--Update Value: {updateValue}")
+        print(f"\nSQL Update :\n\r--otherCacheVariable Address: {var}\n\r--Update Value: {updateValue}")
 #endregion
         
 #region Alarm狀態暫存
@@ -110,10 +116,10 @@ def selectAlarmRelay():
 def updateAlarmRelay(alarmID, status, value):
         if status[1] == 0:
                 query = "UPDATE alarmRelay SET status = ?, value_o2 = ? WHERE relayID = ?"
-                print(f"\nSQL Update Success:\n\r--alarmRelay relayID: {alarmID}\n\r--Update:(status: {status}) ,(value_o2: {value})")
+                print(f"\nSQL Update:\n\r--alarmRelay relayID: {alarmID}\n\r--Update:(status: {status}) ,(value_o2: {value})")
         else:
                 query = "UPDATE alarmRelay SET status = ?, value_temp = ? WHERE relayID = ?"
-                print(f"\nSQL Update Success:\n\r--alarmRelay relayID: {alarmID}\n\r--Update:(status: {status}) ,(value_temp: {value})")
+                print(f"\nSQL Update:\n\r--alarmRelay relayID: {alarmID}\n\r--Update:(status: {status}) ,(value_temp: {value})")
         execute_query(query, (status, value, alarmID,))
         
 #endregion
@@ -140,7 +146,7 @@ def updateNetSetting(ipInfo):
         # query = "Insert Into setInternet Values (?,?,?,?,?,?)"
         query = "Insert Into setInternet (User,Time,IPv4,SubnetMask,DefaultGateway,Hostname) Values (?,?,?,?,?,?)"
         execute_query(query, (IPS["User"], IPS["Time"], IPS["IPv4"], IPS["Subnet Mask"], IPS["Default Gateway"], IPS["Hostname"],))
-        print(f"Insert SQL setInternet Table Success:\n\r{IPS}")
+        print(f"Insert SQL setInternet Table:\n\r{IPS}")
 
 
 

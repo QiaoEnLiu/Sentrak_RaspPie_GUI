@@ -26,6 +26,15 @@ class records_DataStatisticsFrame(QWidget):
         self.title = title
 
         self.dateFormat = PPV.dateFormat[int(PySQL.selectSQL_Reg(4, 1))][1]
+
+        self.cacheStartDate = PySQL.selectSQL_Var('recordStartDate')
+        self.cacheEndDate = PySQL.selectSQL_Var('recordEndDate')
+
+        if self.cacheStartDate is None:
+            self.cacheStartDate = PPV.current_datetime.toString(self.dateFormat)
+
+        if self.cacheEndDate is None:
+            self.cacheEndDate = PPV.current_datetime.toString(self.dateFormat)
         
         title_label = QLabel(self.title)
         title_label.setAlignment(Qt.AlignCenter)  
@@ -49,9 +58,10 @@ class records_DataStatisticsFrame(QWidget):
         setStartLayout = QVBoxLayout()
         self.startLabel = QLabel("啟始時間：")
         self.startLabel.setFont(font)
-        self.startDate = QLineEdit()
-        self.startDate.setPlaceholderText("Click me to open calendar")
-        self.startDate.mousePressEvent = self.openDialogCalendar
+        self.startDate = QLineEdit(self.cacheStartDate)
+        # self.startDate.setPlaceholderText(self.cacheStartDate)
+        self.startDate.mousePressEvent = self.openDialogCalendar(self.startDate)
+        
         
         
         self.startDate.setFont(font)
@@ -62,9 +72,11 @@ class records_DataStatisticsFrame(QWidget):
         setEndLayout = QVBoxLayout()
         self.endLabel = QLabel("結束時間：")
         self.endLabel.setFont(font)
-        self.endDate = QLineEdit()
-        self.endDate.setPlaceholderText("Click me to open calendar")
-        self.endDate.mousePressEvent = self.openDialogCalendar
+        self.endDate = QLineEdit(self.cacheEndDate)
+        # self.endDate.setPlaceholderText(self.cacheEndDate)
+        self.endDate.mousePressEvent = self.openDialogCalendar(self.endDate)
+        
+        
         
         self.endDate.setFont(font)
         setEndLayout.addWidget(self.endLabel)
@@ -97,33 +109,42 @@ class records_DataStatisticsFrame(QWidget):
         # 設定當前顯示的子畫面索引
         print(f'{title} Index: {self.stacked_widget.count()}')
 
-    def openDialogCalendar(self, event):
-        if event.button() == Qt.LeftButton:  # 檢查是否是左鍵按下
-            dialog = CalendarDialog(self)
-            if dialog.exec_() == QDialog.Accepted:
-                print("User clicked OK")
-            else:
-                print("User clicked Cancel")
+    def openDialogCalendar(self, line_edit):
+        def handle_event(event):
+            if event.button() == Qt.LeftButton:
+                selected_date = self.selectDateFromDialog()
+                if selected_date:
+                    line_edit.setText(selected_date)
+
+        return handle_event
+
+    def selectDateFromDialog(self):
+        dialog = CalendarDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
+            return dialog.calendar.selectedDate().toString(self.dateFormat)
+        return None
 
     
-    def updateEndDate(self, date):
-        self.endDate.setMinimumDate(date)
-    
-    def checkEndDate(self, date):
-        min_date = self.startDate.date()
-        if date < min_date:
-            self.endDate.setDate(min_date)
-    
     def setDateInterval(self):
-        selectStartDate = self.startDate.date().toString(self.dateFormat)
-        selectEndDate = self.endDate.date().toString(self.dateFormat)
+        selectStartDate = self.startDate.text()
+        selectEndDate = self.endDate.text()
+
+        if selectStartDate and selectEndDate:
+            if QDate.fromString(selectStartDate, self.dateFormat) > QDate.fromString(selectEndDate, self.dateFormat):
+                # 開始日期在結束日期之後，交換它們
+                selectStartDate, selectEndDate = selectEndDate, selectStartDate
+                self.startDate.setText(selectStartDate)
+                self.endDate.setText(selectEndDate)
 
         setIntervalInfo = "\n\r" + \
                         self.title + "：\n\r" + \
                         self.startLabel.text() + selectStartDate + "\n\r" + \
                         self.endLabel.text() + selectEndDate  + "\n\r"
         print(setIntervalInfo)
+        PySQL.updateSQL_Var('recordStartDate',selectStartDate)
+        PySQL.updateSQL_Var('recordEndDate', selectEndDate)
 
+#region CalendarDialog
 class CalendarDialog(QDialog):
     
     def __init__(self, parent=None):
@@ -216,8 +237,10 @@ class CalendarDialog(QDialog):
 
     def accept(self):
         selectedDate = self.calendar.selectedDate()
-        print("Selected Date:", selectedDate.toString("yyyy-MM-dd"))
+        # print("Selected Date:", selectedDate.toString("yyyy-MM-dd"))
         super(CalendarDialog, self).accept()
+        return selectedDate
+#endregion
 
 
 
