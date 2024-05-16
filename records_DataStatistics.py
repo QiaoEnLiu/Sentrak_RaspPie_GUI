@@ -25,14 +25,26 @@ class records_DataStatisticsFrame(QWidget):
         self.sub_pages = sub_pages
         self.title = title
 
+        self.recordStart = ""
+        self.recordEnd = ""
+
         self.dateFormat = PPV.dateFormat[int(PySQL.selectSQL_Reg(4, 1))][1]
 
-        self.cacheStartDate = PySQL.selectSQL_Var('recordStartDate')
-        self.cacheEndDate = PySQL.selectSQL_Var('recordEndDate')
+        if self.title == '觀看記錄':
+            self.recordStart = 'recordDataStart'
+            self.recordEnd = 'recordDataEnd'
+        elif self.title == '統計表':
+            self.recordStart = 'recordStatisticsStart'
+            self.recordEnd = 'recordStatisticsEnd'
+
+
+        self.cacheStartDate = PySQL.selectSQL_Var(self.recordStart)
+        self.cacheEndDate = PySQL.selectSQL_Var(self.recordEnd)
+
 
         if self.cacheStartDate is None:
             self.cacheStartDate = PPV.current_datetime.toString(self.dateFormat)
-
+        
         if self.cacheEndDate is None:
             self.cacheEndDate = PPV.current_datetime.toString(self.dateFormat)
         
@@ -61,7 +73,6 @@ class records_DataStatisticsFrame(QWidget):
         self.startDate = QLineEdit(self.cacheStartDate)
         # self.startDate.setPlaceholderText(self.cacheStartDate)
         self.startDate.mousePressEvent = self.openDialogCalendar(self.startDate)
-        
         
         
         self.startDate.setFont(font)
@@ -129,6 +140,9 @@ class records_DataStatisticsFrame(QWidget):
         selectStartDate = self.startDate.text()
         selectEndDate = self.endDate.text()
 
+        print(f"Start:{self.recordStart}")
+        print(f"End:{self.recordEnd}")
+
         if selectStartDate and selectEndDate:
             if QDate.fromString(selectStartDate, self.dateFormat) > QDate.fromString(selectEndDate, self.dateFormat):
                 # 開始日期在結束日期之後，交換它們
@@ -141,8 +155,8 @@ class records_DataStatisticsFrame(QWidget):
                         self.startLabel.text() + selectStartDate + "\n\r" + \
                         self.endLabel.text() + selectEndDate  + "\n\r"
         print(setIntervalInfo)
-        PySQL.updateSQL_Var('recordStartDate',selectStartDate)
-        PySQL.updateSQL_Var('recordEndDate', selectEndDate)
+        PySQL.updateSQL_Var(self.recordStart, selectStartDate)
+        PySQL.updateSQL_Var(self.recordEnd, selectEndDate)
 
 #region CalendarDialog
 class CalendarDialog(QDialog):
