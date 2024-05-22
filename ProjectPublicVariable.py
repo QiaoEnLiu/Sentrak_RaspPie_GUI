@@ -31,8 +31,7 @@ subMenu = {
           '感測器資訊':'型號、序號、生產日期……'}
           }
 
-calibrateAirManualOption={"直接校正":"使用已知氧氣濃度之氣體、液體進行校正",
-                          "空氣校正":"將感測器置於空氣中校正"}
+
 
 #endregion
 
@@ -82,9 +81,17 @@ def R1X_address(searchName):
     return address
 #endregion
 
+
+#region 子功能選項
+subDisplay = {'波形圖週期':'', '單位':''} #「設定」>>「介面」
+relays = {'Relay 1':'', 'Relay 2':'', 'Relay 3':''} #「設定」>>「警報輸出」
+subAnalogy = {'類比濃度':'', '類比溫度':''} #「設定」>>「類比輸出」
+subCommunication = {'RS485':'', 'HTTP / TCPIP':''} #「設定」>>「通訊」
+subCalibrateAirManual = {"直接校正":"使用已知氧氣濃度之氣體、液體進行校正",
+                        "空氣校正":"將感測器置於空氣中校正"} #「校正」>>「感測器校正」
+#endregion
 #region R1X 地址狀態
 # relays=['Relay 1']
-relays=['Relay 1', 'Relay 2', 'Relay 3']
 
 def alarm(relay, temp, o2):
     if relay[1]['status'][0] == '0': # 停用

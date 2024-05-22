@@ -31,19 +31,19 @@ try:
     import ProjectPublicVariable as PPV
 
     # 設定 >>
-    from setDisplayOption import displayOptionFrame # 「顯示」
-    from setAlarmRelayMenu import setAlarmRelayMenuFrame # 「警報輸出」選項介面
-    from setAnalogyOutputOption import analogyOutputOptionFrame # 「類比輸出」選項介面
+    # from setDisplayOption import displayOptionFrame # 「顯示」
+    # from setAlarmRelayMenu import setAlarmRelayMenuFrame # 「警報輸出」選項介面
+    # from setAnalogyOutputOption import analogyOutputOptionFrame # 「類比輸出」選項介面
     from setSensorTempLimit import setSensorTempLimitFrame # 「感測器溫度保護」介面
 
-    from setCommunicationOption import comOptionFrame # 「通訊」選項介面
+    # from setCommunicationOption import comOptionFrame # 「通訊」選項介面
 
 
     from setTime import setTimeFrame # 「時間」選項介面
     from setLanguage import setLanguageFrame # 「語言」選項介面
 
     # 校正 >>
-    from calibrateAirManualOption import calibrateAirManualOptionFrame # 「感測器校正」選頁介面
+    # from calibrateAirManualOption import calibrateAirManualOptionFrame # 「感測器校正」選頁介面
     from calibrateAnalogyOutput import calibrateAnalogyOutputFrame # 「類比輸出校正」介面
     from calibratePressure import calibratePressureFrame # 「大氣壓力校正」介面
 
@@ -59,6 +59,9 @@ try:
 
     # 未實作功能測試介面
     from testEndFrame import testEndFrame
+
+    # 進入功能後有子功能選項的介面
+    from subOption import subOptionFrame
 
     
     from imgResource import setLabelIcon
@@ -329,15 +332,15 @@ class subMenuFrame(QWidget):
             #region 「設定」
             if item_text == '顯示':
                 # 由「設定」進入「顯示」介面
-                next_frame = displayOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                next_frame = subOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
 
             elif item_text == '警報輸出':
                 # 由「設定」進入「警報輸出」介面
-                next_frame = setAlarmRelayMenuFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                next_frame = subOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             
             elif item_text == '類比輸出':
                 # 由「設定」進入「類比輸出」介面
-                next_frame = analogyOutputOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                next_frame = subOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
 
             elif item_text == '感測器溫度保護':
                 # 由「設定」進入「感測器溫度保護」介面
@@ -345,7 +348,7 @@ class subMenuFrame(QWidget):
 
             elif item_text == '通訊':
                 # 由「設定」進入「通訊」介面
-                next_frame = comOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                next_frame = subOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
                 
             elif item_text == '時間':
                 # 由「設定」進入「時間」介面
@@ -359,7 +362,7 @@ class subMenuFrame(QWidget):
             #region 「校正」
             elif item_text == '感測器校正':
                 # 由「校正」進入「感測器校正」選項介面
-                next_frame = calibrateAirManualOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+                next_frame = subOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
             elif item_text == '類比輸出校正':
                 # 由「校正」進入「類比輸出校正」介面
                 next_frame = calibrateAnalogyOutputFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
