@@ -42,3 +42,8 @@ fc-list
 dmesg | grep ttyUSB
 
 ps aux | grep
+
+
+Linux Shell:
+sudo mkdir -p /mnt/e
+sudo mount -t drvfs E: /mnt/e
