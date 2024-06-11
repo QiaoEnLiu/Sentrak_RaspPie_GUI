@@ -94,8 +94,8 @@ class MyWindow(QMainWindow):
 
         self.isLogin=False
 
-        self.oxygen_concentration = 0.00
-        self.temperature = 0.00
+        self.oxygen_concentration = 0.00 # 16712.32767
+        self.temperature = 0.00 # 16774.26214
 
 
         self.sqlTempUnit = 0
