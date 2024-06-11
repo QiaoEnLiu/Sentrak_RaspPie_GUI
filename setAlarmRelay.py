@@ -47,6 +47,7 @@ class setAlarmRelayFrame(QWidget):
         # title_label.setStyleSheet(_style)
 
 
+
         font.setPointSize(16)
         # user_label = QLabel(PPV.presentUser.userInfo())
         # user_label.setFont(font)
@@ -107,12 +108,19 @@ class setAlarmRelayFrame(QWidget):
 
         main_layout = QVBoxLayout(self)
         # main_layout.setContentsMargins(0, 0, 0, 0)
-        # main_layout.setSpacing(0) 
+        main_layout.setSpacing(0) 
         main_layout.addWidget(title_label)
         # main_layout.addWidget(user_label)
 
+        title_layout = QVBoxLayout()
+        title_layout.addWidget(title_label)
+        title_layout.setSpacing(0)
+        # title_layout.setContentsMargins(0, 0, 0, 0)
+
         #region 介面配制
         relayStatusLayout = QHBoxLayout()
+        relayStatusLayout.setContentsMargins(10, 10, 10, 10)
+        # relayStatusLayout.setSpacing(0)
         relayStatusLeft = QVBoxLayout()
         relayStatusRight = QVBoxLayout()
         relayStatusLeft.addWidget(relayStatusLabel)
@@ -121,6 +129,8 @@ class setAlarmRelayFrame(QWidget):
         relayStatusLayout.addLayout(relayStatusRight)
 
         meassureTypeLayout = QHBoxLayout()
+        meassureTypeLayout.setContentsMargins(10, 10, 10, 10)
+        # meassureTypeLayout.setSpacing(0)
         meassureTypeLeft = QVBoxLayout()
         meassureTypeRight = QVBoxLayout()
         meassureTypeLeft.addWidget(meassureTypeLabel)
@@ -129,6 +139,8 @@ class setAlarmRelayFrame(QWidget):
         meassureTypeLayout.addLayout(meassureTypeRight)
 
         switchTypeLayout = QHBoxLayout()
+        switchTypeLabel.setContentsMargins(10, 10, 10, 10)
+        # switchTypeLayout.setSpacing(0)
         switchTypeLeft = QVBoxLayout()
         switchTypeRight = QVBoxLayout()
         switchTypeLeft.addWidget(switchTypeLabel)
@@ -137,6 +149,8 @@ class setAlarmRelayFrame(QWidget):
         switchTypeLayout.addLayout(switchTypeRight)
         
         valueLimitTypeLayout = QHBoxLayout()
+        valueLimitTypeLayout.setContentsMargins(10, 10, 10, 10)
+        # valueLimitTypeLayout.setSpacing(0)
         valueLimitTypeLeft = QVBoxLayout()
         valueLimitTypeRight = QVBoxLayout()
         valueLimitTypeLeft.addWidget(valueLimitTypeLabel)
@@ -145,6 +159,8 @@ class setAlarmRelayFrame(QWidget):
         valueLimitTypeLayout.addLayout(valueLimitTypeRight)
 
         valueLayout = QHBoxLayout()
+        valueLayout.setContentsMargins(10, 10, 10, 10)
+        # valueLayout.setSpacing(0)
         valueLeft = QVBoxLayout()
         valueRight = QVBoxLayout()
         valueLeft.addWidget(valueLabel)
@@ -155,8 +171,9 @@ class setAlarmRelayFrame(QWidget):
 
         setLayout = QVBoxLayout()
         setLayout.addWidget(set_button)
+        # setLayout.setSpacing(0)
 
-
+        main_layout.addLayout(title_layout)
         main_layout.addLayout(relayStatusLayout)
         main_layout.addLayout(meassureTypeLayout)
         main_layout.addLayout(switchTypeLayout)

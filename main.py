@@ -53,6 +53,7 @@ print(platform.system())
 #region 其他全域變數
 
 font = QFont()
+font2 = QFont()
 
 spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 spacer_right = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -238,23 +239,24 @@ class MyWindow(QMainWindow):
         # temperature=unit_transfer.convert_temperature(temperature=temperature,unit=temperature_unit_text)
         self.oxygen_label = QLabel("O<sub>2</sub>") # ° 為Alt 0176
         self.o2Data = QLabel(f"{self.oxygen_concentration:.2f}")
-        self.o2Unite = QLabel(" ppb")
+        self.o2Unite = QLabel("<strong>ppb</strong>")
         self.temperture_label=QLabel(f"T")
         self.tempData = QLabel(f"{self.temperature:.2f}")
-        self.tempUnit = QLabel(" °C")
+        self.tempUnit = QLabel("<strong>°C</strong>")
         # self.oxygen_label.setAlignment(Qt.AlignCenter)  # 文字置中
         # self.temperture_label.setAlignment(Qt.AlignCenter)
-        font.setPointSize(28)
+        font.setPointSize(36)
+        font2.setPointSize(16)
         font.setBold(True)
         self.oxygen_label.setFont(font)
         self.o2Data.setFont(font)
-        self.o2Unite.setFont(font)
+        self.o2Unite.setFont(font2)
         self.temperture_label.setFont(font)
         self.tempData.setFont(font)
-        self.tempUnit.setFont(font)
+        self.tempUnit.setFont(font2)
         font.setBold(False)
         main_frame_layout = QGridLayout(main_frame)
-        main_frame_layout.setContentsMargins(50, 50, 50, 50)
+        main_frame_layout.setContentsMargins(75, 75, 75, 75)
         # main_frame_layout.setSpacing(0)  # 添加這一行以消除元素之間的間距
         main_frame_layout.addWidget(self.oxygen_label, 0, 0)
         main_frame_layout.addWidget(self.o2Data, 0, 1)
@@ -566,10 +568,10 @@ class MyWindow(QMainWindow):
 
             #region 氧氣濃度、溫度動態顯示
             self.o2Data.setText(f"{self.oxygen_concentration:.2f}")
-            self.o2Unite.setText(f"{PPV.o2_GasUnitDist[self.sqlGasUnit]}")
+            self.o2Unite.setText(f"<strong>{PPV.o2_GasUnitDist[self.sqlGasUnit]}</strong>")
                     
             self.tempData.setText(f"{self.temperature:.2f}")
-            self.tempUnit.setText(f"{PPV.tempUnitDist[self.sqlTempUnit]}")
+            self.tempUnit.setText(f"<strong>{PPV.tempUnitDist[self.sqlTempUnit]}</strong>")
 
             # self.label.setText(f'Modbus Value: {round(value_read_float, 2)}')
             # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit_default}')

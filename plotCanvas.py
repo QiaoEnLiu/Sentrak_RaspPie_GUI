@@ -142,11 +142,11 @@ class plotCanvas(FigureCanvas):
             fontproperties=font)
 
         # 添加數值標籤
-        for (i, j) in zip(self.x_data, self.temperature_data):
-            self.ax.text(i, j, f'{j:.2f}', color='blue', ha='right', va='bottom')
+        # for (i, j) in zip(self.x_data, self.temperature_data):
+        #     self.ax.text(i, j, f'{j:.2f}', color='blue', ha='right', va='bottom')
 
-        for (i, j) in zip(self.x_data, self.oxygen_concentration_data):
-            self.ax.text(i, j, f'{j:.2f}', color='green', ha='left', va='top')
+        # for (i, j) in zip(self.x_data, self.oxygen_concentration_data):
+        #     self.ax.text(i, j, f'{j:.2f}', color='green', ha='left', va='top')
 
         # 添加圖例
         # self.ax.legend(handles=[lineTemp, lineO2], labels=['溫度'+self.temperature_unit, '氧氣濃度'], prop=font)
