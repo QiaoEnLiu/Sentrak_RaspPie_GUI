@@ -119,7 +119,7 @@ class setAlarmRelayFrame(QWidget):
 
         #region 介面配制
         relayStatusLayout = QHBoxLayout()
-        relayStatusLayout.setContentsMargins(10, 10, 10, 10)
+        #relayStatusLayout.setContentsMargins(10, 10, 10, 10)
         # relayStatusLayout.setSpacing(0)
         relayStatusLeft = QVBoxLayout()
         relayStatusRight = QVBoxLayout()
@@ -129,7 +129,7 @@ class setAlarmRelayFrame(QWidget):
         relayStatusLayout.addLayout(relayStatusRight)
 
         meassureTypeLayout = QHBoxLayout()
-        meassureTypeLayout.setContentsMargins(10, 10, 10, 10)
+        #meassureTypeLayout.setContentsMargins(10, 10, 10, 10)
         # meassureTypeLayout.setSpacing(0)
         meassureTypeLeft = QVBoxLayout()
         meassureTypeRight = QVBoxLayout()
@@ -139,7 +139,7 @@ class setAlarmRelayFrame(QWidget):
         meassureTypeLayout.addLayout(meassureTypeRight)
 
         switchTypeLayout = QHBoxLayout()
-        switchTypeLabel.setContentsMargins(10, 10, 10, 10)
+        #switchTypeLabel.setContentsMargins(10, 10, 10, 10)
         # switchTypeLayout.setSpacing(0)
         switchTypeLeft = QVBoxLayout()
         switchTypeRight = QVBoxLayout()
@@ -149,7 +149,7 @@ class setAlarmRelayFrame(QWidget):
         switchTypeLayout.addLayout(switchTypeRight)
         
         valueLimitTypeLayout = QHBoxLayout()
-        valueLimitTypeLayout.setContentsMargins(10, 10, 10, 10)
+        #valueLimitTypeLayout.setContentsMargins(10, 10, 10, 10)
         # valueLimitTypeLayout.setSpacing(0)
         valueLimitTypeLeft = QVBoxLayout()
         valueLimitTypeRight = QVBoxLayout()
@@ -159,7 +159,7 @@ class setAlarmRelayFrame(QWidget):
         valueLimitTypeLayout.addLayout(valueLimitTypeRight)
 
         valueLayout = QHBoxLayout()
-        valueLayout.setContentsMargins(10, 10, 10, 10)
+        #valueLayout.setContentsMargins(10, 10, 10, 10)
         # valueLayout.setSpacing(0)
         valueLeft = QVBoxLayout()
         valueRight = QVBoxLayout()

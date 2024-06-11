@@ -97,7 +97,7 @@ class setTimeFrame(QWidget):
         timeZone_layout.addWidget(timeZoneContent_label)
 
         timeFormat_layout = QVBoxLayout()
-        timeFormat_layout.setContentsMargins(10, 10, 10, 10)
+        #timeFormat_layout.setContentsMargins(10, 10, 10, 10)
         timeFormat_layout.setSpacing(0)
 
         timeFormat_layout.addWidget(timeFormat_label)
@@ -112,7 +112,7 @@ class setTimeFrame(QWidget):
         timeFormat_layout.addLayout(timeRB_layout)
 
         set_layout = QVBoxLayout()
-        set_layout.setContentsMargins(10, 10, 10, 10)
+        #set_layout.setContentsMargins(10, 10, 10, 10)
         set_layout.setSpacing(0)
 
         set_layout.addWidget(set)

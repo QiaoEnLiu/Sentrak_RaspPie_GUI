@@ -57,7 +57,7 @@ class internetFrame(QWidget):
         title_layout = QVBoxLayout()        
         self.title_label = QLabel(self.title, self)
         # title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(20)
+        font.setPointSize(18)
         self.title_label.setFont(font)
         # self.title_label.setStyleSheet(_style)
         title_layout.addWidget(self.title_label)
@@ -66,8 +66,8 @@ class internetFrame(QWidget):
         # title_layout.setSpacing(0)
 
         internetInfo_layout = QVBoxLayout()
-        # internetInfo_layout.setContentsMargins(0, 0, 0, 0)
-        # internetInfo_layout.setSpacing(0)
+        internetInfo_layout.setContentsMargins(0, 0, 0, 0)
+        internetInfo_layout.setSpacing(0)
 
 
         self.ipconfig_texts = {
@@ -78,12 +78,19 @@ class internetFrame(QWidget):
         }
         self.input_boxes=None
 
+        font.setPointSize(12)
+
         # 在這裡，取得 layout 和 input_boxes
         ip_layout, ipv4_input_boxes = self.ip_input_layout("IPv4")
         subnet_layout, subnet_input_boxes = self.ip_input_layout("子網路遮罩")
         gateway_layout, gateway_input_boxes = self.ip_input_layout("預設閘道")
         # dns_layout, dns_input_boxes = self.ip_input_layout("DNS 伺服器")
         hostname_layout = QVBoxLayout()
+
+        ip_layout.setContentsMargins(0, 0, 0, 0)
+        subnet_layout.setContentsMargins(0, 0, 0, 0)
+        gateway_layout.setContentsMargins(0, 0, 0, 0)
+        hostname_layout.setContentsMargins(0, 0, 0, 0)
 
         font.setPointSize(12)
 
@@ -117,6 +124,7 @@ class internetFrame(QWidget):
             values = last_ip_values.get(name, [])  # 從 default_ip_values 取得對應名稱的值
             for input_box, value in zip(input_boxes, values):
                 input_box.setText(value)
+                
         self.hostname_Input.setText(last_ip_values["主機名稱"])
 
 
@@ -169,12 +177,13 @@ class internetFrame(QWidget):
 
     def ip_input_layout(self, name):
         # 創建水平佈局，包含標籤和輸入框
-        font.setPointSize(16)
+        
         layout = QVBoxLayout()
 
         label_layout = QVBoxLayout()
         ip_layout = QHBoxLayout()
-
+        label_layout.setContentsMargins(0, 0, 0, 0)
+        ip_layout.setContentsMargins(0, 0, 0, 0)
         # 創建標籤，顯示名稱
         label = QLabel(f"{name}:")
         label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
