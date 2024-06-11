@@ -25,11 +25,11 @@ class calibrateAirManualFrame(QWidget):
         
         title_label = QLabel(self.title, self)
         title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(24)
+        font.setPointSize(20)
         title_label.setFont(font)
         # title_label.setStyleSheet(_style)
 
-        font.setPointSize(16)
+        font.setPointSize(12)
         # user_label = QLabel(PPV.presentUser.userInfo())
         # user_label.setFont(font)
         # user_label.setStyleSheet(_style)

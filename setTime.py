@@ -37,11 +37,11 @@ class setTimeFrame(QWidget):
 
         title_label = QLabel(title, self)
         title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(36)
+        font.setPointSize(20)
         title_label.setFont(font)
         # title_label.setStyleSheet(_style)
 
-        font.setPointSize(18)
+        font.setPointSize(16)
         timeZone_label = QLabel('調整時間')
         timeZone_label.setFont(font)
         timeZoneContent_label = QLabel('調整時間尚未置入內容')

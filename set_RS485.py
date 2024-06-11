@@ -47,12 +47,12 @@ class rs485_Frame(QWidget):
         title_layout.setSpacing(0) 
         self.title_label = QLabel(f"{self.title}:{int(PySQL.selectSQL_Reg(4, 9))}({PPV.d2b(int(PySQL.selectSQL_Reg(4, 9))).zfill(8)})")
         self.title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(28)
+        font.setPointSize(20)
         self.title_label.setFont(font)
         # title_label.setStyleSheet(_style)
         title_layout.addWidget(self.title_label)
 
-        font.setPointSize(18)
+        font.setPointSize(16)
 
         # COM Port
         #暫以本機端通訊埠顯示

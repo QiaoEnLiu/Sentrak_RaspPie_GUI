@@ -42,12 +42,12 @@ class setAlarmRelayFrame(QWidget):
         title_label = QLabel(title, self)
         title_label.setAlignment(Qt.AlignCenter)  
         # title_label.setContentsMargins(0, 0, 0, 0)
-        font.setPointSize(32)
+        font.setPointSize(20)
         title_label.setFont(font)
         # title_label.setStyleSheet(_style)
 
 
-        font.setPointSize(20)
+        font.setPointSize(16)
         # user_label = QLabel(PPV.presentUser.userInfo())
         # user_label.setFont(font)
         # user_label.setStyleSheet(_style)

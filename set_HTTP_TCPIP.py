@@ -57,7 +57,7 @@ class internetFrame(QWidget):
         title_layout = QVBoxLayout()        
         self.title_label = QLabel(self.title, self)
         # title_label.setAlignment(Qt.AlignCenter)  
-        font.setPointSize(18)
+        font.setPointSize(20)
         self.title_label.setFont(font)
         # self.title_label.setStyleSheet(_style)
         title_layout.addWidget(self.title_label)
@@ -85,7 +85,7 @@ class internetFrame(QWidget):
         # dns_layout, dns_input_boxes = self.ip_input_layout("DNS 伺服器")
         hostname_layout = QVBoxLayout()
 
-        font.setPointSize(16)
+        font.setPointSize(12)
 
         # 將 input_boxes 賦值給對應的 ipconfig_texts 鍵
         self.ipconfig_texts["IPv4"] = ipv4_input_boxes
