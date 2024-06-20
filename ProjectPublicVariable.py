@@ -3,8 +3,48 @@
 
 # 專案用全域變數、方法
 
-import minimalmodbus, platform, serial
+import minimalmodbus, platform, serial, requests, subprocess, time
 from PyQt5.QtCore import QTimer, QDateTime
+
+system_type = platform.system()
+
+#region Flask in Docker
+docker_process=None
+dockerCommand=None
+def wait_for_flask_api(timeout=30):
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        try:
+            response = requests.get('http://localhost:5000/')
+            if response.status_code == 200:
+                return True
+        except requests.exceptions.ConnectionError:
+            time.sleep(1)
+    return False
+
+def start_flask_api():
+    if system_type == 'Linux':
+        dockerCommand = ['sudo','docker', 'compose', 'up', '--build']
+    else:
+        dockerCommand = ['docker', 'compose', 'up', '--build']
+    docker_process = subprocess.Popen(
+        dockerCommand, # 前面加sudo用於linux
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+    if not wait_for_flask_api():
+        print("Failed to start Flask API")
+
+def stop_flask_api():
+    # if docker_process:
+    #     docker_process.terminate()
+    #     docker_process.wait()
+    if system_type == 'Linux':
+        dockerCommand = ['sudo', 'docker','compose', 'stop']
+    else:
+        dockerCommand = ['docker','compose', 'stop']
+    subprocess.run(dockerCommand) # 前面加sudo用於linux
+#endregion
 
 #region 子選單
 subMenu = {

@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  
+  flask-api:
+    build:
+      context: .
+      dockerfile: Dockfile.windows.dockerfile # windows or linux
+    ports:
+      - "5000:5000"  # 將 Flask API 服務的 5000 端口映射到主機的 5000 端口

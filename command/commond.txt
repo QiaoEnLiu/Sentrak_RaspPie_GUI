@@ -17,6 +17,9 @@ pip install -r requirements.txt
 Start_Process "URL"
 
 
+pylupdate5 .\setLangTest.py -ts lang/en.ts lang/zh.ts
+lrelease .\lang\en.ts -qm .\lang\en.qm
+
 
 Linux:
 
@@ -47,3 +50,12 @@ ps aux | grep
 Linux Shell:
 sudo mkdir -p /mnt/e
 sudo mount -t drvfs E: /mnt/e
+
+shutdown -h now
+reboot
+poweroff（不建議的關機方式）
+
+Docker(Windows及Linux通用):
+docker build -f Dockerfile.dockerfile -t task-name .
+docker-compose up --build
+docker compose up --build

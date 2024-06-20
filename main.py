@@ -88,7 +88,7 @@ class MyWindow(QMainWindow):
     #region 主畫面元件
     def __init__(self):
         super().__init__()
-
+        PPV.start_flask_api() # 啟動Flask API
         # 設定視窗標題
         self.setWindowTitle("Sentrak_RaspPie_GUI")
 
@@ -610,6 +610,7 @@ class MyWindow(QMainWindow):
         if reply == QMessageBox.Yes:
             # 如果用戶選擇 "Yes"，則關閉應用程式
             # response.close()
+            PPV.stop_flask_api() # 程式關閉時關閉Flask API
             QApplication.quit()
 
     #endregion
@@ -907,6 +908,10 @@ class MyWindow(QMainWindow):
         print('Last Index:', self.stacked_widget.count())
 
     #endregion 
+
+    def closeEvent(self, event):
+        PPV.stop_flask_api() # 程式關閉時關閉Flask API
+        event.accept()
 
 #endregion
 
