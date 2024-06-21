@@ -2,10 +2,12 @@
 FROM python:3.9-slim
 
 # 設定工作目錄
-WORKDIR /api
+WORKDIR /SentrakDocker
 
 # 複製應用程式代碼到容器中
 COPY flask_api.py .
+
+# RUN chmod -R 777 /Sentrak_RaspPie_GUI/SentrakSQL/
 
 # 安裝 Flask
 RUN pip install flask

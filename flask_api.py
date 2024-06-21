@@ -1,9 +1,9 @@
-# import sqlite3
+import sqlite3
 from flask import Flask ,render_template , request, jsonify
 app = Flask(__name__)
-# SQLITE_DB_PATH = 'SentrakSQL/SentrakSQL.db'
+SQLITE_DB_PATH = 'SentrakSQL/SentrakSQL.db'
 
-''''
+
 def get_user():
     # 連接到SQLite數據庫（如果不存在，將創建一個新的）
     conn = sqlite3.connect(SQLITE_DB_PATH)
@@ -73,11 +73,11 @@ def get_R4X_Datas():
                   'Value': data[2]}
                   for data in datas]
     return data_list
-'''
+
 @app.route('/', methods=['GET'])
 def get():
-    return jsonify({'Sentrak PyQt5': 'Flask in Docker Success'})
-    # return jsonify(get_R3X_Datas())
+    # return jsonify({'Sentrak PyQt5': 'Flask in Docker Success'})
+    return jsonify(get_R3X_Datas())
     # return render_template('index.html',
     #                        user_data = get_user(),
     #                        data_R1X = get_R1X_Datas(),

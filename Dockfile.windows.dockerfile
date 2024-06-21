@@ -1,9 +1,11 @@
 # Dockerfile for Flask API
 FROM python:3.9-slim
 
-WORKDIR /api
+WORKDIR /SentrakDocker
 
 COPY flask_api.py .
+
+# RUN chmod -R 777 /Sentrak_RaspPie_GUI/SentrakSQL/
 
 RUN pip install flask
 
