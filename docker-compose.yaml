@@ -9,7 +9,8 @@ services:
     ports:
       - "5000:5000"  # 將 Flask API 服務的 5000 端口映射到主機的 5000 端口
     volumes: 
-      - /F/AnacodaProject/Sentrak_RaspPie_GUI/SentrakSQL:/SentrakDocker/SentrakSQL
+      # - /F/AnacodaProject/Sentrak_RaspPie_GUI/SentrakSQL:/SentrakDocker/SentrakSQL
+      - ./SentrakSQL:/SentrakDocker/SentrakSQL
 
       # - /F:/test
 
