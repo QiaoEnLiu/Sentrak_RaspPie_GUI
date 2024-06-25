@@ -1,0 +1,86 @@
+Docker安裝
+----------
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+sudo curl -fsSL https://download.docker.com/linux/raspbian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+--Docker 的官方 GPG 金鑰
+
+sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep tag_name | cut -d '"' -f 4)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+--下載 Docker Compose
+
+echo \
+  "deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/raspbian \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+-- Docker 的 APT 軟體源
+
+sudo apt-get update
+--更新 APT 軟體包索引來包括 Docker 的軟體源
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+--安裝 Docker Engine 
+
+
+Docker設定及啟用
+-----------------
+
+sudo systemctl enable docker
+--設置 Docker 在系統啟動時自動啟動
+
+sudo docker build -f Dockfile.linux.dockerfile -t task-name .
+--手動以dockerfile文檔建立容器
+
+sudo docker compose up --build
+--構建或重建服務（主程式可構建容器了，此手動指令專門用來測試）
+
+
+Docker其他常用指令
+-----------------
+
+
+Docker：
+--------
+
+sudo docker ps
+--列出運行中的容器
+
+sudo docker ps -a
+--列出所有容器（包括停止的容器）
+
+sudo docker stop <container_id>
+--停止容器
+
+sudo docker start <container_id>
+--啟動已停止的容器
+
+sudo docker restart <container_id>
+--重新啟動容器
+
+sudo docker rm <container_id>
+--移除容器
+
+
+Docker Compose:
+--------
+
+sudo docker compose ps
+--啟動服務
+
+sudo docker compose down
+--停止服務
+
+sudo docker compose ps
+--檢查服務狀態
+
+sudo docker compose logs
+--查看服務日誌
+
+sudo docker compose logs <service_name>
+--查看特定服務的日誌
