@@ -1,0 +1,73 @@
+-----------------------
+Python3.9.2安裝：
+-----------------------
+
+sudo apt update
+sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev curl
+--安裝依賴項
+
+curl -O https://www.python.org/ftp/python/3.9.7/Python-3.9.7.tgz
+--從官網下載Python 3.9.2
+
+tar -xvf Python-3.9.2.tgz
+--解壓縮源碼
+
+python3.9 --version
+--驗證安裝Python版本
+
+python3.9 -m pip --version
+--驗證pip版本
+
+-----------------------
+
+
+-----------------------
+安裝依賴包（requirements.txt在command資料夾底下）：
+-----------------------
+
+pip install -r requirements.txt
+--安裝requirements.txt內的依賴包
+
+pip install numpy==1.21.2
+--requirements.txt依賴包順序是字母排序，如果因其他未安裝而中斷安裝過程，則使用此指令一個一個安裝或先安裝錯誤提到尚未安裝的依賴包。
+
+pip list
+pip freeze
+--上述兩則指令可顯示以安裝的依賴包
+-----------------------
+
+
+-----------------------
+執行Python程式：
+-----------------------
+
+python main.py
+--執行主程式（因啟動時會一並啟動docker的flask，建議先依「Docker安裝與啟用.txt」安裝Docker）
+
+python flask_api.py
+--執行Flask程式，可事先測試Flask
+
+-----------------------
+
+
+-----------------------
+安裝matplotlib用的中文字型
+-----------------------
+
+sudo apt-get install fonts-wqy-zenhei
+--matplotlib圖表的中文會無法顯示，需額外安裝中文字，主程式的圖表使用fonts-wqy-zenhei（文泉體）
+
+-----------------------
+
+
+-----------------------
+Flask測試：
+-----------------------
+
+curl http://127.0.0.1:5000
+--本地端測試
+
+http://[裝置IP]:5000
+--瀏覽器上測試
+
+-----------------------
