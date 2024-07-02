@@ -455,6 +455,14 @@ class MyWindow(QMainWindow):
             def modbus_read_thread():
                 # global oxygen_concentration, temperature
 
+                #region 時間動態顯示
+                current_datetime = QDateTime.currentDateTime()
+                formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[self.sqlDateFormat][1]} hh:mm:ss")
+                PPV.current_datetime = current_datetime
+                self.datetime.setText(formatted_datetime)
+
+                #endregion
+
                 # 讀取SQL的暫存資料表
                 self.sqlGasUnit = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 4))
                 self.sqlDateFormat = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 1))
@@ -480,6 +488,13 @@ class MyWindow(QMainWindow):
                     # 讀取濃度、溫度變動值
                     self.oxygen_concentration = PPV.instrument_ID3.read_float(PPV.R3X_address('Gas'), functioncode=4)
                     self.temperature = PPV.instrument_ID3.read_float(PPV.R3X_address('Temperature'), functioncode=4)
+
+                    # 每秒R3X記錄
+                    r3xRecord=PPV.instrument_ID3.read_registers(0,21, functioncode=4)
+                    r3xRecord.insert(0,formatted_datetime)
+                    r3xRecordTuple=tuple(r3xRecord)
+                    PySQL.insertSQL_R3X_Record(r3xRecordTuple)
+                    # print(r3xRecordTuple)
 
                     # 讀取modbus的Reg設定值
                     # modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
@@ -550,13 +565,6 @@ class MyWindow(QMainWindow):
 
             #endregion
             
-            #region 時間動態顯示
-            current_datetime = QDateTime.currentDateTime()
-            formatted_datetime = current_datetime.toString(f"{PPV.dateFormat[self.sqlDateFormat][1]} hh:mm:ss")
-            PPV.current_datetime = current_datetime
-            self.datetime.setText(formatted_datetime)
-
-            #endregion
 
             #region 氧氣濃度、溫度動態顯示
             self.o2Data.setText(f"{self.oxygen_concentration:.2f}")

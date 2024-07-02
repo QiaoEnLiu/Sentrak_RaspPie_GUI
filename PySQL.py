@@ -28,7 +28,7 @@ def commit_SQL():
     try:
         with sqlite3.connect(db_path) as conn:
             conn.commit()   # 提交資料庫更改
-            print("Commit To SQL Success\n")
+        #     print("Commit To SQL Success\n")
     except sqlite3.Error as e:
         print(f"Error connecting to SQLite database: {e}\n")
 
@@ -82,6 +82,15 @@ def updateSQL_Reg(regDF, regKey, updateValue):
 
 #endregion
         
+#region R3X記錄
+def insertSQL_R3X_Record(r3xRecordTuple):
+        query = '''INSERT INTO R3X_Record (times, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+        execute_query(query, r3xRecordTuple)
+        commit_SQL()
+        print(r3xRecordTuple)
+#endregion
+
+
 #region 其他需要暫存的變數
 def selectSQL_Var(var):
         query = "SELECT Value FROM otherCacheVariable WHERE Variable = ?"
