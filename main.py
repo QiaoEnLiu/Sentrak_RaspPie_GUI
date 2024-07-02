@@ -162,12 +162,9 @@ class MyWindow(QMainWindow):
         # 在狀態列中央加入日期時間
         self.datetime = QLabel(self)
         self.datetime.setAlignment(Qt.AlignCenter| Qt.AlignCenter)  # 文字置中
-        # self.datetime=QPushButton(self)
-        # self.datetime.setFlat(True)
         self.datetime.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
         # self.datetime.setStyleSheet("padding: 0; margin: 0;")
         self.datetime.setFont(font)
-        # self.datetime.clicked.connect(self.datetimeFormatChange)
 
         self.stateUSB_label = QLabel('USB', self)
         self.stateUSB_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
@@ -296,7 +293,6 @@ class MyWindow(QMainWindow):
         # 在功能列中添加按鈕
         self.save_button = QPushButton(function_bar) # 資料儲存
         # test_button = QPushButton('測試', function_bar)
-        # self.test_RTU_button = QPushButton('測試RTU', function_bar)
         self.quit_button=QPushButton('離開', function_bar) # 離開
         # self.lock_label = QLabel('螢幕鎖',function_bar)
         self.lock_button=QPushButton(function_bar) # 解鎖
@@ -311,7 +307,6 @@ class MyWindow(QMainWindow):
 
         self.save_button.setFixedSize(button_width, button_height)
         # test_button.setFixedSize(button_width, button_height)
-        # self.test_RTU_button.setFixedSize(button_width, button_height)
         self.quit_button.setFixedSize(button_width,button_height)
         # self.lock_label.setFixedSize(button_width, button_height)
         self.lock_button.setFixedSize(button_width, button_height)
@@ -322,7 +317,6 @@ class MyWindow(QMainWindow):
         font.setPointSize(14)
         self.save_button.setFont(font)
         # test_button.setFont(font)
-        # self.test_RTU_button.setFont(font)
         self.quit_button.setFont(font)
         # self.lock_label.setFont(font)
         self.lock_button.setFont(font)
@@ -345,7 +339,6 @@ class MyWindow(QMainWindow):
         self.return_button.setStyleSheet('QPushButton { border: none; }')
 
         self.quit_button.clicked.connect(self.show_confirmation_dialog)
-        # self.test_RTU_button.clicked.connect(self.conect_modbus_RTU)
         self.lock_button.clicked.connect(self.showLoginDialog)
         self.menu_button.clicked.connect(self.switch_to_menu)
         self.return_button.clicked.connect(self.switch_to_previous_page)
@@ -367,7 +360,6 @@ class MyWindow(QMainWindow):
 
         function_bar_layout1.addWidget(self.save_button)
         # function_bar_layout1.addWidget(test_button)
-        # function_bar_layout1.addWidget(self.test_RTU_button)
         function_bar_layout1.addWidget(self.quit_button)
         function_bar_layout1.addItem(spacer)
 
@@ -615,6 +607,8 @@ class MyWindow(QMainWindow):
 
     #endregion
 
+
+    #region 登入、登出行為
     #region 登入視窗
     def showLoginDialog(self):
 
@@ -647,6 +641,15 @@ class MyWindow(QMainWindow):
         # 登入成功時觸發，將 logout_button 由不可見改為可見
         print('收到 login_successful 信號:', checkLogin)
         self.logout_button.setVisible(True)
+    #endregion
+
+    #region 是否有登入
+    def is_login_dialog(self):
+        # 顯示確認對話框
+        message_text="你要先登入解鎖才能進入選單"
+        QMessageBox.critical(self, '請先登入', message_text)
+        print('選單不可用')
+
     #endregion
     
     #region 登出行為
@@ -696,29 +699,11 @@ class MyWindow(QMainWindow):
             return
         
     #endregion
+
+    #endregion
         
 
-    #region 連接COM Port視窗並讀取氧氣濃度及溫度
-    # def connect_modbus_RTU(self):
-    #     connectGUI=ModbusRTUConfigurator(self)
-    #     connectGUI.value_updated.connect(self.set_main_values)
-    #     self.data_updated.connect(self.update_main_label)
-    #     connectGUI.exec_()
-
-    # @pyqtSlot(float)
-    # def update_main_label(self, temperature):
-    #     self.oxygen_label.setText(f'O₂: {oxygen_concentration:.2f} ppb, T: {temperature:.2f} °C')
-
-    # def set_main_values(self, temperature):
-    #     # 設定 oxygen_concentration 和 temperature 的值
-    #     # oxygen_concentration = round(oxygen, 2)
-    #     temperature = round(temperature, 2)
-    #     # 發送 oxygen_concentration 和 temperature 更新的信號
-    #     self.data_updated.emit(temperature)
-    
-    #endregion
-
-
+    #region 前往主選單行為
     # 在MyWindow類別中新增一個方法用於由主畫面切換主選單
     #region 前往主選單（第二頁）
     def switch_to_menu(self):
@@ -743,7 +728,6 @@ class MyWindow(QMainWindow):
 
             # 根據當前的畫面索引顯示或隱藏按鈕
             self.menu_button.setVisible(self.current_page_index == self.plot_page_index)
-            # self.test_RTU_button.setVisible(self.current_page_index == self.plot_page_index)
             self.return_button.setVisible(self.current_page_index == self.menu_page_index)
 
             print('主選單 Index:', self.stacked_widget.count())
@@ -859,15 +843,8 @@ class MyWindow(QMainWindow):
         self.return_button.setVisible(True)
 
     #endregion
-
-    #region 是否有登入
-    def is_login_dialog(self):
-        # 顯示確認對話框
-        message_text="你要先登入解鎖才能進入選單"
-        QMessageBox.critical(self, '請先登入', message_text)
-        print('選單不可用')
-
     #endregion
+
 
 
     # 在 MyWindow 中新增一個方法用於返回上一個畫面
@@ -909,9 +886,12 @@ class MyWindow(QMainWindow):
 
     #endregion 
 
+    #region Docker的Flask與程式連動
     def closeEvent(self, event):
         PPV.stop_flask_api() # 程式關閉時關閉Flask API
         event.accept()
+
+    #endregion
 
 #endregion
 
