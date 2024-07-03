@@ -101,7 +101,7 @@ def insertSQL_R3X_Record_Test2(r3xRecordTuple):
         query = '''INSERT INTO R3X_Record_Test2 (times, Gas, Temperature, Calibration_Gas_Percent, Calibration_T, Calibration_CT1, Calibration_CT2, Read_V3_voltage, Read_V2_voltage, Read_BAT, Read_BAT_Percent, Read_Valid_Form_Calibration, Read_Pooling_cnt, Read_Current_Percent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
         execute_query(query, r3xRecordTuple)
         commit_R3XRecord_SQL()
-        # print(r3xRecordTuple)
+        print(r3xRecordTuple)
 #endregion
 
 
