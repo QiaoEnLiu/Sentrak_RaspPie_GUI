@@ -28,6 +28,14 @@ def commit_SQL():
     try:
         with sqlite3.connect(db_path) as conn:
             conn.commit()   # 提交資料庫更改
+            print("Commit To SQL Success\n")
+    except sqlite3.Error as e:
+        print(f"Error connecting to SQLite database: {e}\n")
+
+def commit_R3XRecord_SQL():
+    try:
+        with sqlite3.connect(db_path) as conn:
+            conn.commit()   # 提交資料庫更改
         #     print("Commit To SQL Success\n")
     except sqlite3.Error as e:
         print(f"Error connecting to SQLite database: {e}\n")
@@ -83,11 +91,17 @@ def updateSQL_Reg(regDF, regKey, updateValue):
 #endregion
         
 #region R3X記錄
-def insertSQL_R3X_Record(r3xRecordTuple):
-        query = '''INSERT INTO R3X_Record (times, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+def insertSQL_R3X_Record_Test1(r3xRecordTuple):
+        query = '''INSERT INTO R3X_Record_Test1 (times, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
         execute_query(query, r3xRecordTuple)
-        commit_SQL()
-        print(r3xRecordTuple)
+        commit_R3XRecord_SQL()
+        # print(r3xRecordTuple)
+
+def insertSQL_R3X_Record_Test2(r3xRecordTuple):
+        query = '''INSERT INTO R3X_Record_Test2 (times, Gas, Temperature, Calibration_Gas_Percent, Calibration_T, Calibration_CT1, Calibration_CT2, Read_V3_voltage, Read_V2_voltage, Read_BAT, Read_BAT_Percent, Read_Valid_Form_Calibration, Read_Pooling_cnt, Read_Current_Percent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+        execute_query(query, r3xRecordTuple)
+        commit_R3XRecord_SQL()
+        # print(r3xRecordTuple)
 #endregion
 
 

@@ -173,9 +173,9 @@ def alarm(relay, temp, o2):
 #endregion
 
 #region R3X 地址名稱
-R3X_Mapping={0:'Gas', # 已實作
+R3X_Mapping={0:'Gas', # 已實作 16712 62915
 
-             2:'Temperature', # 已實作
+             2:'Temperature', # 已實作 16774 26214
 
              4:'Calibration Gas %',
 

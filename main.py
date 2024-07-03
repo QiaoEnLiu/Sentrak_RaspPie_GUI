@@ -99,7 +99,7 @@ class MyWindow(QMainWindow):
 
 
         self.sqlTempUnit = 0
-        self.sqlDateFormat = 0
+        self.sqlDateFormat = 2
 
         self.sqlGasUnit = 0
 
@@ -486,14 +486,38 @@ class MyWindow(QMainWindow):
 
                     #region 讀取R3X
                     # 讀取濃度、溫度變動值
-                    self.oxygen_concentration = PPV.instrument_ID3.read_float(PPV.R3X_address('Gas'), functioncode=4)
-                    self.temperature = PPV.instrument_ID3.read_float(PPV.R3X_address('Temperature'), functioncode=4)
+                    self.oxygen_concentration = round(PPV.instrument_ID3.read_float(PPV.R3X_address('Gas'), functioncode=4),2)
 
-                    # 每秒R3X記錄
-                    r3xRecord=PPV.instrument_ID3.read_registers(0,21, functioncode=4)
-                    r3xRecord.insert(0,formatted_datetime)
+                    self.temperature = round(PPV.instrument_ID3.read_float(PPV.R3X_address('Temperature'), functioncode=4),2)
+
+                    caliGasPercent = round(PPV.instrument_ID3.read_float(PPV.R3X_address('Calibration Gas %'), functioncode=4),2)
+
+                    caliT = round(PPV.instrument_ID3.read_float(PPV.R3X_address('Calibration T'), functioncode=4),2)
+
+                    caliCT1 = round(PPV.instrument_ID3.read_float(PPV.R3X_address('Calibration CT1'), functioncode=4),2)
+
+                    caliCT2 = round(PPV.instrument_ID3.read_float(PPV.R3X_address('Calibration CT2'), functioncode=4),2)
+
+                    readV3_volt = round(PPV.instrument_ID3.read_float(PPV.R3X_address('Read V3 voltage'), functioncode=4),2)
+
+                    readV2_volt = round(PPV.instrument_ID3.read_float(PPV.R3X_address('Read V2 voltage'), functioncode=4),2)
+
+                    r3x_Value16To20=PPV.instrument_ID3.read_registers(16,5, functioncode=4)
+
+                    
+
+                    # 每秒R3X記錄測試1
+                    # r3xRecord=PPV.instrument_ID3.read_registers(0,21, functioncode=4)
+                    # r3xRecord.insert(0,formatted_datetime)
+                    # r3xRecordTuple=tuple(r3xRecord)
+                    # PySQL.insertSQL_R3X_Record_Test1(r3xRecordTuple)
+                    # print(r3xRecordTuple)
+
+                    # 每秒R3X記錄測試2
+                    r3xRecord=[formatted_datetime, self.oxygen_concentration, self.temperature, caliGasPercent, caliT, caliCT1, caliCT2, readV3_volt, readV2_volt]
+                    r3xRecord.extend(r3x_Value16To20)
                     r3xRecordTuple=tuple(r3xRecord)
-                    PySQL.insertSQL_R3X_Record(r3xRecordTuple)
+                    PySQL.insertSQL_R3X_Record_Test2(r3xRecordTuple)
                     # print(r3xRecordTuple)
 
                     # 讀取modbus的Reg設定值
