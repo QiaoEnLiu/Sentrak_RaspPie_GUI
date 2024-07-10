@@ -1,6 +1,8 @@
 # SQL
 
 import sqlite3
+# import ProjectPublicVariable as PPV
+# from datetime import datetime
 
 db_path = 'SentrakSQL/SentrakSQL.db'
 regDFs={1: 'R1X',
@@ -12,6 +14,8 @@ IPS={"User":"",
      "Subnet Mask":"",
      "Default Gateway":"",
      "Hostname":""}
+startDay=" 00:00:00"
+endDay=" 23:59:59"
 
 #region 連接資料庫
 def execute_query(query, params=()):
@@ -22,6 +26,21 @@ def execute_query(query, params=()):
                 result = cursor.fetchall()
                 cursor.close() # 關閉游標和連接
         return result
+
+def execute_query_R3XRecord(query, params=()):
+        with sqlite3.connect(db_path) as conn: 
+                conn.row_factory = sqlite3.Row 
+                cursor = conn.cursor()
+                cursor.execute(query, params)
+                column_names = [description[0] for description in cursor.description] # 獲取欄位名稱
+                rows = cursor.fetchall()
+
+                result = []
+                for row in rows: # 取得所有資料，並轉換成字典形式
+                        row_dict = dict(zip(column_names, row))
+                        result.append(row_dict)
+                cursor.close()
+                return result
 
 # 針對新增、刪除、修改的提交
 def commit_SQL():
@@ -102,6 +121,31 @@ def insertSQL_R3X_Record_Test2(r3xRecordTuple):
         execute_query(query, r3xRecordTuple)
         commit_R3XRecord_SQL()
         print(r3xRecordTuple)
+
+def selectR3XDates(startDate, endDate):
+        #region 當資料表中同時有三種不同的日期格式
+        # startDate_ISO = datetime.strptime(startDate, PPV.dateFormat[2][1])
+        # startDate_USA = datetime.strptime(startDate, PPV.dateFormat[1][1])
+        # startDate_EU = datetime.strptime(startDate, PPV.dateFormat[0][1])
+
+        # endDate_ISO = datetime.strptime(endDate, PPV.dateFormat[2][1])
+        # endDate_USA = datetime.strptime(endDate, PPV.dateFormat[1][1])
+        # endDate_EU = datetime.strptime(endDate, PPV.dateFormat[0][1])
+
+        # startDate_ISO += startDay
+        # startDate_USA += startDay
+        # startDate_EU += startDay
+
+        # endDate_ISO += endDay
+        # endDate_USA += endDay
+        # endDate_EU += endDay
+        #endregion
+
+        startDate += startDay
+        endDate += endDay
+        query = "SELECT * FROM R3X_Record_Test2 WHERE times BETWEEN ? AND ?" # R3X_Record_Test2為測式用的資料表，R3X_Record_Test3為有三種不同的日期格式
+        result = execute_query_R3XRecord(query, (startDate, endDate,))
+        return result if result else None 
 #endregion
 
 

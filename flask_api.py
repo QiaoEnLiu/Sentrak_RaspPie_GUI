@@ -1,9 +1,12 @@
 import sqlite3
-from flask import Flask ,render_template , request, jsonify
+from flask import Flask, jsonify
+import PySQL
 app = Flask(__name__)
 SQLITE_DB_PATH = 'SentrakSQL/SentrakSQL.db'
 
 
+
+#region 測試用函數
 def get_user():
     # 連接到SQLite數據庫（如果不存在，將創建一個新的）
     conn = sqlite3.connect(SQLITE_DB_PATH)
@@ -73,17 +76,16 @@ def get_R4X_Datas():
                   'Value': data[2]}
                   for data in datas]
     return data_list
+#endregion
 
 @app.route('/', methods=['GET'])
 def get():
+    startDate = PySQL.selectSQL_Var('recordDataStart')
+    endDate = PySQL.selectSQL_Var('recordDataEnd')
     # return jsonify({'Sentrak PyQt5': 'Flask in Docker Success'})
-    return jsonify(get_R3X_Datas())
-    # return render_template('index.html',
-    #                        user_data = get_user(),
-    #                        data_R1X = get_R1X_Datas(),
-    #                        data_R3X = get_R3X_Datas(),
-    #                        data_R4X = get_R4X_Datas())
-    # # return "<p>Sentrak Flask API Activate!</p>"
+    # return jsonify(get_R3X_Datas())
+
+    return jsonify(PySQL.selectR3XDates(startDate, endDate))
 
 
 if __name__ == '__main__':

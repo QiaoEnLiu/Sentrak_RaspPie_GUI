@@ -11,6 +11,7 @@ services:
     volumes: 
       # - /F/AnacodaProject/Sentrak_RaspPie_GUI/SentrakSQL:/SentrakDocker/SentrakSQL # 絕對路徑
       - ./SentrakSQL:/SentrakDocker/SentrakSQL  # 相對路徑
+      - ./PySQL.py:/SentrakDocker/PySQL.py
 
       # 外部路徑：容器內部路徑
       

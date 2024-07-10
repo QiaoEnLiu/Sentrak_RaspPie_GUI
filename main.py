@@ -514,10 +514,12 @@ class MyWindow(QMainWindow):
                     # print(r3xRecordTuple)
 
                     # 每秒R3X記錄測試2
-                    r3xRecord=[formatted_datetime, self.oxygen_concentration, self.temperature, caliGasPercent, caliT, caliCT1, caliCT2, readV3_volt, readV2_volt]
-                    r3xRecord.extend(r3x_Value16To20)
-                    r3xRecordTuple=tuple(r3xRecord)
-                    PySQL.insertSQL_R3X_Record_Test2(r3xRecordTuple)
+                    
+                    # r3xRecord=[formatted_datetime, self.oxygen_concentration, self.temperature, caliGasPercent, caliT, caliCT1, caliCT2, readV3_volt, readV2_volt]
+                    # r3xRecord.extend(r3x_Value16To20)
+                    # r3xRecordTuple=tuple(r3xRecord)
+                    # PySQL.insertSQL_R3X_Record_Test2(r3xRecordTuple)
+                    
                     # print(r3xRecordTuple)
 
                     # 讀取modbus的Reg設定值
