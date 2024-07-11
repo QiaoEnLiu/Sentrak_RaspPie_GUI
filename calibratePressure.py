@@ -48,7 +48,7 @@ class calibratePressureFrame(QWidget):
         # pressureLayout.addWidget(pressureLabel)
         # pressureLayout.addWidget(self.pressureInput)
 
-        cali_button = QPushButton('校正', self)
+        cali_button = QPushButton('確認', self)
         cali_button.setFont(font)
 
         main_layout.addWidget(title_label)

@@ -97,7 +97,7 @@ class records_DataStatisticsFrame(QWidget):
         # self.endDate.dateChanged.connect(self.checkEndDate)
 
         setLayout = QVBoxLayout()
-        set_button = QPushButton('設定區間', self)
+        set_button = QPushButton('確認區間', self)
         set_button.clicked.connect(self.setDateInterval)
         set_button.setFont(font)
         setLayout.addWidget(set_button)

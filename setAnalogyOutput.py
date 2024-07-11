@@ -125,7 +125,7 @@ class setAnalogyOutputFrame(QWidget):
         self.stateTestSpin.setDecimals(0)
 
         setting_layout = QHBoxLayout()
-        set = QPushButton("設定")
+        set = QPushButton("確認")
         set.setFont(font)
         setting_layout.addWidget(set)
 

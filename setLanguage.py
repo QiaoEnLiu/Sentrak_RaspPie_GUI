@@ -40,7 +40,7 @@ class setLanguageFrame(QWidget):
         self.language_combo.addItems(PPV.languages.values())
         self.language_combo.setCurrentIndex(self.language_combo.findText(PPV.languageName))
 
-        set_button = QPushButton('設定', self)
+        set_button = QPushButton('確認', self)
         set_button.setFont(font)
         set_button.clicked.connect(self.setLanguage)
 

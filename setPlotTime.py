@@ -42,7 +42,7 @@ class setPlotTimeFrame(QWidget):
         # default_plotTime_Index = self.plot_time_combo.findText(PPV.plotTimeDict[int(PySQL.selectSQL_Var('plotTime'))])
         self.plot_time_combo.setCurrentIndex(self.plot_time_combo.findText(PPV.plotTime))
 
-        set_button = QPushButton('設定', self)
+        set_button = QPushButton('確認', self)
         set_button.setFont(font)
         set_button.clicked.connect(self.setPlotTimes)
         

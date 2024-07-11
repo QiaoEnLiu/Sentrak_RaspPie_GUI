@@ -39,7 +39,7 @@ class record_AutoManualFrame(QWidget):
         self.auto_manual.addItems(PPV.setAutoManual.values())
         self.auto_manual.setCurrentIndex(int(PySQL.selectSQL_Var("autoManual")))
         
-        set_button = QPushButton('設定', self)
+        set_button = QPushButton('確認', self)
         set_button.setFont(font)
         set_button.clicked.connect(self.setAutoManual)
 

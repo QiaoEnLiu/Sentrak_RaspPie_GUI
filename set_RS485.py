@@ -198,7 +198,7 @@ class rs485_Frame(QWidget):
         setting_layout = QVBoxLayout()
         setting_layout.setContentsMargins(0, 0, 0, 0)
         setting_layout.setSpacing(0) 
-        set_button = QPushButton('設定', self)
+        set_button = QPushButton('確認', self)
         set_button.setFont(font)
         set_button.clicked.connect(self.slaverConnect)
         setting_layout.addWidget(set_button)

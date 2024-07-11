@@ -101,7 +101,7 @@ class setAlarmRelayFrame(QWidget):
         self.valueDefault = self.valueInput.text()
         #endregion
 
-        set_button = QPushButton('設定', self)
+        set_button = QPushButton('確認', self)
         set_button.setFont(font)
         set_button.clicked.connect(self.setAlarm)
 
@@ -207,7 +207,7 @@ class setAlarmRelayFrame(QWidget):
         
         if QMessageBox.question(self, f'設定{self.title}', f'{setAlarmInfo}\
                                 \n確定要設定{self.title}嗎？', QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
-            action = '設定'
+            action = '確認'
             # 在這裡添加您想要在使用者點擊"Yes"時執行的程式碼
 
             PySQL.updateSQL_Reg(1, self.relayID-1, self.relayStatusCombox.currentIndex())

@@ -76,7 +76,7 @@ class calibrateAirManualFrame(QWidget):
         actCO2Layout.addWidget(actCO2_Label)
         actCO2Layout.addWidget(self.actCO2_QCombox)
 
-        cali_button = QPushButton('校正', self)
+        cali_button = QPushButton('確認', self)
         cali_button.setFont(font)
         # set_button.clicked.connect(self.setLanguage)
 

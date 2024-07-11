@@ -92,7 +92,7 @@ class setUnitFrame(QWidget):
         dissolve_label.setFont(font)
 
 
-        set=QPushButton('設定', self)
+        set=QPushButton('確認', self)
         set.setFont(font)
         # set.setStyleSheet(_style)
         set.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -177,7 +177,7 @@ class setUnitFrame(QWidget):
         if QMessageBox.question(self, '顯示單位', f'設定溫度單位：由 {self.defaultTempUnit} 改成 {tempUnitName}\
                                 \n設定濃度單位：由 {self.defaultGasUnit} 改成 {self.gas_unit_ComboBox.currentText()}\
                                 \n確定要設定單位嗎？', QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
-            action = '設定'
+            action = '確認'
             # 在這裡添加您想要在使用者點擊"Yes"時執行的程式碼
 
             self.defaultTempUnit = tempUnitName

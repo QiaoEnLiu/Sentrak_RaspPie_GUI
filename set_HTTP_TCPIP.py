@@ -128,7 +128,7 @@ class internetFrame(QWidget):
         self.hostname_Input.setText(last_ip_values["主機名稱"])
 
 
-        set_button=QPushButton('設定', self)
+        set_button=QPushButton('確認', self)
         set_button.setFont(font)
         set_button.clicked.connect(lambda: self.setInternet())
         

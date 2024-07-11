@@ -76,7 +76,7 @@ class setTimeFrame(QWidget):
             radio_button.setFont(font)
             self.radio_buttons.append(radio_button)
         
-        set=QPushButton('設定')
+        set=QPushButton('確認')
         set.setFont(font)
         # set.setStyleSheet(_style)
         set.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)

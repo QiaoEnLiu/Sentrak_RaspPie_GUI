@@ -65,7 +65,7 @@ class setAlarmRelay2Frame(QWidget):
         valueInput = QLineEdit()
         valueInput.setFont(font)
 
-        set_button = QPushButton('設定', self)
+        set_button = QPushButton('確認', self)
         set_button.setFont(font)
 
 

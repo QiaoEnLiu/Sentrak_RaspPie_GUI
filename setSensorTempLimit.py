@@ -99,7 +99,7 @@ class setSensorTempLimitFrame(QWidget):
         presentLimitLayout.addWidget(self.presentLimit)
 
         set_layout = QVBoxLayout()
-        set = QPushButton('設定', self)
+        set = QPushButton('確認', self)
         font.setPointSize(18)
         set.setFont(font)
         set_layout.addWidget(set)
