@@ -25,7 +25,7 @@ except Exception as e:
 plotTime_limit=0
 
 #region plotCanvas
-class plotCanvas(FigureCanvas):
+class plotCanvasMatplot(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=75):
         # fig, self.ax = plt.subplots(figsize=(width, height), dpi=dpi)
         # super().__init__(fig)

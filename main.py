@@ -19,6 +19,8 @@ try:
         QHBoxLayout, QLabel, QSpacerItem, QSizePolicy, QFrame, QGridLayout,\
         QPushButton, QStackedWidget, QMessageBox, QDesktopWidget\
         
+    # import pyqtgraph as pg
+        
     from PyQt5.QtCore import Qt, QDateTime
     from PyQt5.QtGui import QFont
     from imgResource import setButtonIcon, setLabelIcon, \
@@ -30,10 +32,13 @@ try:
     import PySQL
 
     from unit_transfer import unit_transfer
-    from plotCanvas import plotCanvas #圖表內部配制
+    from plotCanvasMatplot import plotCanvasMatplot #圖表內部配制
+    from plotCanvasPG import PlotCanvasPG
     from subMenuFrame import subMenuFrame #子選單內部配制
     # from img_to_base64 import image_to_base64
     from login import LoginDialog
+
+    from functools import lru_cache,cache
 
 
 except Exception as e:
@@ -74,6 +79,9 @@ temperature_unit_default='°C'
 # temperature = 0.00 # 攝氏 16.8
 
 #endregion
+
+
+
 
 #class MyWindow
 #region 主畫面
@@ -269,7 +277,8 @@ class MyWindow(QMainWindow):
         self.sub_frame = QFrame(self)
         self.sub_frame.setGeometry(400, 40, 400, 360)
 
-        self.plot_canvas = plotCanvas(self, width=5, height=4)
+        # self.plot_canvas = plotCanvasMatplot(self, width=5, height=4) # 使用Matplot
+        self.plot_canvas = PlotCanvasPG(self) # 使用pyqtgraph
         self.sub_frame.setStyleSheet("background-color: white;")  # 子畫面背景顏色
         # sub_label = QLabel('子畫面')
         # sub_label.setAlignment(Qt.AlignCenter)  # 文字置中
@@ -447,6 +456,7 @@ class MyWindow(QMainWindow):
    
             
     #region 動態更新
+    
     def update(self):
         # global oxygen_concentration, temperature
         try:
@@ -603,26 +613,30 @@ class MyWindow(QMainWindow):
             # print(f'O2:{oxygen_concentration:.2f}, T:{temperature:.2f} {temperature_unit_default}')
             #endregion
             
+            self.updatePlot()
             
-            #region 更新圖表
-                
-            # 清除之前的圖例
-            self.plot_canvas.ax.clear()
-
-            PPV.plotTime = PPV.plotTimeDict[int(PySQL.selectSQL_Var('plotTime'))]
-            # 重新繪製折線圖
-            self.plot_canvas.plot(temperature_unit = temperature_unit_text, 
-                                oxygen_concentration = self.oxygen_concentration, 
-                                temperature = self.temperature #temperature: Celsius, Fahrenheit
-                                )  
-
-            # 在這裡更新畫布
-            self.plot_canvas.draw()
-            #endregion
 
         except Exception as e:
             traceback.print_exc()
             print(f'Exception in update_datetime: {e}')
+
+    #region 更新圖表
+    # @lru_cache()
+    def updatePlot(self):
+                
+        # 清除之前的圖例
+        # self.plot_canvas.ax.clear() # PG不使用
+
+        PPV.plotTime = PPV.plotTimeDict[int(PySQL.selectSQL_Var('plotTime'))]
+        # 重新繪製折線圖
+        self.plot_canvas.plot(temperature_unit = temperature_unit_text, 
+                            oxygen_concentration = self.oxygen_concentration, 
+                            temperature = self.temperature #temperature: Celsius, Fahrenheit
+                            )  
+
+        # 在這裡更新畫布
+        # self.plot_canvas.draw() # PG不使用
+    #endregion
 
 
     #endregion
