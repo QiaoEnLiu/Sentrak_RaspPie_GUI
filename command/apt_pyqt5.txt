@@ -1,0 +1,15 @@
+如果pip install pyqt5在樹莓派或Linux上無效時使用下列指令：
+
+sudo apt update
+
+sudo apt-get update
+
+sudo apt-get install libhdf5-dev
+
+sudo python3 -m pip install --upgrade pip
+或
+sudo python3 -m pip install --upgrade pip -i http://pyqi.douban.com/simple/
+
+sudo apt install pyqt5*
+
+sudo apt install qt5-default qttools5-dev-tools
