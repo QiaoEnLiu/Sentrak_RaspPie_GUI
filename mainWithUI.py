@@ -1,6 +1,8 @@
 #zh-tw
 
-# main.py
+# mainWithUI.py
+# 以UI / XML檔案生成圖形化介面
+
 # 此程式碼為主畫面，顯示折線圖為主
 # 由於介面往上堆疊，排除初始化介面，折線圖為第一層，進入主選單為第二層，主選單後進入各個子選單為第三層
     # 介面順序由下而上疊：self.plot_canvas/self.menu_page/self.menuSub_page
@@ -19,6 +21,8 @@ try:
         QHBoxLayout, QLabel, QSpacerItem, QSizePolicy, QFrame, QGridLayout,\
         QPushButton, QStackedWidget, QMessageBox, QDesktopWidget\
         
+    from ui.SentrakGUI_ui import Ui_MainWindow as SentrakGUI_MainWindow
+
     # import pyqtgraph as pg
         
     from PyQt5.QtCore import Qt, QDateTime
@@ -85,7 +89,7 @@ temperature_unit_default='°C'
 
 #class MyWindow
 #region 主畫面
-class MyWindow(QMainWindow):
+class MyWindow(QMainWindow, SentrakGUI_MainWindow):
     # for i in PySQL.selectAlarmRelay():
     #     for j in i:
     #         print(j)
@@ -96,6 +100,8 @@ class MyWindow(QMainWindow):
     #region 主畫面元件
     def __init__(self):
         super().__init__()
+        self.setupUi(self)
+
         PPV.start_flask_api() # 啟動Flask API
         # 設定視窗標題
         self.setWindowTitle("Sentrak_RaspPie_GUI")
@@ -132,19 +138,25 @@ class MyWindow(QMainWindow):
         print('視窗大小：', winWidth, '*', winHeight)
         print('螢幕解析：', screen_width, '*', screen_height)
 
+        self.initUI()
+
         #endregion
+
+    def initUI(self):
 
 
         # 創建狀態列
         #region 狀態列
+        
         font.setPointSize(14)
         status_bar = QStatusBar(self)
-        self.setStatusBar(status_bar)
+        # self.setStatusBar(status_bar)
         status_bar.setGeometry(0, 0, 800, 40)  # 設置狀態列的尺寸
-        status_bar.setStyleSheet("QStatusBar {background-color: white; padding: 0; margin: 0;}")  # 設置背景顏色
-        status_bar.setStyleSheet(status_bar.styleSheet() + "QStatusBar::item{border: 0px}")
+        # status_bar.setStyleSheet("QStatusBar {background-color: white; padding: 0; margin: 0;}")  # 設置背景顏色
+        # status_bar.setStyleSheet(status_bar.styleSheet() + "QStatusBar::item{border: 0px}")
         status_bar.setSizeGripEnabled(False)  # 隱藏右下角的調整大小的三角形
         status_bar.setContentsMargins(0, 0, 0, 0)
+
 
         self.alarmNull_label = QLabel('無警告', self)
         self.alarmNull_label.setAlignment(Qt.AlignLeft)
@@ -235,156 +247,160 @@ class MyWindow(QMainWindow):
 
         # 創建中央主畫面及子畫面
         #region 主畫面
-        main_frame = QFrame(self)
-        main_frame.setGeometry(0, 40, 400, 360)
+        # main_frame = QFrame(self)
+        # main_frame.setGeometry(0, 40, 400, 360)
         # main_frame.setStyleSheet("background-color: lightblue;")
-        main_frame.setStyleSheet("background-color: white;")  # 主畫面背景顏色
+        # main_frame.setStyleSheet("background-color: white;")  # 主畫面背景顏色
 
         # temperature_unit_default=unit_transfer.set_temperature_unit(unit=temperature_unit_text)
         # temperature=unit_transfer.convert_temperature(temperature=temperature,unit=temperature_unit_text)
-        self.oxygen_label = QLabel("O<sub>2</sub>") # ° 為Alt 0176
-        self.o2Data = QLabel(f"{self.oxygen_concentration:.2f}")
-        self.o2Unite = QLabel("<strong>ppb</strong>")
-        self.temperture_label=QLabel(f"T")
-        self.tempData = QLabel(f"{self.temperature:.2f}")
-        self.tempUnit = QLabel("<strong>°C</strong>")
+
+        # self.oxygen_label = QLabel("O<sub>2</sub>") # ° 為Alt 0176
+        # self.o2Data = QLabel(f"{self.oxygen_concentration:.2f}")
+        # self.o2Unite = QLabel("<strong>ppb</strong>")
+        # self.temperture_label=QLabel(f"T")
+        # self.tempData = QLabel(f"{self.temperature:.2f}")
+        # self.tempUnit = QLabel("<strong>°C</strong>")
+
         # self.oxygen_label.setAlignment(Qt.AlignCenter)  # 文字置中
         # self.temperture_label.setAlignment(Qt.AlignCenter)
-        font.setPointSize(36)
-        font2.setPointSize(16)
-        font.setBold(True)
-        self.oxygen_label.setFont(font)
-        self.o2Data.setFont(font)
-        self.o2Unite.setFont(font2)
-        self.temperture_label.setFont(font)
-        self.tempData.setFont(font)
-        self.tempUnit.setFont(font2)
-        font.setBold(False)
-        main_frame_layout = QGridLayout(main_frame)
-        main_frame_layout.setContentsMargins(75, 75, 75, 75)
+
+        # font.setPointSize(36)
+        # font2.setPointSize(16)
+        # font.setBold(True)
+        # self.oxygen_label.setFont(font)
+        # self.o2Data.setFont(font)
+        # self.o2Unite.setFont(font2)
+        # self.temperture_label.setFont(font)
+        # self.tempData.setFont(font)
+        # self.tempUnit.setFont(font2)
+        # font.setBold(False)
+        # main_frame_layout = QGridLayout(main_frame)
+        # main_frame_layout.setContentsMargins(75, 75, 75, 75)
+
         # main_frame_layout.setSpacing(0)  # 添加這一行以消除元素之間的間距
-        main_frame_layout.addWidget(self.oxygen_label, 0, 0)
-        main_frame_layout.addWidget(self.o2Data, 0, 1)
-        main_frame_layout.addWidget(self.o2Unite, 0, 2)
-        main_frame_layout.addWidget(self.temperture_label, 1, 0)
-        main_frame_layout.addWidget(self.tempData, 1, 1)
-        main_frame_layout.addWidget(self.tempUnit, 1, 2)
+
+        # main_frame_layout.addWidget(self.oxygen_label, 0, 0)
+        # main_frame_layout.addWidget(self.o2Data, 0, 1)
+        # main_frame_layout.addWidget(self.o2Unite, 0, 2)
+        # main_frame_layout.addWidget(self.temperture_label, 1, 0)
+        # main_frame_layout.addWidget(self.tempData, 1, 1)
+        # main_frame_layout.addWidget(self.tempUnit, 1, 2)
 
         #endregion
 
         #region 折線圖畫面
         # 創建折線圖畫面
-        self.sub_frame = QFrame(self)
-        self.sub_frame.setGeometry(400, 40, 400, 360)
+        # self.sub_frame = QFrame(self)
+        # self.sub_frame.setGeometry(400, 40, 400, 360)
 
-        # self.plot_canvas = plotCanvasMatplot(self, width=5, height=4) # 使用Matplot
+        # # self.plot_canvas = plotCanvasMatplot(self, width=5, height=4) # 使用Matplot
         self.plot_canvas = PlotCanvasPG(self) # 使用pyqtgraph
-        self.sub_frame.setStyleSheet("background-color: white;")  # 子畫面背景顏色
-        # sub_label = QLabel('子畫面')
-        # sub_label.setAlignment(Qt.AlignCenter)  # 文字置中
-        # font.setPointSize(36)
-        # sub_label.setFont(font)
-        self.sub_frame_layout = QVBoxLayout(self.sub_frame)
-        self.sub_frame_layout.setContentsMargins(0, 0, 0, 0)
-        self.sub_frame_layout.setSpacing(0)  # 添加這一行以消除元素之間的間距
+        # self.sub_frame.setStyleSheet("background-color: white;")  # 子畫面背景顏色
+        # # sub_label = QLabel('子畫面')
+        # # sub_label.setAlignment(Qt.AlignCenter)  # 文字置中
+        # # font.setPointSize(36)
+        # # sub_label.setFont(font)
+        # self.sub_frame_layout = QVBoxLayout(self.sub_frame)
+        # self.sub_frame_layout.setContentsMargins(0, 0, 0, 0)
+        # self.sub_frame_layout.setSpacing(0)  # 添加這一行以消除元素之間的間距
         self.sub_frame_layout.addWidget(self.plot_canvas) # 在子畫面中加入 Matplotlib 的畫布
-        # self.sub_frame_layout.addWidget(sub_label)
 
         #endregion
 
         
         # 創建功能列
         #region 功能列
-        function_bar = QFrame(self)
-        function_bar.setGeometry(0, 400, 800, 80)  # 設置功能列的尺寸
-        function_bar.setStyleSheet("background-color: white;")  # 設置背景顏色
+        # function_bar = QFrame(self)
+        # function_bar.setGeometry(0, 400, 800, 80)  # 設置功能列的尺寸
+        # function_bar.setStyleSheet("background-color: white;")  # 設置背景顏色
 
         # 在功能列中添加按鈕
-        self.save_button = QPushButton(function_bar) # 資料儲存
-        # test_button = QPushButton('測試', function_bar)
-        self.quit_button=QPushButton('離開', function_bar) # 離開
-        # self.lock_label = QLabel('螢幕鎖',function_bar)
-        self.lock_button=QPushButton(function_bar) # 解鎖
-        self.logout_button = QPushButton(function_bar) # 登出
-        self.menu_button = QPushButton(function_bar) # 選單
-        self.return_button = QPushButton(function_bar) # 返回
+        # self.save_button = QPushButton(function_bar) # 資料儲存
+        # # test_button = QPushButton('測試', function_bar)
+        # self.quit_button=QPushButton('離開', function_bar) # 離開
+        # # self.lock_label = QLabel('螢幕鎖',function_bar)
+        # self.lock_button=QPushButton(function_bar) # 解鎖
+        # self.logout_button = QPushButton(function_bar) # 登出
+        # self.menu_button = QPushButton(function_bar) # 選單
+        # self.return_button = QPushButton(function_bar) # 返回
 
 
 
         # 設定按鈕大小
-        button_width, button_height = 80, 80
+        # button_width, button_height = 80, 80
 
-        self.save_button.setFixedSize(button_width, button_height)
-        # test_button.setFixedSize(button_width, button_height)
-        self.quit_button.setFixedSize(button_width,button_height)
-        # self.lock_label.setFixedSize(button_width, button_height)
-        self.lock_button.setFixedSize(button_width, button_height)
-        self.logout_button.setFixedSize(button_width, button_height)
-        self.menu_button.setFixedSize(button_width, button_height)
-        self.return_button.setFixedSize(button_width, button_height)
+        # self.save_button.setFixedSize(button_width, button_height)
+        # # test_button.setFixedSize(button_width, button_height)
+        # self.quit_button.setFixedSize(button_width,button_height)
+        # # self.lock_label.setFixedSize(button_width, button_height)
+        # self.lock_button.setFixedSize(button_width, button_height)
+        # self.logout_button.setFixedSize(button_width, button_height)
+        # self.menu_button.setFixedSize(button_width, button_height)
+        # self.return_button.setFixedSize(button_width, button_height)
         
-        font.setPointSize(14)
-        self.save_button.setFont(font)
-        # test_button.setFont(font)
-        self.quit_button.setFont(font)
-        # self.lock_label.setFont(font)
-        self.lock_button.setFont(font)
-        self.logout_button.setFont(font)
-        self.menu_button.setFont(font)
-        self.return_button.setFont(font)
+        # font.setPointSize(14)
+        # self.save_button.setFont(font)
+        # # test_button.setFont(font)
+        # self.quit_button.setFont(font)
+        # # self.lock_label.setFont(font)
+        # self.lock_button.setFont(font)
+        # self.logout_button.setFont(font)
+        # self.menu_button.setFont(font)
+        # self.return_button.setFont(font)
 
         # 按鈕圖示
-        setButtonIcon(self.save_button, 'Save-icon.png')
-        setButtonIcon(self.lock_button, lock_icons[0])
-        setButtonIcon(self.logout_button, lock_icons[1])
-        setButtonIcon(self.menu_button, 'Menu button.png')
-        setButtonIcon(self.return_button, 'return icon.png')
+        # setButtonIcon(self.save_button, 'Save-icon.png')
+        # setButtonIcon(self.lock_button, lock_icons[0])
+        # setButtonIcon(self.logout_button, lock_icons[1])
+        # setButtonIcon(self.menu_button, 'Menu button.png')
+        # setButtonIcon(self.return_button, 'return icon.png')
 
-        self.save_button.setStyleSheet('QPushButton { border: none; }')
-        self.quit_button.setStyleSheet('QPushButton { border: none; }')
-        self.lock_button.setStyleSheet('QPushButton { border: none; }')
-        self.logout_button.setStyleSheet('QPushButton { border: none; }')
-        self.menu_button.setStyleSheet('QPushButton { border: none; }')
-        self.return_button.setStyleSheet('QPushButton { border: none; }')
+        # self.save_button.setStyleSheet('QPushButton { border: none; }')
+        # self.quit_button.setStyleSheet('QPushButton { border: none; }')
+        # self.lock_button.setStyleSheet('QPushButton { border: none; }')
+        # self.logout_button.setStyleSheet('QPushButton { border: none; }')
+        # self.menu_button.setStyleSheet('QPushButton { border: none; }')
+        # self.return_button.setStyleSheet('QPushButton { border: none; }')
 
-        self.quit_button.clicked.connect(self.show_confirmation_dialog)
-        self.lock_button.clicked.connect(self.showLoginDialog)
-        self.menu_button.clicked.connect(self.switch_to_menu)
-        self.return_button.clicked.connect(self.switch_to_previous_page)
-        self.logout_button.clicked.connect(self.logout_button_click)
+        self.quitBtn.clicked.connect(self.show_confirmation_dialog)
+        self.lockBtn.clicked.connect(self.showLoginDialog)
+        self.menuBtn.clicked.connect(self.switch_to_menu)
+        self.returnBtn.clicked.connect(self.switch_to_previous_page)
+        self.logoutBtn.clicked.connect(self.logout_button_click)
 
-        self.lock_button.setVisible(not self.isLogin)
-        self.logout_button.setVisible(self.isLogin)
-        self.menu_button.setVisible(True)
-        self.return_button.setVisible(False)
-        print('登入：',self.logout_button.isVisible())
+        self.lockBtn.setVisible(not self.isLogin)
+        self.logoutBtn.setVisible(self.isLogin)
+        self.menuBtn.setVisible(True)
+        self.returnBtn.setVisible(False)
+        print('登入：',self.logoutBtn.isVisible())
 
 
 
-        function_bar_layout = QHBoxLayout(function_bar)
+        # function_bar_layout = QHBoxLayout(function_bar)
 
-        function_bar_layout1 = QHBoxLayout()
-        function_bar_layout2 = QHBoxLayout()
-        function_bar_layout3 = QHBoxLayout()
+        # function_bar_layout1 = QHBoxLayout()
+        # function_bar_layout2 = QHBoxLayout()
+        # function_bar_layout3 = QHBoxLayout()
 
-        function_bar_layout1.addWidget(self.save_button)
-        # function_bar_layout1.addWidget(test_button)
-        function_bar_layout1.addWidget(self.quit_button)
-        function_bar_layout1.addItem(spacer)
+        # function_bar_layout1.addWidget(self.save_button)
+        # # function_bar_layout1.addWidget(test_button)
+        # function_bar_layout1.addWidget(self.quit_button)
+        # function_bar_layout1.addItem(spacer)
 
-        function_bar_layout2.addItem(spacer_right)
-        # function_bar_layout2.addWidget(self.lock_label)
-        function_bar_layout2.addWidget(self.lock_button)
-        function_bar_layout2.addWidget(self.logout_button)
-        function_bar_layout2.addItem(spacer_left)
+        # function_bar_layout2.addItem(spacer_right)
+        # # function_bar_layout2.addWidget(self.lock_label)
+        # function_bar_layout2.addWidget(self.lock_button)
+        # function_bar_layout2.addWidget(self.logout_button)
+        # function_bar_layout2.addItem(spacer_left)
         
-        function_bar_layout3.addItem(spacer)
-        function_bar_layout3.addWidget(self.menu_button)
-        function_bar_layout3.addWidget(self.return_button)
+        # function_bar_layout3.addItem(spacer)
+        # function_bar_layout3.addWidget(self.menu_button)
+        # function_bar_layout3.addWidget(self.return_button)
 
-        function_bar_layout.addLayout(function_bar_layout1, 1)
-        function_bar_layout.addLayout(function_bar_layout2, 1)
-        function_bar_layout.addLayout(function_bar_layout3, 1)
+        # function_bar_layout.addLayout(function_bar_layout1, 1)
+        # function_bar_layout.addLayout(function_bar_layout2, 1)
+        # function_bar_layout.addLayout(function_bar_layout3, 1)
 
 
         #endregion
@@ -392,23 +408,23 @@ class MyWindow(QMainWindow):
         # 整體畫面配制
         #region 整體畫面
         # 創建一個放置元件的底層佈局
-        central_widget = QWidget(self)
-        self.setCentralWidget(central_widget)
+        # central_widget = QWidget(self)
+        # self.setCentralWidget(central_widget)
 
-        global_layout = QVBoxLayout(central_widget)
-        global_layout.setContentsMargins(0, 0, 0, 0)  # 消除佈局的邊距
-        global_layout.setSpacing(0)
+        # global_layout = QVBoxLayout(central_widget)
+        # global_layout.setContentsMargins(0, 0, 0, 0)  # 消除佈局的邊距
+        # global_layout.setSpacing(0)
 
 
-        # 創建一個放置元件的子佈局
-        main_layout = QHBoxLayout()
-        main_layout.setSpacing(0)
-        main_layout.addWidget(main_frame, 1)  # 添加主畫面到佈局，第二個參數是優先級，表示佔用100的寬度
-        main_layout.addWidget(self.sub_frame, 1) # 添加子畫面到佈局
+        # # 創建一個放置元件的子佈局
+        # main_layout = QHBoxLayout()
+        # main_layout.setSpacing(0)
+        # main_layout.addWidget(main_frame, 1)  # 添加主畫面到佈局，第二個參數是優先級，表示佔用100的寬度
+        # main_layout.addWidget(self.sub_frame, 1) # 添加子畫面到佈局
 
-        global_layout.addWidget(status_bar, 1)  # 添加狀態列到佈局佔用 1 的高度
-        global_layout.addLayout(main_layout,8) # 添加子佈局到佈局
-        global_layout.addWidget(function_bar, 2)  # 添加功能列到佈局，功能列佔用 2 的高度
+        # global_layout.addWidget(status_bar, 1)  # 添加狀態列到佈局佔用 1 的高度
+        # global_layout.addLayout(main_layout,8) # 添加子佈局到佈局
+        # global_layout.addWidget(function_bar, 2)  # 添加功能列到佈局，功能列佔用 2 的高度
 
         #endregion
 
@@ -668,9 +684,9 @@ class MyWindow(QMainWindow):
             self.isLogin=True
             # username = login_dialog.username_input.text()
             # password = login_dialog.password_input.text()
-            self.logout_button.setVisible(self.isLogin)
-            self.lock_button.setVisible(not self.isLogin)
-            # print('logout_button:',self.logout_button.isVisible())
+            self.logoutBtn.setVisible(self.isLogin)
+            self.lockBtn.setVisible(not self.isLogin)
+            # print('logoutBtn:',self.logoutBtn.isVisible())
             print('登入成功')
             PPV.presentUser = login_dialog.get_global_loginUser()
 
@@ -686,9 +702,8 @@ class MyWindow(QMainWindow):
 
     #region 登入成功行為
     def handle_login_success(self, checkLogin):
-        # 登入成功時觸發，將 logout_button 由不可見改為可見
         print('收到 login_successful 信號:', checkLogin)
-        self.logout_button.setVisible(True)
+        self.logoutBtn.setVisible(True)
     #endregion
 
     #region 是否有登入
@@ -712,8 +727,8 @@ class MyWindow(QMainWindow):
             self.isLogin=False
 
             QMessageBox.information(self, '登出成功', '返回主頁面')
-            self.logout_button.setVisible(self.isLogin) 
-            print('logout_button_click:',self.logout_button.isVisible())
+            self.logoutBtn.setVisible(self.isLogin) 
+            print('logoutBTN_click:',self.logoutBtn.isVisible())
 
             # 將畫面切換回主畫面（清空堆疊）
             # 判斷是否只剩下一頁，如果是，則不執行刪除
@@ -740,9 +755,9 @@ class MyWindow(QMainWindow):
             # print('Plot Index:', self.plot_page_index)
             print('Plot Index:',self.stacked_widget.count())
 
-            self.lock_button.setVisible(not self.isLogin)
-            self.return_button.setVisible(False)
-            self.menu_button.setVisible(True)
+            self.logoutBtn.setVisible(not self.isLogin)
+            self.returnBtn.setVisible(False)
+            self.menuBtn.setVisible(True)
         else:
             return
         
@@ -775,8 +790,8 @@ class MyWindow(QMainWindow):
                 self.stacked_widget.setCurrentIndex(self.menu_page_index)
 
             # 根據當前的畫面索引顯示或隱藏按鈕
-            self.menu_button.setVisible(self.current_page_index == self.plot_page_index)
-            self.return_button.setVisible(self.current_page_index == self.menu_page_index)
+            self.menuBtn.setVisible(self.current_page_index == self.plot_page_index)
+            self.returnBtn.setVisible(self.current_page_index == self.menu_page_index)
 
             print('主選單 Index:', self.stacked_widget.count())
 
@@ -851,7 +866,7 @@ class MyWindow(QMainWindow):
         menu_page_layout.addWidget(self.record_button, 1, 0, 1, 1)
         menu_page_layout.addWidget(self.identify_button, 1, 1, 1, 1)
 
-        # print('登入：',self.logout_button.isVisible())
+        # print('登入：',self.logoutBtn.isVisible())
         return menu_page
     
     #endregion
@@ -859,11 +874,11 @@ class MyWindow(QMainWindow):
     # 主選單前往子選單畫面
     #region 在主選單中前往下一個子選單清單頁面（第三頁）
     def sub_menu_page(self, page_name, _style):
-        print('登入：',self.logout_button.isVisible())
+        print('登入：',self.logoutBtn.isVisible())
         print('進入：', page_name)
 
         # 隱藏選單按鈕
-        self.menu_button.setVisible(False)
+        self.menuBtn.setVisible(False)
 
         # 判斷是否已經創建了該子畫面
         if page_name not in self.sub_pages or not self.stacked_widget.widget(self.sub_pages[page_name]):
@@ -888,7 +903,7 @@ class MyWindow(QMainWindow):
         print(f'{page_name} Index: {self.stacked_widget.count()}')
 
         # 顯示返回按鈕
-        self.return_button.setVisible(True)
+        self.returnBtn.setVisible(True)
 
     #endregion
     #endregion
@@ -927,8 +942,8 @@ class MyWindow(QMainWindow):
                     del self.sub_pages[title]
 
             # 根據當前的畫面索引顯示或隱藏按鈕
-            self.menu_button.setVisible(self.current_page_index == self.plot_page_index)
-            self.return_button.setVisible(self.current_page_index != self.plot_page_index)
+            self.menuBtn.setVisible(self.current_page_index == self.plot_page_index)
+            self.returnBtn.setVisible(self.current_page_index != self.plot_page_index)
 
         print('Last Index:', self.stacked_widget.count())
 
