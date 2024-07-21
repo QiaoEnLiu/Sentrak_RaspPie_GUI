@@ -10,6 +10,12 @@
     <height>480</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
     <width>800</width>
@@ -24,14 +30,14 @@
   </property>
   <property name="sizeIncrement">
    <size>
-    <width>0</width>
-    <height>0</height>
+    <width>800</width>
+    <height>480</height>
    </size>
   </property>
   <property name="baseSize">
    <size>
-    <width>0</width>
-    <height>0</height>
+    <width>800</width>
+    <height>480</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -41,50 +47,392 @@
    <property name="minimumSize">
     <size>
      <width>800</width>
-     <height>440</height>
+     <height>480</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>800</width>
-     <height>440</height>
+     <height>480</height>
     </size>
    </property>
    <property name="sizeIncrement">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>800</width>
+     <height>480</height>
     </size>
    </property>
    <property name="baseSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>800</width>
+     <height>480</height>
     </size>
    </property>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>1</x>
-      <y>1</y>
+      <x>0</x>
+      <y>0</y>
       <width>804</width>
-      <height>454</height>
+      <height>492</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="main_func_layout" stretch="0,0">
+    <layout class="QVBoxLayout" name="windows_layout" stretch="1,8,2">
      <property name="spacing">
       <number>0</number>
      </property>
+     <property name="sizeConstraint">
+      <enum>QLayout::SetFixedSize</enum>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
      <item>
-      <layout class="QHBoxLayout" name="main_layout">
+      <layout class="QHBoxLayout" name="statusLayout">
        <property name="spacing">
         <number>0</number>
        </property>
        <property name="sizeConstraint">
-        <enum>QLayout::SetNoConstraint</enum>
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="statusLeftLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SetDefaultConstraint</enum>
+         </property>
+         <item>
+          <widget class="QLabel" name="alarmNull_label">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>40</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>無警告</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="alarm1_label">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>40</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>警告1</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="alarm2_label">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>警告2</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="statusCentLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SetDefaultConstraint</enum>
+         </property>
+         <item>
+          <widget class="QLabel" name="datetime">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>40</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>datetime</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="statusRightLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SetDefaultConstraint</enum>
+         </property>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="stateUSB_label">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="stateBattery_label">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>40</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>電池</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="stateConnect_label">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>離線</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="center_layout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
        </property>
        <item>
         <widget class="QFrame" name="main_frame">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
           <size>
            <width>400</width>
@@ -99,14 +447,14 @@
          </property>
          <property name="sizeIncrement">
           <size>
-           <width>0</width>
-           <height>0</height>
+           <width>400</width>
+           <height>360</height>
           </size>
          </property>
          <property name="baseSize">
           <size>
-           <width>0</width>
-           <height>0</height>
+           <width>400</width>
+           <height>360</height>
           </size>
          </property>
          <property name="frameShape">
@@ -118,13 +466,16 @@
          <widget class="QWidget" name="gridLayoutWidget">
           <property name="geometry">
            <rect>
-            <x>-1</x>
-            <y>-1</y>
+            <x>0</x>
+            <y>0</y>
             <width>401</width>
             <height>361</height>
            </rect>
           </property>
-          <layout class="QGridLayout" name="main_Grid_layout">
+          <layout class="QGridLayout" name="main_frame_layout">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
+           </property>
            <property name="leftMargin">
             <number>75</number>
            </property>
@@ -140,15 +491,15 @@
            <property name="spacing">
             <number>0</number>
            </property>
-           <item row="1" column="2">
-            <widget class="QLabel" name="oxygen_label">
+           <item row="1" column="3">
+            <widget class="QLabel" name="o2Data">
              <property name="font">
               <font>
                <pointsize>36</pointsize>
               </font>
              </property>
              <property name="text">
-              <string>O&lt;sub&gt;2&lt;/sub&gt;</string>
+              <string>0.00</string>
              </property>
             </widget>
            </item>
@@ -164,18 +515,6 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="3">
-            <widget class="QLabel" name="o2Data">
-             <property name="font">
-              <font>
-               <pointsize>36</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>0.00</string>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="2">
             <widget class="QLabel" name="temperture_label">
              <property name="font">
@@ -185,18 +524,6 @@
              </property>
              <property name="text">
               <string>T</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="3">
-            <widget class="QLabel" name="tempData">
-             <property name="font">
-              <font>
-               <pointsize>36</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>0.00</string>
              </property>
             </widget>
            </item>
@@ -212,12 +539,42 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="oxygen_label">
+             <property name="font">
+              <font>
+               <pointsize>36</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>O&lt;sub&gt;2&lt;/sub&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QLabel" name="tempData">
+             <property name="font">
+              <font>
+               <pointsize>36</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>0.00</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </widget>
        </item>
        <item>
         <widget class="QFrame" name="sub_frame">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
           <size>
            <width>400</width>
@@ -232,14 +589,14 @@
          </property>
          <property name="sizeIncrement">
           <size>
-           <width>0</width>
-           <height>0</height>
+           <width>400</width>
+           <height>360</height>
           </size>
          </property>
          <property name="baseSize">
           <size>
-           <width>0</width>
-           <height>0</height>
+           <width>400</width>
+           <height>360</height>
           </size>
          </property>
          <property name="frameShape">
@@ -251,15 +608,18 @@
          <widget class="QWidget" name="verticalLayoutWidget">
           <property name="geometry">
            <rect>
-            <x>-1</x>
-            <y>0</y>
+            <x>1</x>
+            <y>1</y>
             <width>401</width>
             <height>361</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="sub_frame_layout">
+          <layout class="QVBoxLayout" name="sub_frame_layout" stretch="">
            <property name="spacing">
             <number>0</number>
+           </property>
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
            </property>
           </layout>
          </widget>
@@ -281,13 +641,19 @@
           <number>0</number>
          </property>
          <property name="sizeConstraint">
-          <enum>QLayout::SetNoConstraint</enum>
+          <enum>QLayout::SetDefaultConstraint</enum>
          </property>
          <property name="leftMargin">
           <number>0</number>
          </property>
          <item>
           <widget class="QPushButton" name="saveBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>80</width>
@@ -325,6 +691,12 @@
          </item>
          <item>
           <widget class="QPushButton" name="quitBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>80</width>
@@ -396,10 +768,16 @@
           <number>0</number>
          </property>
          <property name="sizeConstraint">
-          <enum>QLayout::SetNoConstraint</enum>
+          <enum>QLayout::SetDefaultConstraint</enum>
          </property>
          <item>
           <widget class="QPushButton" name="lockBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>80</width>
@@ -443,7 +821,7 @@
           <number>0</number>
          </property>
          <property name="sizeConstraint">
-          <enum>QLayout::SetNoConstraint</enum>
+          <enum>QLayout::SetDefaultConstraint</enum>
          </property>
          <property name="leftMargin">
           <number>0</number>
@@ -475,6 +853,12 @@
          </item>
          <item>
           <widget class="QPushButton" name="logoutBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>80</width>
@@ -512,6 +896,12 @@
          </item>
          <item>
           <widget class="QPushButton" name="returnBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>80</width>
@@ -549,6 +939,12 @@
          </item>
          <item>
           <widget class="QPushButton" name="menuBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>80</width>
@@ -591,7 +987,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <resources/>
  <connections/>

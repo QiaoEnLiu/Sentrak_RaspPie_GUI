@@ -7,6 +7,8 @@
 # 由於介面往上堆疊，排除初始化介面，折線圖為第一層，進入主選單為第二層，主選單後進入各個子選單為第三層
     # 介面順序由下而上疊：self.plot_canvas/self.menu_page/self.menuSub_page
 
+# 16777215
+
 
 try:
     
@@ -64,9 +66,9 @@ print(platform.system())
 font = QFont()
 font2 = QFont()
 
-spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-spacer_right = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-spacer_left = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+# spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+# spacer_right = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+# spacer_left = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
 
 # modbusTempUnit, sqlTempUnit = 0, 0
@@ -149,106 +151,107 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
         #region 狀態列
         
         font.setPointSize(14)
-        status_bar = QStatusBar(self)
-        # self.setStatusBar(status_bar)
-        status_bar.setGeometry(0, 0, 800, 40)  # 設置狀態列的尺寸
-        # status_bar.setStyleSheet("QStatusBar {background-color: white; padding: 0; margin: 0;}")  # 設置背景顏色
-        # status_bar.setStyleSheet(status_bar.styleSheet() + "QStatusBar::item{border: 0px}")
-        status_bar.setSizeGripEnabled(False)  # 隱藏右下角的調整大小的三角形
-        status_bar.setContentsMargins(0, 0, 0, 0)
+
+        # status_bar = QStatusBar(self)
+        # # self.setStatusBar(status_bar)
+        # status_bar.setGeometry(0, 0, 800, 40)  # 設置狀態列的尺寸
+        # # status_bar.setStyleSheet("QStatusBar {background-color: white; padding: 0; margin: 0;}")  # 設置背景顏色
+        # # status_bar.setStyleSheet(status_bar.styleSheet() + "QStatusBar::item{border: 0px}")
+        # status_bar.setSizeGripEnabled(False)  # 隱藏右下角的調整大小的三角形
+        # status_bar.setContentsMargins(0, 0, 0, 0)
 
 
-        self.alarmNull_label = QLabel('無警告', self)
-        self.alarmNull_label.setAlignment(Qt.AlignLeft)
-        self.alarmNull_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
-        self.alarmNull_label.setFont(font)
-        setLabelIcon(self.alarmNull_label, stateAlarm_icons[0])
+        # self.alarmNull_label = QLabel('無警告', self)
+        # self.alarmNull_label.setAlignment(Qt.AlignLeft)
+        # self.alarmNull_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
+        # self.alarmNull_label.setFont(font)
+        # setLabelIcon(self.alarmNull_label, stateAlarm_icons[0])
         
-        self.alarm1_label = QLabel('警告1', self)
-        self.alarm1_label.setAlignment(Qt.AlignLeft)
-        self.alarm1_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
-        self.alarm1_label.setFont(font)
-        self.alarm1_label.setVisible(False)
-        setLabelIcon(self.alarm1_label, stateAlarm_icons[1])
+        # self.alarm1_label = QLabel('警告1', self)
+        # self.alarm1_label.setAlignment(Qt.AlignLeft)
+        # self.alarm1_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
+        # self.alarm1_label.setFont(font)
+        # self.alarm1_label.setVisible(False)
+        # setLabelIcon(self.alarm1_label, stateAlarm_icons[1])
 
-        self.alarm2_label = QLabel('警告2', self)
-        self.alarm2_label.setAlignment(Qt.AlignLeft)
-        self.alarm2_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
-        self.alarm2_label.setFont(font)
-        self.alarm2_label.setVisible(False)
-        setLabelIcon(self.alarm2_label, stateAlarm_icons[2])
-
-
-        # 在狀態列中央加入日期時間
-        self.datetime = QLabel(self)
-        self.datetime.setAlignment(Qt.AlignCenter| Qt.AlignCenter)  # 文字置中
-        self.datetime.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
-        # self.datetime.setStyleSheet("padding: 0; margin: 0;")
-        self.datetime.setFont(font)
-
-        self.stateUSB_label = QLabel('USB', self)
-        self.stateUSB_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
-        self.stateUSB_label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
-        self.stateUSB_label.setFont(font)
-        setLabelIcon(self.stateUSB_label, stateWire_icons[2])
+        # self.alarm2_label = QLabel('警告2', self)
+        # self.alarm2_label.setAlignment(Qt.AlignLeft)
+        # self.alarm2_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
+        # self.alarm2_label.setFont(font)
+        # self.alarm2_label.setVisible(False)
+        # setLabelIcon(self.alarm2_label, stateAlarm_icons[2])
 
 
-        self.stateBattery_label = QLabel('電池', self)
-        self.stateBattery_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
-        self.stateBattery_label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
-        self.stateBattery_label.setFont(font)
-        setLabelIcon(self.stateBattery_label, stateBattery_icons[0])
+        # # 在狀態列中央加入日期時間
+        # self.datetime = QLabel(self)
+        # self.datetime.setAlignment(Qt.AlignCenter| Qt.AlignCenter)  # 文字置中
+        # self.datetime.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
+        # # self.datetime.setStyleSheet("padding: 0; margin: 0;")
+        # self.datetime.setFont(font)
 
-        self.stateConnect_label = QLabel('離線', self)
-        self.stateConnect_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
-        self.stateConnect_label.setAlignment(Qt.AlignRight| Qt.AlignCenter)
-        self.stateConnect_label.setFont(font)
-        # setLabelIcon(self.stateConnect_label, )
-
-        # 建立容器 widget 用來放置元件
-        container_widget = QWidget(self)
-        container_layout = QHBoxLayout(container_widget)
-        container_layout.setContentsMargins(0, 0, 0, 0)
-
-        container_layout1 = QHBoxLayout()
-        container_layout2 = QHBoxLayout()
-        container_layout3 = QHBoxLayout()
-
-        # 將 QLabel 加入狀態列，並指定伸縮因子為1
-        # 添加元件到容器
-        container_layout1.addWidget(self.alarmNull_label)
-        container_layout1.addWidget(self.alarm1_label)
-        container_layout1.addWidget(self.alarm2_label)
-        container_layout1.addItem(spacer)
-
-        container_layout2.addItem(spacer_left)
-        container_layout2.addWidget(self.datetime)
-        container_layout2.addItem(spacer_right)
-
-        container_layout3.addItem(spacer)
-        container_layout3.addWidget(self.stateUSB_label)
-        container_layout3.addWidget(self.stateBattery_label)
-        container_layout3.addWidget(self.stateConnect_label)
-
-        container_layout.addLayout(container_layout1)
-        container_layout.addLayout(container_layout2)
-        container_layout.addLayout(container_layout3)
+        # self.stateUSB_label = QLabel('USB', self)
+        # self.stateUSB_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
+        # self.stateUSB_label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
+        # self.stateUSB_label.setFont(font)
+        # setLabelIcon(self.stateUSB_label, stateWire_icons[2])
 
 
-        # status_bar.addWidget(self.alarmNull_label)
-        # status_bar.addWidget(self.alarm1_label)
-        # status_bar.addWidget(self.alarm2_label, 1)
-        # status_bar.addWidget(self.datetime, 1)
-        # status_bar.addWidget(self.state_label, 1)
+        # self.stateBattery_label = QLabel('電池', self)
+        # self.stateBattery_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
+        # self.stateBattery_label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
+        # self.stateBattery_label.setFont(font)
+        # setLabelIcon(self.stateBattery_label, stateBattery_icons[0])
 
-        status_bar.addWidget(container_widget,1)
+        # self.stateConnect_label = QLabel('離線', self)
+        # self.stateConnect_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
+        # self.stateConnect_label.setAlignment(Qt.AlignRight| Qt.AlignCenter)
+        # self.stateConnect_label.setFont(font)
+        # # setLabelIcon(self.stateConnect_label, )
+
+        # # 建立容器 widget 用來放置元件
+        # container_widget = QWidget(self)
+        # container_layout = QHBoxLayout(container_widget)
+        # container_layout.setContentsMargins(0, 0, 0, 0)
+
+        # container_layout1 = QHBoxLayout()
+        # container_layout2 = QHBoxLayout()
+        # container_layout3 = QHBoxLayout()
+
+        # # 將 QLabel 加入狀態列，並指定伸縮因子為1
+        # # 添加元件到容器
+        # container_layout1.addWidget(self.alarmNull_label)
+        # container_layout1.addWidget(self.alarm1_label)
+        # container_layout1.addWidget(self.alarm2_label)
+        # container_layout1.addItem(spacer)
+
+        # container_layout2.addItem(spacer_left)
+        # container_layout2.addWidget(self.datetime)
+        # container_layout2.addItem(spacer_right)
+
+        # container_layout3.addItem(spacer)
+        # container_layout3.addWidget(self.stateUSB_label)
+        # container_layout3.addWidget(self.stateBattery_label)
+        # container_layout3.addWidget(self.stateConnect_label)
+
+        # container_layout.addLayout(container_layout1)
+        # container_layout.addLayout(container_layout2)
+        # container_layout.addLayout(container_layout3)
+
+
+        # # status_bar.addWidget(self.alarmNull_label)
+        # # status_bar.addWidget(self.alarm1_label)
+        # # status_bar.addWidget(self.alarm2_label, 1)
+        # # status_bar.addWidget(self.datetime, 1)
+        # # status_bar.addWidget(self.state_label, 1)
+
+        # status_bar.addWidget(container_widget,1)
         #endregion
 
 
         # 創建中央主畫面及子畫面
         #region 主畫面
         # main_frame = QFrame(self)
-        # main_frame.setGeometry(0, 40, 400, 360)
+        # self.main_frame.setGeometry(0, 40, 400, 360)
         # main_frame.setStyleSheet("background-color: lightblue;")
         # main_frame.setStyleSheet("background-color: white;")  # 主畫面背景顏色
 
@@ -293,7 +296,7 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
         # 創建折線圖畫面
         # self.sub_frame = QFrame(self)
         # self.sub_frame.setGeometry(400, 40, 400, 360)
-
+        
         # # self.plot_canvas = plotCanvasMatplot(self, width=5, height=4) # 使用Matplot
         self.plot_canvas = PlotCanvasPG(self) # 使用pyqtgraph
         # self.sub_frame.setStyleSheet("background-color: white;")  # 子畫面背景顏色
@@ -304,7 +307,7 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
         # self.sub_frame_layout = QVBoxLayout(self.sub_frame)
         # self.sub_frame_layout.setContentsMargins(0, 0, 0, 0)
         # self.sub_frame_layout.setSpacing(0)  # 添加這一行以消除元素之間的間距
-        self.sub_frame_layout.addWidget(self.plot_canvas) # 在子畫面中加入 Matplotlib 的畫布
+        # self.sub_frame_layout.addWidget(self.plot_canvas) # 在子畫面中加入 Matplotlib 的畫布
 
         #endregion
 
