@@ -24,6 +24,7 @@ try:
         QPushButton, QStackedWidget, QMessageBox, QDesktopWidget\
         
     from ui.SentrakGUI_ui import Ui_MainWindow as SentrakGUI_MainWindow
+    from ui.manu_page_ui import Ui_Frame as menu_page
 
     # import pyqtgraph as pg
         
@@ -779,7 +780,7 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
             
         else:
             print('進入目錄成功')
-            self.menu_page_index = self.stacked_widget.addWidget(self.create_menu_page()) #此處添加了目錄畫面（第二頁）
+            self.menu_page_index = self.stacked_widget.addWidget(self.create_menu_page()) #此處添加了目錄畫面（第二頁） 
             if self.menu_page_index is None:
                 self.menu_page = self.create_menu_page()
                 self.menu_page_index = self.stacked_widget.addWidget(self.menu_page)
@@ -802,8 +803,10 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
     
     # 創建主選單畫面
     #region 建立主選單及其元件、配制
-    def create_menu_page(self):       
+    def create_menu_page(self): 
 
+        menu = menu_page()
+        '''
         menu_page = QFrame(self)
         menu_page.setStyleSheet("background-color: white;")  # 選單畫面背景顏色
 
@@ -857,20 +860,29 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
         self.record_button.setFont(font)
         self.identify_button.setFont(font)
 
-        # 連接按鈕點擊事件（前往各個子選單）
-        self.set_button.clicked.connect(lambda: self.sub_menu_page("設定",self.set_button.styleSheet()))
-        self.calibrate_button.clicked.connect(lambda: self.sub_menu_page("校正",self.calibrate_button.styleSheet()))
-        self.record_button.clicked.connect(lambda: self.sub_menu_page("記錄",self.record_button.styleSheet()))
-        self.identify_button.clicked.connect(lambda: self.sub_menu_page("識別",self.identify_button.styleSheet()))
-
         # 將按鈕添加到GridLayout中
         menu_page_layout.addWidget(self.set_button, 0, 0, 1, 1)
         menu_page_layout.addWidget(self.calibrate_button, 0, 1, 1, 1)
         menu_page_layout.addWidget(self.record_button, 1, 0, 1, 1)
         menu_page_layout.addWidget(self.identify_button, 1, 1, 1, 1)
+        '''
+
+        # 連接按鈕點擊事件（前往各個子選單）
+        # self.set_button.clicked.connect(lambda: self.sub_menu_page("設定",self.set_button.styleSheet()))
+        # self.calibrate_button.clicked.connect(lambda: self.sub_menu_page("校正",self.calibrate_button.styleSheet()))
+        # self.record_button.clicked.connect(lambda: self.sub_menu_page("記錄",self.record_button.styleSheet()))
+        # self.identify_button.clicked.connect(lambda: self.sub_menu_page("識別",self.identify_button.styleSheet()))
+
+        menu.set_button.clicked.connect(lambda: self.sub_menu_page("設定",menu.set_button.styleSheet()))
+        menu.calibrate_button.clicked.connect(lambda: self.sub_menu_page("校正",menu.calibrate_button.styleSheet()))
+        menu.record_button.clicked.connect(lambda: self.sub_menu_page("記錄",menu.record_button.styleSheet()))
+        menu.identify_button.clicked.connect(lambda: self.sub_menu_page("識別",menu.identify_button.styleSheet()))
+
+
+
 
         # print('登入：',self.logoutBtn.isVisible())
-        return menu_page
+        return menu
     
     #endregion
 
