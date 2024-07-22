@@ -11,19 +11,19 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Frame(object):
-    def setupUi(self, Frame):
-        Frame.setObjectName("Frame")
-        Frame.resize(400, 360)
-        Frame.setMinimumSize(QtCore.QSize(400, 360))
-        Frame.setMaximumSize(QtCore.QSize(400, 360))
-        Frame.setSizeIncrement(QtCore.QSize(400, 360))
-        Frame.setBaseSize(QtCore.QSize(400, 360))
-        self.gridLayoutWidget = QtWidgets.QWidget(Frame)
+class Ui_menu_page(object):
+    def setupUi(self, menu_page):
+        menu_page.setObjectName("menu_page")
+        menu_page.resize(400, 360)
+        menu_page.setMinimumSize(QtCore.QSize(400, 360))
+        menu_page.setMaximumSize(QtCore.QSize(400, 360))
+        menu_page.setSizeIncrement(QtCore.QSize(400, 360))
+        menu_page.setBaseSize(QtCore.QSize(400, 360))
+        self.gridLayoutWidget = QtWidgets.QWidget(menu_page)
         self.gridLayoutWidget.setGeometry(QtCore.QRect(0, 0, 401, 361))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
         self.menu_page_layout = QtWidgets.QGridLayout(self.gridLayoutWidget)
-        self.menu_page_layout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
+        self.menu_page_layout.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
         self.menu_page_layout.setContentsMargins(0, 0, 0, 0)
         self.menu_page_layout.setSpacing(0)
         self.menu_page_layout.setObjectName("menu_page_layout")
@@ -68,13 +68,13 @@ class Ui_Frame(object):
         self.identify_button.setObjectName("identify_button")
         self.menu_page_layout.addWidget(self.identify_button, 1, 1, 1, 1)
 
-        self.retranslateUi(Frame)
-        QtCore.QMetaObject.connectSlotsByName(Frame)
+        self.retranslateUi(menu_page)
+        QtCore.QMetaObject.connectSlotsByName(menu_page)
 
-    def retranslateUi(self, Frame):
+    def retranslateUi(self, menu_page):
         _translate = QtCore.QCoreApplication.translate
-        Frame.setWindowTitle(_translate("Frame", "Frame"))
-        self.set_button.setText(_translate("Frame", "設定"))
-        self.record_button.setText(_translate("Frame", "記錄"))
-        self.calibrate_button.setText(_translate("Frame", "校正"))
-        self.identify_button.setText(_translate("Frame", "識別"))
+        menu_page.setWindowTitle(_translate("menu_page", "Frame"))
+        self.set_button.setText(_translate("menu_page", "設定"))
+        self.record_button.setText(_translate("menu_page", "記錄"))
+        self.calibrate_button.setText(_translate("menu_page", "校正"))
+        self.identify_button.setText(_translate("menu_page", "識別"))

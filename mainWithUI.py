@@ -24,7 +24,7 @@ try:
         QPushButton, QStackedWidget, QMessageBox, QDesktopWidget\
         
     from ui.SentrakGUI_ui import Ui_MainWindow as SentrakGUI_MainWindow
-    from ui.manu_page_ui import Ui_Frame as menu_page
+    from ui.manu_page_ui import Ui_menu_page as menu_page
 
     # import pyqtgraph as pg
         
@@ -804,8 +804,11 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
     # 創建主選單畫面
     #region 建立主選單及其元件、配制
     def create_menu_page(self): 
+        menuFrame=QFrame()
 
         menu = menu_page()
+        menu.setupUi(menuFrame)
+        
         '''
         menu_page = QFrame(self)
         menu_page.setStyleSheet("background-color: white;")  # 選單畫面背景顏色
@@ -882,7 +885,7 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
 
 
         # print('登入：',self.logoutBtn.isVisible())
-        return menu
+        return menuFrame
     
     #endregion
 
