@@ -8,6 +8,7 @@
     # 介面順序由下而上疊：self.plot_canvas/self.menu_page/self.menuSub_page
 
 # 16777215
+# import picture.icon.icon_rc
 
 
 try:

@@ -122,20 +122,20 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
+             <width>75</width>
              <height>40</height>
             </size>
            </property>
            <property name="sizeIncrement">
             <size>
              <width>0</width>
-             <height>40</height>
+             <height>-1</height>
             </size>
            </property>
            <property name="baseSize">
             <size>
-             <width>40</width>
-             <height>40</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="font">
@@ -143,8 +143,17 @@
              <pointsize>14</pointsize>
             </font>
            </property>
+           <property name="contextMenuPolicy">
+            <enum>Qt::NoContextMenu</enum>
+           </property>
            <property name="text">
-            <string>無警告</string>
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="../picture/icon/icon.qrc">:/stateAlarm_icons/Alarm icon null.jpg</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -158,7 +167,7 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
+             <width>75</width>
              <height>40</height>
             </size>
            </property>
@@ -180,7 +189,13 @@
             </font>
            </property>
            <property name="text">
-            <string>警告1</string>
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="../picture/icon/icon.qrc">:/stateAlarm_icons/Alarm 1 icon.jpg</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -197,7 +212,7 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
+             <width>75</width>
              <height>40</height>
             </size>
            </property>
@@ -213,7 +228,13 @@
             </font>
            </property>
            <property name="text">
-            <string>警告2</string>
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="../picture/icon/icon.qrc">:/stateAlarm_icons/Alarm 2 icon.jpg</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -312,11 +333,17 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
+             <width>100</width>
              <height>40</height>
             </size>
            </property>
            <property name="sizeIncrement">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="baseSize">
             <size>
              <width>0</width>
              <height>0</height>
@@ -331,7 +358,13 @@
             <enum>Qt::LeftToRight</enum>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="../picture/icon/icon.qrc">:/stateWire_icons/usb icon.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -348,7 +381,7 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
+             <width>100</width>
              <height>40</height>
             </size>
            </property>
@@ -370,7 +403,13 @@
             </font>
            </property>
            <property name="text">
-            <string>電池</string>
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="../picture/icon/icon.qrc">:/stateBattery_icons/Battery icon.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -387,7 +426,7 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
+             <width>150</width>
              <height>40</height>
             </size>
            </property>
@@ -404,6 +443,9 @@
            </property>
            <property name="text">
             <string>離線</string>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -609,12 +651,12 @@
           <property name="geometry">
            <rect>
             <x>1</x>
-            <y>1</y>
+            <y>0</y>
             <width>401</width>
             <height>361</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="sub_frame_layout" stretch="">
+          <layout class="QVBoxLayout" name="sub_frame_layout">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -678,6 +720,9 @@
              <height>0</height>
             </size>
            </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
            <property name="text">
             <string>儲存</string>
            </property>
@@ -721,6 +766,9 @@
              <height>0</height>
             </size>
            </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
            <property name="text">
             <string>離開</string>
            </property>
@@ -763,7 +811,7 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="funcCenterLayout" stretch="0">
+        <layout class="QHBoxLayout" name="funcCenterLayout" stretch="0,0">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -772,6 +820,65 @@
          </property>
          <item>
           <widget class="QPushButton" name="lockBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>80</horstretch>
+             <verstretch>80</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="accessibleDescription">
+            <string/>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton { border: none; }</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../picture/icon/icon.qrc">
+             <normaloff>:/lock_icons/Lock icon.jpg</normaloff>:/lock_icons/Lock icon.jpg</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="autoRepeat">
+            <bool>false</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="logoutBtn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -802,8 +909,15 @@
              <height>0</height>
             </size>
            </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton { border: none; }</string>
+           </property>
            <property name="text">
-            <string>登入</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../picture/icon/icon.qrc">
+             <normaloff>:/lock_icons/Unlock icon.jpg</normaloff>:/lock_icons/Unlock icon.jpg</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -816,7 +930,7 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="funcLeftLayout" stretch="0,0,0,0">
+        <layout class="QHBoxLayout" name="funcLeftLayout" stretch="0,0,0">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -852,49 +966,6 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="logoutBtn">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>80</width>
-             <height>80</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>80</width>
-             <height>80</height>
-            </size>
-           </property>
-           <property name="sizeIncrement">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="baseSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>登出</string>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>80</width>
-             <height>80</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="returnBtn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -926,8 +997,15 @@
              <height>0</height>
             </size>
            </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton { border: none; }</string>
+           </property>
            <property name="text">
-            <string>返回</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../picture/icon/icon.qrc">
+             <normaloff>:/stackPage/return icon.png</normaloff>:/stackPage/return icon.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -969,8 +1047,15 @@
              <height>0</height>
             </size>
            </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton { border: none; }</string>
+           </property>
            <property name="text">
-            <string>選單</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../picture/icon/icon.qrc">
+             <normaloff>:/stackPage/Menu button.png</normaloff>:/stackPage/Menu button.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -988,6 +1073,8 @@
    </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../picture/icon/icon.qrc"/>
+ </resources>
  <connections/>
 </ui>

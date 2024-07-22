@@ -1,0 +1,44 @@
+<RCC>
+  <qresource prefix="stateAlarm_icons">
+    <file>Alarm 1 icon.jpg</file>
+    <file>Alarm 2 icon.jpg</file>
+    <file>Alarm icon null.jpg</file>
+  </qresource>
+  <qresource prefix="stackPage">
+    <file>Menu button.png</file>
+    <file>return icon.png</file>
+  </qresource>
+  <qresource prefix="stateWire_icons">
+    <file>Ethernet.png</file>
+    <file>RS485.png</file>
+    <file>usb icon.png</file>
+  </qresource>
+  <qresource prefix="stateRecord_icons">
+    <file>一次性紀錄.png</file>
+    <file>自動記錄.png</file>
+    <file>紀錄中.png</file>
+    <file>紀錄停止.png</file>
+  </qresource>
+  <qresource prefix="stateInbMenu_icons">
+    <file>進入選單.png</file>
+    <file>settings icon.png</file>
+    <file>calibration icon.png</file>
+    <file>Identification icon.png</file>
+    <file>Data log icon.jpg</file>
+  </qresource>
+  <qresource prefix="stateBattery_icons">
+    <file>Battery icon.png</file>
+  </qresource>
+  <qresource prefix="stateBatteryCharge_icons">
+    <file>電量10以下.png</file>
+    <file>電量11-25.png</file>
+    <file>電量26-50.png</file>
+    <file>電量51-75.png</file>
+    <file>電量76-100.png</file>
+    <file>電量充電中.png</file>
+  </qresource>
+  <qresource prefix="lock_icons">
+    <file>Lock icon.jpg</file>
+    <file>Unlock icon.jpg</file>
+  </qresource>
+</RCC>

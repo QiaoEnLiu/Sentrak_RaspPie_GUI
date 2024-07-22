@@ -10,6 +10,12 @@
     <height>360</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
     <width>400</width>
@@ -48,13 +54,31 @@
    </property>
    <layout class="QGridLayout" name="menu_page_layout" rowstretch="0,0" columnstretch="0,0">
     <property name="sizeConstraint">
-     <enum>QLayout::SetNoConstraint</enum>
+     <enum>QLayout::SetDefaultConstraint</enum>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
     </property>
     <property name="spacing">
      <number>0</number>
     </property>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="set_button">
+    <item row="0" column="1">
+     <widget class="QPushButton" name="calibrate_button">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
         <width>125</width>
@@ -84,13 +108,33 @@
         <pointsize>16</pointsize>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton { border: none; }</string>
+      </property>
       <property name="text">
-       <string>設定</string>
+       <string>校
+正</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../picture/icon/icon.qrc">
+        <normaloff>:/stateInbMenu_icons/calibration icon.png</normaloff>:/stateInbMenu_icons/calibration icon.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>100</height>
+       </size>
       </property>
      </widget>
     </item>
     <item row="1" column="0">
      <widget class="QPushButton" name="record_button">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
         <width>125</width>
@@ -120,49 +164,33 @@
         <pointsize>16</pointsize>
        </font>
       </property>
-      <property name="text">
-       <string>記錄</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QPushButton" name="calibrate_button">
-      <property name="minimumSize">
-       <size>
-        <width>125</width>
-        <height>125</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>125</width>
-        <height>125</height>
-       </size>
-      </property>
-      <property name="sizeIncrement">
-       <size>
-        <width>125</width>
-        <height>125</height>
-       </size>
-      </property>
-      <property name="baseSize">
-       <size>
-        <width>125</width>
-        <height>125</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-       </font>
+      <property name="styleSheet">
+       <string notr="true">QPushButton { border: none; }</string>
       </property>
       <property name="text">
-       <string>校正</string>
+       <string>記
+錄</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../picture/icon/icon.qrc">
+        <normaloff>:/stateInbMenu_icons/Data log icon.jpg</normaloff>:/stateInbMenu_icons/Data log icon.jpg</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>100</height>
+       </size>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
      <widget class="QPushButton" name="identify_button">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
         <width>125</width>
@@ -192,14 +220,86 @@
         <pointsize>16</pointsize>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton { border: none; }</string>
+      </property>
       <property name="text">
-       <string>識別</string>
+       <string>識
+別</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../picture/icon/icon.qrc">
+        <normaloff>:/stateInbMenu_icons/Identification icon.png</normaloff>:/stateInbMenu_icons/Identification icon.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>100</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="set_button">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>125</width>
+        <height>125</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>125</width>
+        <height>125</height>
+       </size>
+      </property>
+      <property name="sizeIncrement">
+       <size>
+        <width>125</width>
+        <height>125</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>125</width>
+        <height>125</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton { border: none; }</string>
+      </property>
+      <property name="text">
+       <string>設
+定</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../picture/icon/icon.qrc">
+        <normaloff>:/stateInbMenu_icons/settings icon.png</normaloff>:/stateInbMenu_icons/settings icon.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>100</height>
+       </size>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../picture/icon/icon.qrc"/>
+ </resources>
  <connections/>
 </ui>

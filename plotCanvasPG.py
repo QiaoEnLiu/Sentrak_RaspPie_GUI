@@ -21,6 +21,7 @@ except Exception as e:
 
 plotTime_limit=0
 
+
 #region plotCanvas
 class PlotCanvasPG(QWidget):
     def __init__(self, parent=None):
@@ -36,11 +37,12 @@ class PlotCanvasPG(QWidget):
         self.layout = QVBoxLayout(self)
         self.setLayout(self.layout)
 
-        self.plot_widget = pg.PlotWidget()
-        self.layout.addWidget(self.plot_widget)
+        self.plot_widget = pg.PlotWidget()  
+
         self.plot_widget.setMenuEnabled(False)
         self.plot_widget.setMouseEnabled(x=False, y=False)
-
+        self.layout.addWidget(self.plot_widget)
+        
         self.plot_widget.setBackground('w')
         self.plot_widget.showGrid(x=True, y=True)
 
