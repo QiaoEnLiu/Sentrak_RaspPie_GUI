@@ -104,7 +104,7 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
         super().__init__()
         self.setupUi(self)
 
-        # PPV.start_flask_api() # 啟動Flask API
+        PPV.start_flask_api() # 啟動Flask API
         # 設定視窗標題
         # self.setWindowTitle("Sentrak_RaspPie_GUI")
 
