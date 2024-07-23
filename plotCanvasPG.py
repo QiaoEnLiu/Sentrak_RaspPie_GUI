@@ -39,6 +39,8 @@ class PlotCanvasPG(QWidget):
 
         self.plot_widget = pg.PlotWidget()  
 
+        self.plot_widget.hideButtons()
+
         self.plot_widget.setMenuEnabled(False)
         self.plot_widget.setMouseEnabled(x=False, y=False)
         self.layout.addWidget(self.plot_widget)

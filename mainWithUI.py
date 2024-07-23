@@ -40,7 +40,7 @@ try:
     import PySQL
 
     from unit_transfer import unit_transfer
-    from plotCanvasMatplot import plotCanvasMatplot #圖表內部配制
+    # from plotCanvasMatplot import plotCanvasMatplot #圖表內部配制
     from plotCanvasPG import PlotCanvasPG
     from subMenuFrame import subMenuFrame #子選單內部配制
     # from img_to_base64 import image_to_base64
@@ -89,8 +89,6 @@ temperature_unit_default='°C'
 #endregion
 
 
-
-
 #class MyWindow
 #region 主畫面
 class MyWindow(QMainWindow, SentrakGUI_MainWindow):
@@ -106,9 +104,9 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
         super().__init__()
         self.setupUi(self)
 
-        PPV.start_flask_api() # 啟動Flask API
+        # PPV.start_flask_api() # 啟動Flask API
         # 設定視窗標題
-        self.setWindowTitle("Sentrak_RaspPie_GUI")
+        # self.setWindowTitle("Sentrak_RaspPie_GUI")
 
         self.isLogin=False
 
@@ -147,226 +145,12 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
         #endregion
 
     def initUI(self):
-
-
-        # 創建狀態列
-        #region 狀態列
         
         font.setPointSize(14)
 
-        # status_bar = QStatusBar(self)
-        # # self.setStatusBar(status_bar)
-        # status_bar.setGeometry(0, 0, 800, 40)  # 設置狀態列的尺寸
-        # # status_bar.setStyleSheet("QStatusBar {background-color: white; padding: 0; margin: 0;}")  # 設置背景顏色
-        # # status_bar.setStyleSheet(status_bar.styleSheet() + "QStatusBar::item{border: 0px}")
-        # status_bar.setSizeGripEnabled(False)  # 隱藏右下角的調整大小的三角形
-        # status_bar.setContentsMargins(0, 0, 0, 0)
-
-
-        # self.alarmNull_label = QLabel('無警告', self)
-        # self.alarmNull_label.setAlignment(Qt.AlignLeft)
-        # self.alarmNull_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
-        # self.alarmNull_label.setFont(font)
-        # setLabelIcon(self.alarmNull_label, stateAlarm_icons[0])
         
-        # self.alarm1_label = QLabel('警告1', self)
-        # self.alarm1_label.setAlignment(Qt.AlignLeft)
-        # self.alarm1_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
-        # self.alarm1_label.setFont(font)
-        # self.alarm1_label.setVisible(False)
-        # setLabelIcon(self.alarm1_label, stateAlarm_icons[1])
-
-        # self.alarm2_label = QLabel('警告2', self)
-        # self.alarm2_label.setAlignment(Qt.AlignLeft)
-        # self.alarm2_label.setStyleSheet("QLabel { border: none; padding: 0; margin: 0;background: transparent;}")
-        # self.alarm2_label.setFont(font)
-        # self.alarm2_label.setVisible(False)
-        # setLabelIcon(self.alarm2_label, stateAlarm_icons[2])
-
-
-        # # 在狀態列中央加入日期時間
-        # self.datetime = QLabel(self)
-        # self.datetime.setAlignment(Qt.AlignCenter| Qt.AlignCenter)  # 文字置中
-        # self.datetime.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
-        # # self.datetime.setStyleSheet("padding: 0; margin: 0;")
-        # self.datetime.setFont(font)
-
-        # self.stateUSB_label = QLabel('USB', self)
-        # self.stateUSB_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
-        # self.stateUSB_label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
-        # self.stateUSB_label.setFont(font)
-        # setLabelIcon(self.stateUSB_label, stateWire_icons[2])
-
-
-        # self.stateBattery_label = QLabel('電池', self)
-        # self.stateBattery_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
-        # self.stateBattery_label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
-        # self.stateBattery_label.setFont(font)
-        # setLabelIcon(self.stateBattery_label, stateBattery_icons[0])
-
-        # self.stateConnect_label = QLabel('離線', self)
-        # self.stateConnect_label.setStyleSheet("QLabel { border: none; padding: 0;  margin: 0;background: transparent;}")
-        # self.stateConnect_label.setAlignment(Qt.AlignRight| Qt.AlignCenter)
-        # self.stateConnect_label.setFont(font)
-        # # setLabelIcon(self.stateConnect_label, )
-
-        # # 建立容器 widget 用來放置元件
-        # container_widget = QWidget(self)
-        # container_layout = QHBoxLayout(container_widget)
-        # container_layout.setContentsMargins(0, 0, 0, 0)
-
-        # container_layout1 = QHBoxLayout()
-        # container_layout2 = QHBoxLayout()
-        # container_layout3 = QHBoxLayout()
-
-        # # 將 QLabel 加入狀態列，並指定伸縮因子為1
-        # # 添加元件到容器
-        # container_layout1.addWidget(self.alarmNull_label)
-        # container_layout1.addWidget(self.alarm1_label)
-        # container_layout1.addWidget(self.alarm2_label)
-        # container_layout1.addItem(spacer)
-
-        # container_layout2.addItem(spacer_left)
-        # container_layout2.addWidget(self.datetime)
-        # container_layout2.addItem(spacer_right)
-
-        # container_layout3.addItem(spacer)
-        # container_layout3.addWidget(self.stateUSB_label)
-        # container_layout3.addWidget(self.stateBattery_label)
-        # container_layout3.addWidget(self.stateConnect_label)
-
-        # container_layout.addLayout(container_layout1)
-        # container_layout.addLayout(container_layout2)
-        # container_layout.addLayout(container_layout3)
-
-
-        # # status_bar.addWidget(self.alarmNull_label)
-        # # status_bar.addWidget(self.alarm1_label)
-        # # status_bar.addWidget(self.alarm2_label, 1)
-        # # status_bar.addWidget(self.datetime, 1)
-        # # status_bar.addWidget(self.state_label, 1)
-
-        # status_bar.addWidget(container_widget,1)
-        #endregion
-
-
-        # 創建中央主畫面及子畫面
-        #region 主畫面
-        # main_frame = QFrame(self)
-        # self.main_frame.setGeometry(0, 40, 400, 360)
-        # main_frame.setStyleSheet("background-color: lightblue;")
-        # main_frame.setStyleSheet("background-color: white;")  # 主畫面背景顏色
-
-        # temperature_unit_default=unit_transfer.set_temperature_unit(unit=temperature_unit_text)
-        # temperature=unit_transfer.convert_temperature(temperature=temperature,unit=temperature_unit_text)
-
-        # self.oxygen_label = QLabel("O<sub>2</sub>") # ° 為Alt 0176
-        # self.o2Data = QLabel(f"{self.oxygen_concentration:.2f}")
-        # self.o2Unite = QLabel("<strong>ppb</strong>")
-        # self.temperture_label=QLabel(f"T")
-        # self.tempData = QLabel(f"{self.temperature:.2f}")
-        # self.tempUnit = QLabel("<strong>°C</strong>")
-
-        # self.oxygen_label.setAlignment(Qt.AlignCenter)  # 文字置中
-        # self.temperture_label.setAlignment(Qt.AlignCenter)
-
-        # font.setPointSize(36)
-        # font2.setPointSize(16)
-        # font.setBold(True)
-        # self.oxygen_label.setFont(font)
-        # self.o2Data.setFont(font)
-        # self.o2Unite.setFont(font2)
-        # self.temperture_label.setFont(font)
-        # self.tempData.setFont(font)
-        # self.tempUnit.setFont(font2)
-        # font.setBold(False)
-        # main_frame_layout = QGridLayout(main_frame)
-        # main_frame_layout.setContentsMargins(75, 75, 75, 75)
-
-        # main_frame_layout.setSpacing(0)  # 添加這一行以消除元素之間的間距
-
-        # main_frame_layout.addWidget(self.oxygen_label, 0, 0)
-        # main_frame_layout.addWidget(self.o2Data, 0, 1)
-        # main_frame_layout.addWidget(self.o2Unite, 0, 2)
-        # main_frame_layout.addWidget(self.temperture_label, 1, 0)
-        # main_frame_layout.addWidget(self.tempData, 1, 1)
-        # main_frame_layout.addWidget(self.tempUnit, 1, 2)
-
-        #endregion
-
-        #region 折線圖畫面
-        # 創建折線圖畫面
-        # self.sub_frame = QFrame(self)
-        # self.sub_frame.setGeometry(400, 40, 400, 360)
-        
-        # # self.plot_canvas = plotCanvasMatplot(self, width=5, height=4) # 使用Matplot
         self.plot_canvas = PlotCanvasPG(self) # 使用pyqtgraph
-        # self.sub_frame.setStyleSheet("background-color: white;")  # 子畫面背景顏色
-        # # sub_label = QLabel('子畫面')
-        # # sub_label.setAlignment(Qt.AlignCenter)  # 文字置中
-        # # font.setPointSize(36)
-        # # sub_label.setFont(font)
-        # self.sub_frame_layout = QVBoxLayout(self.sub_frame)
-        # self.sub_frame_layout.setContentsMargins(0, 0, 0, 0)
-        # self.sub_frame_layout.setSpacing(0)  # 添加這一行以消除元素之間的間距
-        # self.sub_frame_layout.addWidget(self.plot_canvas) # 在子畫面中加入 Matplotlib 的畫布
-
-        #endregion
-
         
-        # 創建功能列
-        #region 功能列
-        # function_bar = QFrame(self)
-        # function_bar.setGeometry(0, 400, 800, 80)  # 設置功能列的尺寸
-        # function_bar.setStyleSheet("background-color: white;")  # 設置背景顏色
-
-        # 在功能列中添加按鈕
-        # self.save_button = QPushButton(function_bar) # 資料儲存
-        # # test_button = QPushButton('測試', function_bar)
-        # self.quit_button=QPushButton('離開', function_bar) # 離開
-        # # self.lock_label = QLabel('螢幕鎖',function_bar)
-        # self.lock_button=QPushButton(function_bar) # 解鎖
-        # self.logout_button = QPushButton(function_bar) # 登出
-        # self.menu_button = QPushButton(function_bar) # 選單
-        # self.return_button = QPushButton(function_bar) # 返回
-
-
-
-        # 設定按鈕大小
-        # button_width, button_height = 80, 80
-
-        # self.save_button.setFixedSize(button_width, button_height)
-        # # test_button.setFixedSize(button_width, button_height)
-        # self.quit_button.setFixedSize(button_width,button_height)
-        # # self.lock_label.setFixedSize(button_width, button_height)
-        # self.lock_button.setFixedSize(button_width, button_height)
-        # self.logout_button.setFixedSize(button_width, button_height)
-        # self.menu_button.setFixedSize(button_width, button_height)
-        # self.return_button.setFixedSize(button_width, button_height)
-        
-        # font.setPointSize(14)
-        # self.save_button.setFont(font)
-        # # test_button.setFont(font)
-        # self.quit_button.setFont(font)
-        # # self.lock_label.setFont(font)
-        # self.lock_button.setFont(font)
-        # self.logout_button.setFont(font)
-        # self.menu_button.setFont(font)
-        # self.return_button.setFont(font)
-
-        # 按鈕圖示
-        # setButtonIcon(self.save_button, 'Save-icon.png')
-        # setButtonIcon(self.lock_button, lock_icons[0])
-        # setButtonIcon(self.logout_button, lock_icons[1])
-        # setButtonIcon(self.menu_button, 'Menu button.png')
-        # setButtonIcon(self.return_button, 'return icon.png')
-
-        # self.save_button.setStyleSheet('QPushButton { border: none; }')
-        # self.quit_button.setStyleSheet('QPushButton { border: none; }')
-        # self.lock_button.setStyleSheet('QPushButton { border: none; }')
-        # self.logout_button.setStyleSheet('QPushButton { border: none; }')
-        # self.menu_button.setStyleSheet('QPushButton { border: none; }')
-        # self.return_button.setStyleSheet('QPushButton { border: none; }')
 
         self.quitBtn.clicked.connect(self.show_confirmation_dialog)
         self.lockBtn.clicked.connect(self.showLoginDialog)
@@ -381,57 +165,6 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
         print('登入：',self.logoutBtn.isVisible())
 
 
-
-        # function_bar_layout = QHBoxLayout(function_bar)
-
-        # function_bar_layout1 = QHBoxLayout()
-        # function_bar_layout2 = QHBoxLayout()
-        # function_bar_layout3 = QHBoxLayout()
-
-        # function_bar_layout1.addWidget(self.save_button)
-        # # function_bar_layout1.addWidget(test_button)
-        # function_bar_layout1.addWidget(self.quit_button)
-        # function_bar_layout1.addItem(spacer)
-
-        # function_bar_layout2.addItem(spacer_right)
-        # # function_bar_layout2.addWidget(self.lock_label)
-        # function_bar_layout2.addWidget(self.lock_button)
-        # function_bar_layout2.addWidget(self.logout_button)
-        # function_bar_layout2.addItem(spacer_left)
-        
-        # function_bar_layout3.addItem(spacer)
-        # function_bar_layout3.addWidget(self.menu_button)
-        # function_bar_layout3.addWidget(self.return_button)
-
-        # function_bar_layout.addLayout(function_bar_layout1, 1)
-        # function_bar_layout.addLayout(function_bar_layout2, 1)
-        # function_bar_layout.addLayout(function_bar_layout3, 1)
-
-
-        #endregion
-
-        # 整體畫面配制
-        #region 整體畫面
-        # 創建一個放置元件的底層佈局
-        # central_widget = QWidget(self)
-        # self.setCentralWidget(central_widget)
-
-        # global_layout = QVBoxLayout(central_widget)
-        # global_layout.setContentsMargins(0, 0, 0, 0)  # 消除佈局的邊距
-        # global_layout.setSpacing(0)
-
-
-        # # 創建一個放置元件的子佈局
-        # main_layout = QHBoxLayout()
-        # main_layout.setSpacing(0)
-        # main_layout.addWidget(main_frame, 1)  # 添加主畫面到佈局，第二個參數是優先級，表示佔用100的寬度
-        # main_layout.addWidget(self.sub_frame, 1) # 添加子畫面到佈局
-
-        # global_layout.addWidget(status_bar, 1)  # 添加狀態列到佈局佔用 1 的高度
-        # global_layout.addLayout(main_layout,8) # 添加子佈局到佈局
-        # global_layout.addWidget(function_bar, 2)  # 添加功能列到佈局，功能列佔用 2 的高度
-
-        #endregion
 
         #主畫面堆疊
         #region 畫面堆疊
@@ -809,80 +542,11 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
 
         menu = menu_page()
         menu.setupUi(menuFrame)
-        
-        '''
-        menu_page = QFrame(self)
-        menu_page.setStyleSheet("background-color: white;")  # 選單畫面背景顏色
-
-        font.setPointSize(16)
-        # menu_label = QLabel('選單')
-        # menu_label.setAlignment(Qt.AlignCenter)  # 文字置中
-        # menu_label.setFont(font)
-        menu_page_layout = QGridLayout(menu_page)
-        menu_page_layout.setSpacing(0)
-        # menu_page_layout.addWidget(menu_label)
-
-        # 顯示四個按鈕
-        self.set_button = QPushButton(menu_page) # 設定
-        self.calibrate_button = QPushButton( menu_page) # 校正
-        self.record_button = QPushButton(menu_page) # 記錄
-        self.identify_button = QPushButton(menu_page) # 識別
-
-            # 設定按鈕大小
-        button_width, button_height = 125, 125
-
-        self.set_button.setFixedSize(button_width, button_height)
-        self.calibrate_button.setFixedSize(button_width, button_height)
-        self.record_button.setFixedSize(button_width, button_height)
-        self.identify_button.setFixedSize(button_width, button_height)
-
-        # 設定按鈕的背景顏色，方便檢查它們的可見性
-        # self.set_button.setStyleSheet("background-color: white;")
-        # self.calibrate_button.setStyleSheet("background-color: white;")
-        # self.record_button.setStyleSheet("background-color: white;")
-        # self.identify_button.setStyleSheet("background-color: white;")
-
-
-        setButtonIcon(self.set_button, stateInbMenu_icons[1], text = "設\n定") # text='設定'
-        setButtonIcon(self.calibrate_button, stateInbMenu_icons[2], text = "校\n正") # text='校正'
-        setButtonIcon(self.record_button, stateInbMenu_icons[3], text = "記\n錄") # text='記錄'
-        setButtonIcon(self.identify_button, stateInbMenu_icons[4], text = "識\n別") # text='識別'
-
-        self.set_button.setStyleSheet('QPushButton { border: none;}')
-        self.calibrate_button.setStyleSheet('QPushButton { border: none;}')
-        self.record_button.setStyleSheet('QPushButton { border: none;}')
-        self.identify_button.setStyleSheet('QPushButton { border: none;}')
-
-
-        # paintEvent(self.set_button, None)
-        # paintEvent(self.calibrate_button, None)
-        # paintEvent(self.record_button, None)
-        # paintEvent(self.identify_button, None)
-
-        self.set_button.setFont(font)
-        self.calibrate_button.setFont(font)
-        self.record_button.setFont(font)
-        self.identify_button.setFont(font)
-
-        # 將按鈕添加到GridLayout中
-        menu_page_layout.addWidget(self.set_button, 0, 0, 1, 1)
-        menu_page_layout.addWidget(self.calibrate_button, 0, 1, 1, 1)
-        menu_page_layout.addWidget(self.record_button, 1, 0, 1, 1)
-        menu_page_layout.addWidget(self.identify_button, 1, 1, 1, 1)
-        '''
-
-        # 連接按鈕點擊事件（前往各個子選單）
-        # self.set_button.clicked.connect(lambda: self.sub_menu_page("設定",self.set_button.styleSheet()))
-        # self.calibrate_button.clicked.connect(lambda: self.sub_menu_page("校正",self.calibrate_button.styleSheet()))
-        # self.record_button.clicked.connect(lambda: self.sub_menu_page("記錄",self.record_button.styleSheet()))
-        # self.identify_button.clicked.connect(lambda: self.sub_menu_page("識別",self.identify_button.styleSheet()))
 
         menu.set_button.clicked.connect(lambda: self.sub_menu_page("設定",menu.set_button.styleSheet()))
         menu.calibrate_button.clicked.connect(lambda: self.sub_menu_page("校正",menu.calibrate_button.styleSheet()))
         menu.record_button.clicked.connect(lambda: self.sub_menu_page("記錄",menu.record_button.styleSheet()))
         menu.identify_button.clicked.connect(lambda: self.sub_menu_page("識別",menu.identify_button.styleSheet()))
-
-
 
 
         # print('登入：',self.logoutBtn.isVisible())
