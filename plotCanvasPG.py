@@ -19,7 +19,7 @@ except Exception as e:
  
 
 
-plotTime_limit = PPV.plotTimeDefault[1]
+# plotTime_limit = PPV.plotTimeDefault[1]
 
 
 #region plotCanvas
@@ -62,8 +62,8 @@ class PlotCanvasPG(QWidget):
 
 
 
-    def plot(self, temperature_unit, oxygen_concentration, temperature):
-        global plotTime_limit
+    def plot(self, plotTimeDictKey, temperature_unit, oxygen_concentration, temperature):
+        # global plotTime_limit
 
         
         # 補充設定 plotTime_limit 的部分
@@ -79,7 +79,7 @@ class PlotCanvasPG(QWidget):
         #     print('圖表週期未成功取得暫存值')
         #     plotTime_limit = 10
         #endregion
-        plotTime_limit = PPV.plotTimeDict.get(PPV.plotTime, PPV.plotTimeDefault)[1]
+        plotTime_limit = PPV.plotTimeDict.get(plotTimeDictKey, PPV.plotTimeDict[3])[1]
 
 
         self.x_axis.setLabel(f'時間（每{PPV.plotTime}）')

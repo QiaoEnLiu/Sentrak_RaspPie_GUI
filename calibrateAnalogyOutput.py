@@ -21,7 +21,7 @@ font = QFont()
 # selectLowValue = int(PySQL.selectSQL_Reg(4, 20))
 # selectHighValue = int(PySQL.selectSQL_Reg(4, 21))
 class calibrateAnalogyOutputFrame(QWidget):
-    def __init__(self, title, _style, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
         self.title=title
         print(self.title)

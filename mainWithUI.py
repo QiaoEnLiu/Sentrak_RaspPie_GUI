@@ -373,13 +373,15 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
                 
         # 清除之前的圖例
         # self.plot_canvas.ax.clear() # PG不使用
-
-        PPV.plotTime = PPV.plotTimeDict[int(PySQL.selectSQL_Var('plotTime'))][0]
+        plotTimeDictKey=int(PySQL.selectSQL_Var('plotTime'))
+        PPV.plotTime = PPV.plotTimeDict.get(plotTimeDictKey, PPV.plotTimeDict[3])[0]
         # 重新繪製折線圖
-        self.plot_canvas.plot(temperature_unit = temperature_unit_text, 
-                            oxygen_concentration = self.oxygen_concentration, 
-                            temperature = self.temperature #temperature: Celsius, Fahrenheit
-                            )  
+        self.plot_canvas.plot(
+            plotTimeDictKey = plotTimeDictKey,
+            temperature_unit = temperature_unit_text, 
+            oxygen_concentration = self.oxygen_concentration, 
+            temperature = self.temperature #temperature: Celsius, Fahrenheit
+        )  
 
         # 在這裡更新畫布
         # self.plot_canvas.draw() # PG不使用

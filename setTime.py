@@ -27,7 +27,7 @@ date_formats = PPV.dateFormat
 # select_Format = None
 
 class setTimeFrame(QWidget):
-    def __init__(self, title, _style, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
         print(title)
 

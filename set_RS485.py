@@ -29,7 +29,7 @@ font = QFont()
 # select_RS485_state = int(PySQL.selectSQL_Reg(regDF = 4, regKey = 9))
 # bin_RS485_state = PPV.d2b(select_RS485_state).zfill(8)
 class rs485_Frame(QWidget):
-    def __init__(self, title, _style, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
         self.title=title
         print(self.title)

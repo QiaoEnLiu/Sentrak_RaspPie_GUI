@@ -44,7 +44,7 @@ set_ip_values={"使用者":"","時間":"",**PPV.IPS}
 
 
 class internetFrame(QWidget):
-    def __init__(self, title, _style, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
         # print(title)
         

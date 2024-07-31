@@ -46,35 +46,6 @@ def stop_flask_api():
     subprocess.run(dockerCommand) # 前面加sudo用於linux
 #endregion
 
-#region 子選單
-subMenu = {
-    '設定':{'顯示':'波形圖週期、單位',
-          '警報輸出':'Relay 1、Relay 2、Relay 3…',
-          '類比輸出':'濃度、溫度、類型',
-          '感測器溫度保護':'狀態、溫度設定',
-          '診斷':'觀看詳細數值',
-          '通訊':'RS-485、HTTP/TCPIP',
-          '時間':'調整時間、日期格式',
-          '語言':'多國語言'},
-          
-    '校正':{'感測器校正':'空氣校正、直接校正',
-          '大氣壓力校正':'大氣壓力校正',
-          '類比輸出校正':'0 - 20 mA、4 - 20 mA'},
-
-    '記錄':{'觀看記錄':'時間、數值',
-          '統計表':'最高值、平均值、最底值',
-          '下載記錄至隨身碟':'儲存格式：Excel、txt、json、csv',
-          '記錄方式設定':'自動、手動'},
-          
-    '識別':{'登入身份':'輸入密碼',
-          '儀器資訊':'型號、序號、生產日期……',
-          '感測器資訊':'型號、序號、生產日期……'}
-          }
-
-
-
-#endregion
-
 
 timer = QTimer()
 current_datetime = QDateTime.currentDateTime()
@@ -121,17 +92,7 @@ def R1X_address(searchName):
     return address
 #endregion
 
-
-#region 子功能選項
-subDisplay = {'波形圖週期':'', '單位':''} #「設定」>>「介面」
-relays = {'Relay 1':'', 'Relay 2':'', 'Relay 3':''} #「設定」>>「警報輸出」
-subAnalogy = {'類比濃度':'', '類比溫度':''} #「設定」>>「類比輸出」
-subCommunication = {'RS485':'', 'HTTP / TCPIP':''} #「設定」>>「通訊」
-subCalibrateAirManual = {"直接校正":"使用已知氧氣濃度之氣體、液體進行校正",
-                        "空氣校正":"將感測器置於空氣中校正"} #「校正」>>「感測器校正」
-#endregion
 #region R1X 地址狀態
-# relays=['Relay 1']
 
 def alarm(relay, temp, o2):
     if relay[1]['status'][0] == '0': # 停用
@@ -368,7 +329,6 @@ def fromValueFindKey(d, target_value):
 
 #region 圖表區域
 plotTime = None # 圖表週期
-plotTimeDefault = ['10秒', 10]
 plotTimeDict = {1:['5秒', 5],
                 2:['10秒', 10],
                 3:['15秒', 15]}

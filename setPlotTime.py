@@ -20,10 +20,10 @@ except Exception as e:
 
 font = QFont()
 class setPlotTimeFrame(QWidget):
-    def __init__(self, title, _style, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
         print(title)
-
+        print(PPV.plotTimeDict.values())
         self.sub_pages = sub_pages
         
         title_label = QLabel(title, self)
@@ -38,7 +38,7 @@ class setPlotTimeFrame(QWidget):
 
         self.plot_time_combo = QComboBox()
         self.plot_time_combo.setFont(font)
-        self.plot_time_combo.addItems(PPV.plotTimeDict.values()) # ['1分','5分','10分','30分','1小時']
+        self.plot_time_combo.addItems(value[0] for value in PPV.plotTimeDict.values()) # ['1分','5分','10分','30分','1小時']
         # default_plotTime_Index = self.plot_time_combo.findText(PPV.plotTimeDict[int(PySQL.selectSQL_Var('plotTime'))])
         self.plot_time_combo.setCurrentIndex(self.plot_time_combo.findText(PPV.plotTime))
 
@@ -73,15 +73,17 @@ class setPlotTimeFrame(QWidget):
     def setPlotTimes(self):
 
 
-        if QMessageBox.question(self, '顯示波形圖週期', f'設定波形圖週期：由 每{PPV.plotTime} 改成 每{self.plot_time_combo.currentText()}\
+        if QMessageBox.question(self, '顯示波形圖週期', f'設定波形圖週期：由 每{PPV.plotTime} 改成 每{self.plot_time_combo.currentText()}({self.plot_time_combo.currentIndex()+1})\
                                 \n確定要設定波形圖週期嗎？', QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
             action = '確認'
             # 在這裡添加您想要在使用者點擊"Yes"時執行的程式碼
             PPV.plotTime = self.plot_time_combo.currentText()
             # self.plot_time_combo.setCurrentIndex(PPV.plotTime)
-            print(f'更改波形圖週期為：{PPV.plotTime}({PPV.get_keys_from_value(PPV.plotTimeDict, PPV.plotTime)[0]})')
-            PySQL.updateSQL_Var('plotTime', PPV.get_keys_from_value(PPV.plotTimeDict, PPV.plotTime)[0])
-
+            # plotTimeIndex=PPV.get_keys_from_value(PPV.plotTime, PPV.plotTimeDict.get(self.plot_time_combo.currentIndex() + 1))
+            plotTimeIndex = self.plot_time_combo.currentIndex()+1
+            print(f'更改波形圖週期為：{PPV.plotTime}({plotTimeIndex})')
+            PySQL.updateSQL_Var('plotTime', plotTimeIndex)
+            # PPV.get_keys_from_value(PPV.plotTimeDict, PPV.plotTime)
 
             print("使用者設定波形圖週期")
 

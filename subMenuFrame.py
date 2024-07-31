@@ -30,14 +30,14 @@ try:
     
     import ProjectPublicVariable as PPV
 
-    # 設定 >>
+
+    '''# 設定 >>
     # from setDisplayOption import displayOptionFrame # 「顯示」
     # from setAlarmRelayMenu import setAlarmRelayMenuFrame # 「警報輸出」選項介面
     # from setAnalogyOutputOption import analogyOutputOptionFrame # 「類比輸出」選項介面
     from setSensorTempLimit import setSensorTempLimitFrame # 「感測器溫度保護」介面
 
     # from setCommunicationOption import comOptionFrame # 「通訊」選項介面
-
 
     from setTime import setTimeFrame # 「時間」選項介面
     from setLanguage import setLanguageFrame # 「語言」選項介面
@@ -61,7 +61,9 @@ try:
     from testEndFrame import testEndFrame
 
     # 進入功能後有子功能選項的介面
-    from subOption import subOptionFrame
+    from subOption import subOptionFrame'''
+
+    import subMenuDict
 
     
     from imgResource import setLabelIcon
@@ -71,6 +73,34 @@ except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
     input("Press Enter to exit")
+
+
+#region 子選單
+'''subMenu = {
+    '設定':{'顯示':'波形圖週期、單位',
+          '警報輸出':'Relay 1、Relay 2、Relay 3…',
+          '類比輸出':'濃度、溫度、類型',
+          '感測器溫度保護':'狀態、溫度設定',
+          '診斷':'觀看詳細數值',
+          '通訊':'RS-485、HTTP/TCPIP',
+          '時間':'調整時間、日期格式',
+          '語言':'多國語言'},
+          
+    '校正':{'感測器校正':'空氣校正、直接校正',
+          '大氣壓力校正':'大氣壓力校正',
+          '類比輸出校正':'0 - 20 mA、4 - 20 mA'},
+
+    '記錄':{'觀看記錄':'時間、數值',
+          '統計表':'最高值、平均值、最底值',
+          '下載記錄至隨身碟':'儲存格式：Excel、txt、json、csv',
+          '記錄方式設定':'自動、手動'},
+          
+    '識別':{'登入身份':'輸入密碼',
+          '儀器資訊':'型號、序號、生產日期……',
+          '感測器資訊':'型號、序號、生產日期……'}
+}'''
+
+#endregion
 
 font = QFont()
 itemTitleSize = QFont()
@@ -110,32 +140,11 @@ class subMenuFrame(QWidget):
         self.list_widget = QListWidget(self)
 
         # 依功能添加列各自表項
-        if self.title in PPV.subMenu:
-            for option in PPV.subMenu[self.title].keys():
-                self.create_list_item(option)
-                self.itemDescribe(PPV.subMenu.get(self.title, {}).get(option, None))
-        #region 非模組化寫法
-        # if self.title == '設定':
-        #     for option in ['顯示', '警報輸出', '類比輸出', '感測器溫度保護', '診斷', '通訊', '時間', '語言']:
-        #         self.create_list_item(option)
-        #         self.itemDescribe(option)
+        # if self.title in subMenu:
+        for option in subMenuDict.subMenu[self.title].keys():
+            self.create_list_item(option)
+            self.itemDescribe(subMenuDict.subMenu.get(self.title, {}).get(option, None)[0])
 
-        # elif self.title == '校正':
-        #     for option in ['感測器校正', '大氣壓力校正', '類比輸出校正']:
-        #         self.create_list_item(option)
-        #         self.itemDescribe(option)
-
-        # elif self.title == '記錄':
-        #     for option in ['觀看記錄', '統計表', '下載記錄至隨身碟', '記錄方式設定']:
-        #         self.create_list_item(option)
-        #         self.itemDescribe(option)
-
-        # elif self.title == '識別':
-        #     for option in ['登入身份', '儀器資訊', '感測器資訊']:
-        #         self.create_list_item(option)
-        #         self.itemDescribe(option)
-                
-        #endregion
 
         # 將垂直滾動條設置為不可見
         # self.list_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -259,61 +268,6 @@ class subMenuFrame(QWidget):
     #region 清單描述
     def itemDescribe(self, describe):
         self.describe_label.setText(describe)
-    #region 非模組化寫法
-    # def itemDescribe(self, option):    
-        # #region 「設定」清單
-        # if option == '顯示':
-        #     self.describe_label.setText('波形圖週期、單位')
-        # elif option == '警報輸出':
-        #     self.describe_label.setText('Relay 1、Relay 2、Relay 3…')
-        # elif option == '類比輸出':
-        #     self.describe_label.setText('濃度、溫度、類型')
-        # elif option == '感測器溫度保護':
-        #     self.describe_label.setText('狀態、溫度設定')
-        # elif option == '診斷':
-        #     self.describe_label.setText('觀看詳細數值')
-        # elif option == '通訊':
-        #     self.describe_label.setText('RS-485、HTTP/TCPIP')
-        # elif option == '時間':
-        #     self.describe_label.setText('調整時間、日期格式')
-        # elif option == '語言':
-        #     self.describe_label.setText('多國語言')
-        # #endregion
-            
-        # #region 「校正」清單
-        # elif option =='感測器校正':
-        #     self.describe_label.setText('空氣校正、直接校正')
-        # elif option =='大氣壓力校正':
-        #     self.describe_label.setText('大氣壓力校正')
-        # elif option == '類比輸出校正':
-        #     self.describe_label.setText('0 - 20 mA、4 - 20 mA')
-        # #endregion
-        
-        # #region 「記錄」清單
-        # elif option == '觀看記錄':
-        #     self.describe_label.setText('時間、數值')
-        # elif option == '統計表':
-        #     self.describe_label.setText('最高值、平均值、最底值')
-        # elif option == '下載記錄至隨身碟':
-        #     self.describe_label.setText('儲存格式：Excel、txt、json、csv')
-        # elif option == '記錄方式設定':
-        #     self.describe_label.setText('自動、手動')
-        # #endregion
-            
-        # #region 「識別」清單
-        # elif option == '登入身份':
-        #     self.describe_label.setText('輸入密碼')
-        # elif option == '儀器資訊':
-        #     self.describe_label.setText('型號、序號、生產日期……')
-        # elif option == '感測器資訊':
-        #     self.describe_label.setText('型號、序號、生產日期……')
-        # #endregion
-
-        # #region 其他
-        # else :
-        #     self.describe_label.setText('描述')
-        # #endregion
-    #endregion
             
     #endregion
 
@@ -328,8 +282,8 @@ class subMenuFrame(QWidget):
         # 判斷是否已經創建了 testEndFrame
         if item_text not in self.sub_pages: #"testEndFrame"
             print('進入選項：', item_text)
-
-            #region 「設定」
+            next_frame=subMenuDict.subMenu.get(self.title,{}).get(item_text,{})[1](item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages, self.title)
+            '''#region 「設定」
             if item_text == '顯示':
                 # 由「設定」進入「顯示」介面
                 next_frame = subOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
@@ -398,7 +352,7 @@ class subMenuFrame(QWidget):
             else:
                 # 如果還沒有，則創建一個新的 testEndFrame 為終節點畫面測試
                 next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-                
+            '''    
             # 添加到堆疊中
             next_frame_index = self.stacked_widget.addWidget(next_frame)
             self.sub_pages[item_text] = next_frame_index

@@ -16,7 +16,7 @@ except Exception as e:
 
 font = QFont()
 class analogyConcentrationFrame(QWidget):
-    def __init__(self, title, _style, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
         print(title)
 

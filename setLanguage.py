@@ -18,7 +18,7 @@ except Exception as e:
 
 font = QFont()
 class setLanguageFrame(QWidget):
-    def __init__(self, title, _style, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
         print(f"{title}({PPV.languages[int(PySQL.selectSQL_Var('language'))]})")
         PPV.languageName = PPV.languages[int(PySQL.selectSQL_Var('language'))]

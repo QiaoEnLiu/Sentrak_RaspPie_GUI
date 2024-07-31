@@ -23,7 +23,7 @@ except Exception as e:
 font = QFont()
 
 class deviceSensorInfoFrame(QWidget):
-    def __init__(self, title, _style, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
         # print(title)
         print('測試畫面：', title)

@@ -33,7 +33,7 @@ itemTitleSize.setPointSize(20)
 itemdescribeSize = QFont()
 itemdescribeSize.setPointSize(14)
 class setAlarmRelayMenuFrame(QWidget):
-    def __init__(self, title, _style, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
         print(title)
 

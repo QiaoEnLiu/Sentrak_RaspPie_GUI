@@ -10,7 +10,9 @@ try:
     import ProjectPublicVariable as PPV
     from imgResource import setLabelIcon
 
-    # 設定 >>
+    import subMenuDict
+
+    '''# 設定 >>
     from setUnit import setUnitFrame # 「介面」>>「單位」
     from setPlotTime import setPlotTimeFrame # 「介面」>>「波形圖週期」
 
@@ -32,11 +34,9 @@ try:
 
     # 識別 >>
 
-    
-
-
     # 未實作功能測試介面
-    from testEndFrame import testEndFrame
+    from testEndFrame import testEndFrame'''
+
 except Exception as e:
     print(f"An error occurred: {e}")
     traceback.print_exc()
@@ -48,14 +48,16 @@ itemTitleSize.setPointSize(20)
 itemdescribeSize = QFont()
 itemdescribeSize.setPointSize(14)
 class subOptionFrame(QWidget):
-    def __init__(self, title, _style, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
         print(title)
 
+        self.mainTitle=mainTitle
+        self.title=title
 
         self.sub_pages=sub_pages
         
-        self.title_label = QLabel(title, self)
+        self.title_label = QLabel(self.title, self)
         self.title_label.setAlignment(Qt.AlignCenter)  
         font.setPointSize(32)
         self.title_label.setFont(font)
@@ -67,8 +69,11 @@ class subOptionFrame(QWidget):
         # user_label.setStyleSheet(_style)
 
         self.relayList_widget = QListWidget(self)
+        for option in subMenuDict.subMenu[self.mainTitle][self.title][2]:
+            self.create_list_item(option)
+            self.itemDeescribe(option)
 
-        if title == '顯示':
+        '''if title == '顯示':
             for option in PPV.subDisplay:
                 self.create_list_item(option)
                 self.itemDeescribe(option)
@@ -91,10 +96,8 @@ class subOptionFrame(QWidget):
         elif title == '感測器校正':
             for option in PPV.subCalibrateAirManual:
                 self.create_list_item(option)
-                self.itemDeescribe(option)
-        
+                self.itemDeescribe(option)'''
 
-        
 
         content_layout = QVBoxLayout()
         content_layout.addWidget(self.relayList_widget)
@@ -217,46 +220,8 @@ class subOptionFrame(QWidget):
         # 判斷是否已經創建了 testEndFrame
         if item_text not in self.sub_pages: #"testEndFrame"
             print('進入選項：', item_text)
-            
-            #region 子功能選項
-            #region 設定
-            if item_text == '波形圖週期': # 顯示
-                next_frame = setPlotTimeFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            
-            elif item_text == '單位': # 顯示
-                next_frame = setUnitFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
+            next_frame=subMenuDict.subMenu.get(self.mainTitle,{}).get(self.title,{})[2].get(item_text,{})[1](item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages, self.mainTitle)
 
-            elif item_text == 'Relay 1' or item_text == 'Relay 2' or item_text == 'Relay 3': # 警報輸出
-                next_frame = setAlarmRelayFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-
-            elif item_text == '類比濃度' or item_text == '類比溫度': # 類比輸出
-                next_frame = setAnalogyOutputFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            
-            elif item_text == 'RS485': # 通訊
-                next_frame = rs485_Frame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-
-            elif item_text == 'HTTP / TCPIP': # 通訊
-                next_frame = internetFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            #endregion
-
-            #region 校正
-            elif item_text == '直接校正' or item_text == '空氣校正': # 感測器校正
-                next_frame = calibrateAirManualFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            #endregion
-
-            #region 記錄
-            #endregion
-
-            #region 識別
-            #endregion
-
-
-            # 其他
-            else:
-                # 如果還沒有，則創建一個新的 testEndFrame 為終節點畫面測試
-                next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            
-            #endregion
             # 添加到堆疊中
             next_frame_index = self.stacked_widget.addWidget(next_frame)
             self.sub_pages[item_text] = next_frame_index

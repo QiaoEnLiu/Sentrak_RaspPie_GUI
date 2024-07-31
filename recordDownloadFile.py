@@ -24,7 +24,7 @@ fileContent = [fileContentTitle, fileContentList]
 data_text = '\n'.join([','.join(row) for row in fileContent])
 
 class recordDownloadFileFrame(QWidget):
-    def __init__(self, title, _style, stacked_widget, sub_pages):
+    def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
         print(title)
 
