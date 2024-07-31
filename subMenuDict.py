@@ -64,23 +64,23 @@ from testEndFrame import testEndFrame
 subMenu = {
     '設定':{
         '顯示':['波形圖週期、單位',subOptionFrame,{ 
-            '波形圖週期':['',setPlotTimeFrame],
-            '單位':['',setUnitFrame]
+            '波形圖週期':['波形圖週期說明',setPlotTimeFrame],
+            '單位':['單位說明',setUnitFrame]
         }],
         '警報輸出':['Relay 1、Relay 2、Relay 3…',subOptionFrame,{
-            'Relay 1':['',setAlarmRelayFrame],
-            'Relay 2':['',setAlarmRelayFrame],
-            'Relay 3':['',setAlarmRelayFrame]
+            'Relay 1':['Relay 1說明',setAlarmRelayFrame],
+            'Relay 2':['Relay 2說明',setAlarmRelayFrame],
+            'Relay 3':['Relay 3說明',setAlarmRelayFrame]
         }],
         '類比輸出':['濃度、溫度、類型',subOptionFrame,{
-            '類比濃度':['',setAnalogyOutputFrame],
-            '類比溫度':['',setAnalogyOutputFrame]
+            '類比濃度':['說明',setAnalogyOutputFrame],
+            '類比溫度':['說明',setAnalogyOutputFrame]
         }],
         '感測器溫度保護':['狀態、溫度設定',setSensorTempLimitFrame],
         '診斷':['觀看詳細數值',testEndFrame],
         '通訊':['RS-485、HTTP/TCPIP',subOptionFrame,{
-            'RS485':['',rs485_Frame],
-            'HTTP / TCPIP':['',internetFrame]
+            'RS485':['RS485說明',rs485_Frame],
+            'HTTP / TCPIP':['HTTP / TCPIP說明',internetFrame]
         }],
         '時間':['調整時間、日期格式',setTimeFrame],
         '語言':['多國語言',setLanguageFrame]},

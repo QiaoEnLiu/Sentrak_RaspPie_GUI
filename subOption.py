@@ -46,7 +46,7 @@ font = QFont()
 itemTitleSize = QFont()
 itemTitleSize.setPointSize(20)
 itemdescribeSize = QFont()
-itemdescribeSize.setPointSize(14)
+itemdescribeSize.setPointSize(10)
 class subOptionFrame(QWidget):
     def __init__(self, title, _style, stacked_widget, sub_pages, mainTitle):
         super().__init__()
@@ -69,9 +69,9 @@ class subOptionFrame(QWidget):
         # user_label.setStyleSheet(_style)
 
         self.relayList_widget = QListWidget(self)
-        for option in subMenuDict.subMenu[self.mainTitle][self.title][2]:
+        for option, value in subMenuDict.subMenu[self.mainTitle][self.title][2].items():
             self.create_list_item(option)
-            self.itemDeescribe(option)
+            self.itemDescribe(value[0])
 
         '''if title == '顯示':
             for option in PPV.subDisplay:
@@ -205,7 +205,7 @@ class subOptionFrame(QWidget):
     #endregion
         
     #region 清單描述
-    def itemDeescribe(self, option):
+    def itemDescribe(self, option):
         item_title = option
         self.describe_label.setText(item_title)
 
@@ -220,8 +220,8 @@ class subOptionFrame(QWidget):
         # 判斷是否已經創建了 testEndFrame
         if item_text not in self.sub_pages: #"testEndFrame"
             print('進入選項：', item_text)
-            next_frame=subMenuDict.subMenu.get(self.mainTitle,{}).get(self.title,{})[2].get(item_text,{})[1](item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages, self.mainTitle)
-
+            selectOption = subMenuDict.subMenu.get(self.mainTitle,{}).get(self.title,{})[2]
+            next_frame = selectOption.get(item_text,{})[1](item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages, self.mainTitle)
             # 添加到堆疊中
             next_frame_index = self.stacked_widget.addWidget(next_frame)
             self.sub_pages[item_text] = next_frame_index
