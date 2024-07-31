@@ -368,9 +368,10 @@ def fromValueFindKey(d, target_value):
 
 #region 圖表區域
 plotTime = None # 圖表週期
-plotTimeDict = {1:'5秒',
-                2:'10秒',
-                3:'15秒'}
+plotTimeDefault = ['10秒', 10]
+plotTimeDict = {1:['5秒', 5],
+                2:['10秒', 10],
+                3:['15秒', 15]}
 # ['1分','5分','10分','30分','1小時']
 #endregion
 

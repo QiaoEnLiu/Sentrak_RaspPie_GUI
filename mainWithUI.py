@@ -55,13 +55,6 @@ except Exception as e:
     input("Press Enter to exit")
 
 print(platform.system())
-
-
-# response = requests.get('http://localhost:5000')
-# if response.status_code == 200:
-#     print('Flask API啟用')
-# else:
-#     print('Flask API未啟用')
     
 #region 其他全域變數
 
@@ -381,7 +374,7 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
         # 清除之前的圖例
         # self.plot_canvas.ax.clear() # PG不使用
 
-        PPV.plotTime = PPV.plotTimeDict[int(PySQL.selectSQL_Var('plotTime'))]
+        PPV.plotTime = PPV.plotTimeDict[int(PySQL.selectSQL_Var('plotTime'))][0]
         # 重新繪製折線圖
         self.plot_canvas.plot(temperature_unit = temperature_unit_text, 
                             oxygen_concentration = self.oxygen_concentration, 

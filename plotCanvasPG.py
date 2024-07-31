@@ -19,7 +19,7 @@ except Exception as e:
  
 
 
-plotTime_limit=0
+plotTime_limit = PPV.plotTimeDefault[1]
 
 
 #region plotCanvas
@@ -67,15 +67,20 @@ class PlotCanvasPG(QWidget):
 
         
         # 補充設定 plotTime_limit 的部分
-        if PPV.plotTime == '5秒':
-            plotTime_limit = 5
-        elif PPV.plotTime == '10秒':
-            plotTime_limit = 10
-        elif PPV.plotTime == '15秒':
-            plotTime_limit = 15
-        else:
-            print('圖表週期未成功取得暫存值')
-            plotTime_limit = 10
+        
+        #region PlotTime判斷式
+        # if PPV.plotTime == '5秒':
+        #     plotTime_limit = 5
+        # elif PPV.plotTime == '10秒':
+        #     plotTime_limit = 10
+        # elif PPV.plotTime == '15秒':
+        #     plotTime_limit = 15
+        # else:
+        #     print('圖表週期未成功取得暫存值')
+        #     plotTime_limit = 10
+        #endregion
+        plotTime_limit = PPV.plotTimeDict.get(PPV.plotTime, PPV.plotTimeDefault)[1]
+
 
         self.x_axis.setLabel(f'時間（每{PPV.plotTime}）')
         self.y_axis.setLabel('溫度、氧氣濃度數值')
