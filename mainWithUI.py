@@ -17,8 +17,6 @@ try:
     # sys.path.append("venv-py3_9/Lib/site-packages")
     # print(sys.path)
 
-    
-
     from PyQt5.QtWidgets import \
         QApplication, QMainWindow, QWidget, QStatusBar, QVBoxLayout,\
         QHBoxLayout, QLabel, QSpacerItem, QSizePolicy, QFrame, QGridLayout,\
@@ -262,7 +260,6 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
                     r3x_Value16To20=PPV.instrument_ID3.read_registers(16,5, functioncode=4)
 
                     
-
                     # 每秒R3X記錄測試1
                     # r3xRecord=PPV.instrument_ID3.read_registers(0,21, functioncode=4)
                     # r3xRecord.insert(0,formatted_datetime)
@@ -278,13 +275,14 @@ class MyWindow(QMainWindow, SentrakGUI_MainWindow):
                     # PySQL.insertSQL_R3X_Record_Test2(r3xRecordTuple)
                     
                     # print(r3xRecordTuple)
+                    #endregion
+
 
                     # 讀取modbus的Reg設定值
                     # modbusGasUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Set Gas Unit'), functioncode=3)
                     # modbusDateFormat =PPV.instrument_ID1.read_register(PPV.R4X_address('Date Formate'), functioncode=3)
                     # modbusTempUnit = PPV.instrument_ID1.read_register(PPV.R4X_address('Temp unit'), functioncode=3)
 
-                    #endregion
 
                     #region 讀取R4X
                     # 讀取地址範圍為 0 到 15 的保持寄存器值

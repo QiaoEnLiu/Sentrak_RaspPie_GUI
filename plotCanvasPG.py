@@ -15,11 +15,6 @@ except Exception as e:
     traceback.print_exc()
     input("Press Enter to exit")
 
-# matplotlib.use('Qt5Agg')
- 
-
-
-# plotTime_limit = PPV.plotTimeDefault[1]
 
 
 #region plotCanvas

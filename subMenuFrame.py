@@ -75,33 +75,6 @@ except Exception as e:
     input("Press Enter to exit")
 
 
-#region 子選單
-'''subMenu = {
-    '設定':{'顯示':'波形圖週期、單位',
-          '警報輸出':'Relay 1、Relay 2、Relay 3…',
-          '類比輸出':'濃度、溫度、類型',
-          '感測器溫度保護':'狀態、溫度設定',
-          '診斷':'觀看詳細數值',
-          '通訊':'RS-485、HTTP/TCPIP',
-          '時間':'調整時間、日期格式',
-          '語言':'多國語言'},
-          
-    '校正':{'感測器校正':'空氣校正、直接校正',
-          '大氣壓力校正':'大氣壓力校正',
-          '類比輸出校正':'0 - 20 mA、4 - 20 mA'},
-
-    '記錄':{'觀看記錄':'時間、數值',
-          '統計表':'最高值、平均值、最底值',
-          '下載記錄至隨身碟':'儲存格式：Excel、txt、json、csv',
-          '記錄方式設定':'自動、手動'},
-          
-    '識別':{'登入身份':'輸入密碼',
-          '儀器資訊':'型號、序號、生產日期……',
-          '感測器資訊':'型號、序號、生產日期……'}
-}'''
-
-#endregion
-
 font = QFont()
 itemTitleSize = QFont()
 itemTitleSize.setPointSize(20)
@@ -283,76 +256,7 @@ class subMenuFrame(QWidget):
         if item_text not in self.sub_pages: #"testEndFrame"
             print('進入選項：', item_text)
             next_frame=subMenuDict.subMenu.get(self.title,{}).get(item_text,{})[1](item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages, self.title)
-            '''#region 「設定」
-            if item_text == '顯示':
-                # 由「設定」進入「顯示」介面
-                next_frame = subOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-
-            elif item_text == '警報輸出':
-                # 由「設定」進入「警報輸出」介面
-                next_frame = subOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            
-            elif item_text == '類比輸出':
-                # 由「設定」進入「類比輸出」介面
-                next_frame = subOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-
-            elif item_text == '感測器溫度保護':
-                # 由「設定」進入「感測器溫度保護」介面
-                next_frame = setSensorTempLimitFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-
-            elif item_text == '通訊':
-                # 由「設定」進入「通訊」介面
-                next_frame = subOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-                
-            elif item_text == '時間':
-                # 由「設定」進入「時間」介面
-                next_frame = setTimeFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            
-            elif item_text == '語言':
-                # 由「設定」進入「語言」介面
-                next_frame = setLanguageFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            #endregion
-                
-            #region 「校正」
-            elif item_text == '感測器校正':
-                # 由「校正」進入「感測器校正」選項介面
-                next_frame = subOptionFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            elif item_text == '類比輸出校正':
-                # 由「校正」進入「類比輸出校正」介面
-                next_frame = calibrateAnalogyOutputFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            elif item_text == '大氣壓力校正':
-                # 由「校正」進入「大氣壓力校正」介面
-                next_frame = calibratePressureFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            #endregion
-                
-            #region 「記錄」
-            elif item_text == '觀看記錄' or item_text == '統計表':
-                # 由「記錄」進入「觀看記錄」或「統計表」介面
-                next_frame = records_DataStatisticsFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            elif item_text == '下載記錄至隨身碟':
-                # 由「記錄」進入「時間」介面
-                next_frame = recordDownloadFileFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-
-            elif item_text == '記錄方式設定':
-                # 由「記錄」進入「記錄方式設定」介面
-                next_frame = record_AutoManualFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            #endregion
-                
-            #region 「識別」
-            elif item_text == '登入身份':
-                # 由「識別」進入「登入身份」介面，此功能須再與解鎖功能區分
-                next_frame = id_LogIn_Frame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-                # next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-
-            elif item_text == '儀器資訊' or item_text == '感測器資訊': 
-                # 由「識別」進入「儀器資訊」或「感測器資訊」介面，暫以本機開發硬體測試
-                next_frame = deviceSensorInfoFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            #endregion
-
-            else:
-                # 如果還沒有，則創建一個新的 testEndFrame 為終節點畫面測試
-                next_frame = testEndFrame(item_text, self.title_label.styleSheet(), self.stacked_widget, self.sub_pages)
-            '''    
+             
             # 添加到堆疊中
             next_frame_index = self.stacked_widget.addWidget(next_frame)
             self.sub_pages[item_text] = next_frame_index
